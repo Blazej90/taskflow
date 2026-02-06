@@ -1,14 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { Task } from '../../task';
 
 @Component({
   selector: 'app-task-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './task-card.html',
   styleUrl: './task-card.scss',
 })
 export class TaskCard {
   @Input({ required: true }) task!: Task;
+  @Output() remove = new EventEmitter<string>();
 }

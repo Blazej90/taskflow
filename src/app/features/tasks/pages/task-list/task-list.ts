@@ -17,4 +17,9 @@ export class TaskList {
   constructor(private tasksService: TasksService) {
     this.tasks = this.tasksService.getAll();
   }
+
+  removeTask(id: string) {
+    this.tasksService.delete(id);
+    this.tasks = this.tasksService.getAll();
+  }
 }

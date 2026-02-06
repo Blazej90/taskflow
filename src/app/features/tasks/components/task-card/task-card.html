@@ -1,5 +1,13 @@
 <article class="card">
-  <h3>{{ task.title }}</h3>
+  <div class="top">
+    <h3>{{ task.title }}</h3>
+
+    <div class="actions">
+      <a class="btn" [routerLink]="['/tasks', task.id, 'edit']">Edit</a>
+      <button class="btn danger" type="button" (click)="remove.emit(task.id)">Delete</button>
+    </div>
+  </div>
+
   <p *ngIf="task.description">{{ task.description }}</p>
   <small>Status: {{ task.status }}</small>
 </article>
