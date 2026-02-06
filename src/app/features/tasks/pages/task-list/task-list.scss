@@ -5,7 +5,10 @@
 }
 
 .header {
-  margin-bottom: 16px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .subtitle {
@@ -16,4 +19,23 @@
 .list {
   display: grid;
   gap: 12px;
+}
+
+.filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 12px 0 16px;
+}
+
+.chip {
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background: white;
+  cursor: pointer;
+}
+
+.chip.active {
+  background: rgba(0, 0, 0, 0.08);
 }
