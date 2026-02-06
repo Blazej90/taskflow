@@ -14,4 +14,8 @@ export class TasksService {
   getAll(): Task[] {
     return this.tasks;
   }
+
+  getById(id: string): Task | undefined {
+    return this.tasks.find((t) => t.id === id);
+  }
 }

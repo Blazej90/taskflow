@@ -1,11 +1,59 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { TasksService } from '../../tasks.service';
+import { TaskStatus } from '../../task';
+
+type TaskFormValue = {
+  title: string;
+  description: string;
+  status: TaskStatus;
+};
 
 @Component({
   selector: 'app-task-form',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './task-form.html',
   styleUrl: './task-form.scss',
 })
 export class TaskForm {
+  isEdit = false;
+  taskId: string | null = null;
 
+  form!: FormGroup;
+
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private tasksService: TasksService,
+    private router: Router,
+  ) {
+    this.form = this.fb.group({
+      title: ['', [Validators.required, Validators.minLength(2)]],
+      description: [''],
+      status: ['todo' as TaskStatus],
+    });
+
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.isEdit = true;
+      this.taskId = id;
+
+      const task = this.tasksService.getById(id);
+      if (task) {
+        this.form.patchValue({
+          title: task.title,
+          description: task.description ?? '',
+          status: task.status,
+        });
+      }
+    }
+  }
+
+  submit() {
+    const value = this.form.getRawValue() as TaskFormValue;
+    console.log('FORM SUBMIT', value, { isEdit: this.isEdit, id: this.taskId });
+  }
 }

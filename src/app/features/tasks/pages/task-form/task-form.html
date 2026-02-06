@@ -1,2 +1,34 @@
-<h1>Task form</h1>
-<p>TODO: add reactive form</p>
+<div class="page">
+  <header class="header">
+    <h1>{{ isEdit ? 'Edit task' : 'New task' }}</h1>
+    <a routerLink="/tasks">← Back to list</a>
+  </header>
+
+  <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+    <label class="field">
+      <span>Title</span>
+      <input type="text" formControlName="title" />
+      <small *ngIf="form.get('title')?.touched && form.get('title')?.invalid">
+        Title is required (min 2 chars)
+      </small>
+    </label>
+
+    <label class="field">
+      <span>Description</span>
+      <textarea rows="3" formControlName="description"></textarea>
+    </label>
+
+    <label class="field">
+      <span>Status</span>
+      <select formControlName="status">
+        <option value="todo">todo</option>
+        <option value="doing">doing</option>
+        <option value="done">done</option>
+      </select>
+    </label>
+
+    <button type="submit" [disabled]="form.invalid">
+      {{ isEdit ? 'Save changes' : 'Create task' }}
+    </button>
+  </form>
+</div>
