@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Task } from '../../task';
 import { TaskCard } from '../../components/task-card/task-card';
+import { Task } from '../../task';
+import { TasksService } from '../../tasks.service';
 
 @Component({
   selector: 'app-task-list',
@@ -11,9 +12,9 @@ import { TaskCard } from '../../components/task-card/task-card';
   styleUrl: './task-list.scss',
 })
 export class TaskList {
-  tasks: Task[] = [
-    { id: '1', title: 'Zrobić layout TaskFlow', status: 'todo' },
-    { id: '2', title: 'Dodać TaskCard', description: 'Input + template', status: 'doing' },
-    { id: '3', title: 'Nauczyć się *ngFor', status: 'done' },
-  ];
+  tasks: Task[];
+
+  constructor(private tasksService: TasksService) {
+    this.tasks = this.tasksService.getAll();
+  }
 }
