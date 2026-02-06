@@ -1,34 +1,21 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Task } from './task';
+import { LocalStorageTasksRepository } from './local-storage-tasks.repository';
+import { TASKS_REPOSITORY, TasksRepository } from './task.repository';
 
-const STORAGE_KEY = 'taskflow.tasks.v1';
-
-function loadFromStorage(): Task[] | null {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw) as unknown;
-    if (!Array.isArray(parsed)) return null;
-    return parsed as Task[];
-  } catch {
-    return null;
-  }
-}
-
-function saveToStorage(tasks: Task[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
-}
+const SEED_TASKS: Task[] = [
+  { id: '1', title: 'Zrobić layout TaskFlow', status: 'todo' },
+  { id: '2', title: 'Dodać TaskCard', description: 'Input + template', status: 'doing' },
+  { id: '3', title: 'Nauczyć się *ngFor', status: 'done' },
+];
 
 @Injectable({ providedIn: 'root' })
 export class TasksService {
-  private tasks: Task[] = loadFromStorage() ?? [
-    { id: '1', title: 'Zrobić layout TaskFlow', status: 'todo' },
-    { id: '2', title: 'Dodać TaskCard', description: 'Input + template', status: 'doing' },
-    { id: '3', title: 'Nauczyć się *ngFor', status: 'done' },
-  ];
+  private tasks: Task[];
 
-  constructor() {
-    saveToStorage(this.tasks);
+  constructor(@Inject(TASKS_REPOSITORY) private repo: TasksRepository) {
+    this.tasks = this.repo.load() ?? SEED_TASKS;
+    this.repo.save(this.tasks);
   }
 
   getAll(): Task[] {
@@ -46,7 +33,7 @@ export class TasksService {
     };
 
     this.tasks = [...this.tasks, newTask];
-    saveToStorage(this.tasks);
+    this.repo.save(this.tasks);
   }
 
   update(id: string, updated: Omit<Task, 'id'>) {
@@ -57,11 +44,11 @@ export class TasksService {
     next[index] = { id, ...updated };
 
     this.tasks = next;
-    saveToStorage(this.tasks);
+    this.repo.save(this.tasks);
   }
 
   delete(id: string) {
     this.tasks = this.tasks.filter((t) => t.id !== id);
-    saveToStorage(this.tasks);
+    this.repo.save(this.tasks);
   }
 }
