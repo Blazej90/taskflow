@@ -1,2 +1,5 @@
 <h1>TaskFlow</h1>
-<p>Task list works ✅</p>
+
+<section class="list">
+  <app-task-card *ngFor="let t of tasks" [task]="t"></app-task-card>
+</section>

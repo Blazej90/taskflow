@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+export type TaskStatus = 'todo' | 'doing' | 'done';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class Task {
-  
+export interface Task {
+  id: string;
+  title: string;
+  description?: string;
+  status: TaskStatus;
 }
