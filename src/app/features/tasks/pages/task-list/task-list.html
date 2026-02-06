@@ -9,21 +9,43 @@
   </header>
 
   <div class="filters">
-    <button class="chip" [class.active]="filter === 'all'" (click)="setFilter('all')">All</button>
-    <button class="chip" [class.active]="filter === 'todo'" (click)="setFilter('todo')">
+    <button
+      type="button"
+      class="chip"
+      [class.active]="statusFilter() === 'all'"
+      (click)="setFilter('all')"
+    >
+      All
+    </button>
+    <button
+      type="button"
+      class="chip"
+      [class.active]="statusFilter() === 'todo'"
+      (click)="setFilter('todo')"
+    >
       Todo
     </button>
-    <button class="chip" [class.active]="filter === 'doing'" (click)="setFilter('doing')">
+    <button
+      type="button"
+      class="chip"
+      [class.active]="statusFilter() === 'doing'"
+      (click)="setFilter('doing')"
+    >
       Doing
     </button>
-    <button class="chip" [class.active]="filter === 'done'" (click)="setFilter('done')">
+    <button
+      type="button"
+      class="chip"
+      [class.active]="statusFilter() === 'done'"
+      (click)="setFilter('done')"
+    >
       Done
     </button>
   </div>
 
   <section class="list">
     <app-task-card
-      *ngFor="let t of filteredTasks"
+      *ngFor="let t of filteredTasks()"
       [task]="t"
       (remove)="removeTask($event)"
     ></app-task-card>

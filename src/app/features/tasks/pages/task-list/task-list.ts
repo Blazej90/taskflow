@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TaskCard } from '../../components/task-card/task-card';
-import { Task, TaskStatus } from '../../task';
+import { TaskStatus } from '../../task';
 import { TasksService } from '../../tasks.service';
 
 type Filter = 'all' | TaskStatus;
@@ -15,28 +15,22 @@ type Filter = 'all' | TaskStatus;
   styleUrl: './task-list.scss',
 })
 export class TaskList {
-  tasks: Task[] = [];
-  filter: Filter = 'all';
+  private tasksService = inject(TasksService);
 
-  constructor(private tasksService: TasksService) {
-    this.refresh();
-  }
+  readonly tasks = this.tasksService.tasks;
+  readonly statusFilter = signal<Filter>('all');
 
-  get filteredTasks(): Task[] {
-    if (this.filter === 'all') return this.tasks;
-    return this.tasks.filter((t) => t.status === this.filter);
-  }
+  readonly filteredTasks = computed(() => {
+    const f = this.statusFilter();
+    const tasks = this.tasks();
+    return f === 'all' ? tasks : tasks.filter((t) => t.status === f);
+  });
 
-  setFilter(filter: Filter) {
-    this.filter = filter;
+  setFilter(next: Filter) {
+    this.statusFilter.set(next);
   }
 
   removeTask(id: string) {
     this.tasksService.delete(id);
-    this.refresh();
-  }
-
-  private refresh() {
-    this.tasks = this.tasksService.getAll();
   }
 }

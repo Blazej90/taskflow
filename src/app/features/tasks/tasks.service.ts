@@ -1,6 +1,5 @@
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, signal } from '@angular/core';
 import { Task } from './task';
-import { LocalStorageTasksRepository } from './local-storage-tasks.repository';
 import { TASKS_REPOSITORY, TasksRepository } from './task.repository';
 
 const SEED_TASKS: Task[] = [
@@ -11,44 +10,47 @@ const SEED_TASKS: Task[] = [
 
 @Injectable({ providedIn: 'root' })
 export class TasksService {
-  private tasks: Task[];
+  private _tasks = signal<Task[]>([]);
+  readonly tasks = this._tasks.asReadonly();
 
   constructor(@Inject(TASKS_REPOSITORY) private repo: TasksRepository) {
-    this.tasks = this.repo.load() ?? SEED_TASKS;
-    this.repo.save(this.tasks);
+    const initial = this.repo.load() ?? SEED_TASKS;
+    this._tasks.set(initial);
+    this.repo.save(initial);
   }
 
   getAll(): Task[] {
-    return this.tasks;
+    return this._tasks();
   }
 
   getById(id: string): Task | undefined {
-    return this.tasks.find((t) => t.id === id);
+    return this._tasks().find((t) => t.id === id);
   }
 
   create(task: Omit<Task, 'id'>) {
-    const newTask: Task = {
-      ...task,
-      id: crypto.randomUUID(),
-    };
+    const newTask: Task = { ...task, id: crypto.randomUUID() };
+    const next = [...this._tasks(), newTask];
 
-    this.tasks = [...this.tasks, newTask];
-    this.repo.save(this.tasks);
+    this._tasks.set(next);
+    this.repo.save(next);
   }
 
   update(id: string, updated: Omit<Task, 'id'>) {
-    const index = this.tasks.findIndex((t) => t.id === id);
+    const current = this._tasks();
+    const index = current.findIndex((t) => t.id === id);
     if (index === -1) return;
 
-    const next = [...this.tasks];
+    const next = [...current];
     next[index] = { id, ...updated };
 
-    this.tasks = next;
-    this.repo.save(this.tasks);
+    this._tasks.set(next);
+    this.repo.save(next);
   }
 
   delete(id: string) {
-    this.tasks = this.tasks.filter((t) => t.id !== id);
-    this.repo.save(this.tasks);
+    const next = this._tasks().filter((t) => t.id !== id);
+
+    this._tasks.set(next);
+    this.repo.save(next);
   }
 }
