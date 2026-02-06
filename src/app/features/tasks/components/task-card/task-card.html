@@ -9,5 +9,9 @@
   </div>
 
   <p *ngIf="task.description">{{ task.description }}</p>
-  <small>Status: {{ task.status }}</small>
+  <div class="footer">
+    <span class="badge" [ngClass]="'badge-' + task.status">
+      {{ task.status }}
+    </span>
+  </div>
 </article>

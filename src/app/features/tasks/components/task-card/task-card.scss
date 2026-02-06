@@ -18,3 +18,57 @@ p {
 small {
   opacity: 0.7;
 }
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.actions {
+  display: flex;
+  gap: 6px;
+}
+
+.btn {
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background: white;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.btn.danger {
+  border-color: #ffb3b3;
+  background: #fff0f0;
+}
+
+.footer {
+  margin-top: 10px;
+}
+
+.badge {
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* status colors */
+.badge-todo {
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.badge-doing {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.badge-done {
+  background: #ecfdf5;
+  color: #047857;
+}
