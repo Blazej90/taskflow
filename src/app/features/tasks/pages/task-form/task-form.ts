@@ -53,7 +53,20 @@ export class TaskForm {
   }
 
   submit() {
-    const value = this.form.getRawValue() as TaskFormValue;
-    console.log('FORM SUBMIT', value, { isEdit: this.isEdit, id: this.taskId });
+    if (this.form.invalid) return;
+
+    const value = this.form.getRawValue() as {
+      title: string;
+      description: string;
+      status: TaskStatus;
+    };
+
+    if (this.isEdit && this.taskId) {
+      this.tasksService.update(this.taskId, value);
+    } else {
+      this.tasksService.create(value);
+    }
+
+    this.router.navigate(['/tasks']);
   }
 }
