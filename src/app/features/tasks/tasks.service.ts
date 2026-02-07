@@ -53,4 +53,20 @@ export class TasksService {
     this._tasks.set(next);
     this.repo.save(next);
   }
+
+  toggleStatus(id: string) {
+    const current = this._tasks();
+    const task = current.find((t) => t.id === id);
+    if (!task) return;
+
+    const order = ['todo', 'doing', 'done'] as const;
+    const idx = order.indexOf(task.status);
+    const nextStatus = order[(idx + 1) % order.length];
+
+    this.update(id, {
+      title: task.title,
+      description: task.description ?? '',
+      status: nextStatus,
+    });
+  }
 }

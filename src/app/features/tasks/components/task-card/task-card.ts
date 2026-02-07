@@ -12,5 +12,7 @@ import { Task } from '../../task';
 })
 export class TaskCard {
   @Input({ required: true }) task!: Task;
+
   @Output() remove = new EventEmitter<string>();
+  @Output() toggle = new EventEmitter<string>();
 }

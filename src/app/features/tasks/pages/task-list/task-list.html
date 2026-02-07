@@ -48,6 +48,7 @@
       *ngFor="let t of filteredTasks()"
       [task]="t"
       (remove)="removeTask($event)"
+      (toggle)="toggleTaskStatus($event)"
     ></app-task-card>
   </section>
 </div>

@@ -33,4 +33,8 @@ export class TaskList {
   removeTask(id: string) {
     this.tasksService.delete(id);
   }
+
+  toggleTaskStatus(id: string) {
+    this.tasksService.toggleStatus(id);
+  }
 }

@@ -4,6 +4,9 @@
 
     <div class="actions">
       <a class="btn" [routerLink]="['/tasks', task.id, 'edit']">Edit</a>
+
+      <button class="btn" type="button" (click)="toggle.emit(task.id)">Next status</button>
+
       <button class="btn danger" type="button" (click)="remove.emit(task.id)">Delete</button>
     </div>
   </div>
