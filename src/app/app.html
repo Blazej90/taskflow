@@ -1,1 +1,16 @@
-<router-outlet></router-outlet>
+<div class="shell">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" routerLink="/tasks">TaskFlow</a>
+
+      <nav class="nav">
+        <a class="nav-link" routerLink="/tasks" routerLinkActive="active">Tasks</a>
+        <a class="nav-link" routerLink="/tasks/new" routerLinkActive="active">New</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <router-outlet></router-outlet>
+  </main>
+</div>
