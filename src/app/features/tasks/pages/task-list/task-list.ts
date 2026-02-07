@@ -37,4 +37,11 @@ export class TaskList {
   toggleTaskStatus(id: string) {
     this.tasksService.toggleStatus(id);
   }
+
+  readonly totalCount = computed(() => this.tasks().length);
+  readonly todoCount = computed(() => this.tasks().filter((t) => t.status === 'todo').length);
+  readonly doingCount = computed(() => this.tasks().filter((t) => t.status === 'doing').length);
+  readonly doneCount = computed(() => this.tasks().filter((t) => t.status === 'done').length);
+
+  readonly isEmpty = computed(() => this.filteredTasks().length === 0);
 }

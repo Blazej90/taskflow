@@ -1,9 +1,5 @@
 <header class="header">
-  <div>
-    <h1>TaskFlow</h1>
-    <p class="subtitle">Mini task manager in Angular</p>
-  </div>
-
+  <h1>Tasks</h1>
   <a class="btn" routerLink="/tasks/new">+ New task</a>
 </header>
 
@@ -14,7 +10,7 @@
     [class.active]="statusFilter() === 'all'"
     (click)="setFilter('all')"
   >
-    All
+    All ({{ totalCount() }})
   </button>
   <button
     type="button"
@@ -22,7 +18,7 @@
     [class.active]="statusFilter() === 'todo'"
     (click)="setFilter('todo')"
   >
-    Todo
+    Todo ({{ todoCount() }})
   </button>
   <button
     type="button"
@@ -30,7 +26,7 @@
     [class.active]="statusFilter() === 'doing'"
     (click)="setFilter('doing')"
   >
-    Doing
+    Doing ({{ doingCount() }})
   </button>
   <button
     type="button"
@@ -38,7 +34,7 @@
     [class.active]="statusFilter() === 'done'"
     (click)="setFilter('done')"
   >
-    Done
+    Done ({{ doneCount() }})
   </button>
 </div>
 
@@ -50,3 +46,9 @@
     (toggle)="toggleTaskStatus($event)"
   ></app-task-card>
 </section>
+
+<div *ngIf="isEmpty()" class="empty">
+  <h3>No tasks here 👀</h3>
+  <p>Create a new task or change the filter.</p>
+  <a class="btn" routerLink="/tasks/new">+ New task</a>
+</div>
