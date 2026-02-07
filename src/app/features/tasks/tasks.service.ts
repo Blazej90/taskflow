@@ -13,6 +13,8 @@ export class TasksService {
   private _tasks = signal<Task[]>([]);
   readonly tasks = this._tasks.asReadonly();
 
+  readonly loading = signal(false);
+
   constructor(@Inject(TASKS_REPOSITORY) private repo: TasksRepository) {
     const initial = this.repo.load() ?? SEED_TASKS;
     this._tasks.set(initial);
@@ -27,7 +29,9 @@ export class TasksService {
     return this._tasks().find((t) => t.id === id);
   }
 
-  create(task: Omit<Task, 'id'>) {
+  async create(task: Omit<Task, 'id'>) {
+    await this.simulate();
+
     const newTask: Task = { ...task, id: crypto.randomUUID() };
     const next = [...this._tasks(), newTask];
 
@@ -35,7 +39,9 @@ export class TasksService {
     this.repo.save(next);
   }
 
-  update(id: string, updated: Omit<Task, 'id'>) {
+  async update(id: string, updated: Omit<Task, 'id'>) {
+    await this.simulate();
+
     const current = this._tasks();
     const index = current.findIndex((t) => t.id === id);
     if (index === -1) return;
@@ -47,14 +53,15 @@ export class TasksService {
     this.repo.save(next);
   }
 
-  delete(id: string) {
-    const next = this._tasks().filter((t) => t.id !== id);
+  async delete(id: string) {
+    await this.simulate();
 
+    const next = this._tasks().filter((t) => t.id !== id);
     this._tasks.set(next);
     this.repo.save(next);
   }
 
-  toggleStatus(id: string) {
+  async toggleStatus(id: string) {
     const current = this._tasks();
     const task = current.find((t) => t.id === id);
     if (!task) return;
@@ -63,10 +70,21 @@ export class TasksService {
     const idx = order.indexOf(task.status);
     const nextStatus = order[(idx + 1) % order.length];
 
-    this.update(id, {
+    await this.update(id, {
       title: task.title,
       description: task.description ?? '',
       status: nextStatus,
+    });
+  }
+
+  private simulate(delayMs = 400): Promise<void> {
+    this.loading.set(true);
+
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        this.loading.set(false);
+        resolve();
+      }, delayMs);
     });
   }
 }

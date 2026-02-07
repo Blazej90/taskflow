@@ -4,10 +4,13 @@
     <a routerLink="/tasks">← Back to list</a>
   </header>
 
+  <p class="loading" *ngIf="loading()">Saving...</p>
+
   <form class="form" [formGroup]="form" (ngSubmit)="submit()">
     <label class="field">
       <span>Title</span>
-      <input type="text" formControlName="title" />
+      <input type="text" formControlName="title" [disabled]="loading()" />
+
       <small *ngIf="form.get('title')?.touched && form.get('title')?.invalid">
         Title is required (min 2 chars)
       </small>
@@ -15,20 +18,20 @@
 
     <label class="field">
       <span>Description</span>
-      <textarea rows="3" formControlName="description"></textarea>
+      <textarea rows="3" formControlName="description" [disabled]="loading()"></textarea>
     </label>
 
     <label class="field">
       <span>Status</span>
-      <select formControlName="status">
+      <select formControlName="status" [disabled]="loading()">
         <option value="todo">todo</option>
         <option value="doing">doing</option>
         <option value="done">done</option>
       </select>
     </label>
 
-    <button type="submit" [disabled]="form.invalid">
-      {{ isEdit ? 'Save changes' : 'Create task' }}
+    <button type="submit" [disabled]="form.invalid || loading()">
+      {{ loading() ? 'Saving...' : isEdit ? 'Save changes' : 'Create task' }}
     </button>
   </form>
 </div>

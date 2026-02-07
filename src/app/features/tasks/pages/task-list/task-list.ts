@@ -30,12 +30,12 @@ export class TaskList {
     this.statusFilter.set(next);
   }
 
-  removeTask(id: string) {
-    this.tasksService.delete(id);
+  async removeTask(id: string) {
+    await this.tasksService.delete(id);
   }
 
-  toggleTaskStatus(id: string) {
-    this.tasksService.toggleStatus(id);
+  async toggleTaskStatus(id: string) {
+    await this.tasksService.toggleStatus(id);
   }
 
   readonly totalCount = computed(() => this.tasks().length);
@@ -44,4 +44,6 @@ export class TaskList {
   readonly doneCount = computed(() => this.tasks().filter((t) => t.status === 'done').length);
 
   readonly isEmpty = computed(() => this.filteredTasks().length === 0);
+
+  readonly loading = this.tasksService.loading;
 }

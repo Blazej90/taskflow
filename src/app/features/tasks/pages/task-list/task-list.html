@@ -1,6 +1,13 @@
 <header class="header">
   <h1>Tasks</h1>
-  <a class="btn" routerLink="/tasks/new">+ New task</a>
+  <a
+    class="btn"
+    routerLink="/tasks/new"
+    [class.disabled]="loading()"
+    [attr.aria-disabled]="loading()"
+  >
+    + New task
+  </a>
 </header>
 
 <div class="filters">
@@ -8,6 +15,7 @@
     type="button"
     class="chip"
     [class.active]="statusFilter() === 'all'"
+    [disabled]="loading()"
     (click)="setFilter('all')"
   >
     All ({{ totalCount() }})
@@ -16,6 +24,7 @@
     type="button"
     class="chip"
     [class.active]="statusFilter() === 'todo'"
+    [disabled]="loading()"
     (click)="setFilter('todo')"
   >
     Todo ({{ todoCount() }})
@@ -24,6 +33,7 @@
     type="button"
     class="chip"
     [class.active]="statusFilter() === 'doing'"
+    [disabled]="loading()"
     (click)="setFilter('doing')"
   >
     Doing ({{ doingCount() }})
@@ -32,6 +42,7 @@
     type="button"
     class="chip"
     [class.active]="statusFilter() === 'done'"
+    [disabled]="loading()"
     (click)="setFilter('done')"
   >
     Done ({{ doneCount() }})

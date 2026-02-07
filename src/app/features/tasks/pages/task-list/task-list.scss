@@ -50,3 +50,18 @@
   margin: 0 0 12px;
   opacity: 0.75;
 }
+
+.loading {
+  margin: 8px 0 12px;
+  opacity: 0.7;
+}
+
+.btn.disabled {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.chip:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

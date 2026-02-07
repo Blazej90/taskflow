@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TasksService } from '../../tasks.service';
@@ -19,23 +19,24 @@ type TaskFormValue = {
   styleUrl: './task-form.scss',
 })
 export class TaskForm {
+  private fb = inject(FormBuilder);
+  private route = inject(ActivatedRoute);
+  private tasksService = inject(TasksService);
+  private router = inject(Router);
+
   isEdit = false;
   taskId: string | null = null;
 
-  form!: FormGroup;
+  // ✅ teraz działa, bo tasksService już istnieje (inject jest wykonywany od razu)
+  readonly loading = this.tasksService.loading;
 
-  constructor(
-    private fb: FormBuilder,
-    private route: ActivatedRoute,
-    private tasksService: TasksService,
-    private router: Router,
-  ) {
-    this.form = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(2)]],
-      description: [''],
-      status: ['todo' as TaskStatus],
-    });
+  form: FormGroup = this.fb.group({
+    title: ['', [Validators.required, Validators.minLength(2)]],
+    description: [''],
+    status: ['todo' as TaskStatus],
+  });
 
+  constructor() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEdit = true;
@@ -52,21 +53,20 @@ export class TaskForm {
     }
   }
 
-  submit() {
-    if (this.form.invalid) return;
-
-    const value = this.form.getRawValue() as {
-      title: string;
-      description: string;
-      status: TaskStatus;
-    };
-
-    if (this.isEdit && this.taskId) {
-      this.tasksService.update(this.taskId, value);
-    } else {
-      this.tasksService.create(value);
+  async submit() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
     }
 
-    this.router.navigate(['/tasks']);
+    const value = this.form.getRawValue() as TaskFormValue;
+
+    if (this.isEdit && this.taskId) {
+      await this.tasksService.update(this.taskId, value);
+    } else {
+      await this.tasksService.create(value);
+    }
+
+    await this.router.navigateByUrl('/tasks');
   }
 }
