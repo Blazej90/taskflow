@@ -1,4 +1,4 @@
-import { Inject, Injectable, signal } from '@angular/core';
+import { Inject, Injectable, computed, signal } from '@angular/core';
 import { Task } from './task';
 import { TASKS_REPOSITORY, TasksRepository } from './task.repository';
 
@@ -13,7 +13,16 @@ export class TasksService {
   private _tasks = signal<Task[]>([]);
   readonly tasks = this._tasks.asReadonly();
 
-  readonly loading = signal(false);
+  readonly creating = signal(false);
+  private _updatingIds = signal<Set<string>>(new Set());
+  private _deletingIds = signal<Set<string>>(new Set());
+
+  readonly updatingIds = this._updatingIds.asReadonly();
+  readonly deletingIds = this._deletingIds.asReadonly();
+
+  readonly loading = computed(() => {
+    return this.creating() || this._updatingIds().size > 0 || this._deletingIds().size > 0;
+  });
 
   constructor(@Inject(TASKS_REPOSITORY) private repo: TasksRepository) {
     const initial = this.repo.load() ?? SEED_TASKS;
@@ -29,36 +38,62 @@ export class TasksService {
     return this._tasks().find((t) => t.id === id);
   }
 
+  isUpdating(id: string): boolean {
+    return this._updatingIds().has(id);
+  }
+
+  isDeleting(id: string): boolean {
+    return this._deletingIds().has(id);
+  }
+
   async create(task: Omit<Task, 'id'>) {
-    await this.simulate();
+    this.creating.set(true);
 
-    const newTask: Task = { ...task, id: crypto.randomUUID() };
-    const next = [...this._tasks(), newTask];
+    try {
+      await this.simulate();
 
-    this._tasks.set(next);
-    this.repo.save(next);
+      const newTask: Task = { ...task, id: crypto.randomUUID() };
+      const next = [...this._tasks(), newTask];
+
+      this._tasks.set(next);
+      this.repo.save(next);
+    } finally {
+      this.creating.set(false);
+    }
   }
 
   async update(id: string, updated: Omit<Task, 'id'>) {
-    await this.simulate();
+    this.addId(this._updatingIds, id);
 
-    const current = this._tasks();
-    const index = current.findIndex((t) => t.id === id);
-    if (index === -1) return;
+    try {
+      await this.simulate();
 
-    const next = [...current];
-    next[index] = { id, ...updated };
+      const current = this._tasks();
+      const index = current.findIndex((t) => t.id === id);
+      if (index === -1) return;
 
-    this._tasks.set(next);
-    this.repo.save(next);
+      const next = [...current];
+      next[index] = { id, ...updated };
+
+      this._tasks.set(next);
+      this.repo.save(next);
+    } finally {
+      this.removeId(this._updatingIds, id);
+    }
   }
 
   async delete(id: string) {
-    await this.simulate();
+    this.addId(this._deletingIds, id);
 
-    const next = this._tasks().filter((t) => t.id !== id);
-    this._tasks.set(next);
-    this.repo.save(next);
+    try {
+      await this.simulate();
+
+      const next = this._tasks().filter((t) => t.id !== id);
+      this._tasks.set(next);
+      this.repo.save(next);
+    } finally {
+      this.removeId(this._deletingIds, id);
+    }
   }
 
   async toggleStatus(id: string) {
@@ -77,14 +112,25 @@ export class TasksService {
     });
   }
 
-  private simulate(delayMs = 400): Promise<void> {
-    this.loading.set(true);
+  private addId(store: typeof this._updatingIds, id: string) {
+    store.update((set) => {
+      const next = new Set(set);
+      next.add(id);
+      return next;
+    });
+  }
 
+  private removeId(store: typeof this._updatingIds, id: string) {
+    store.update((set) => {
+      const next = new Set(set);
+      next.delete(id);
+      return next;
+    });
+  }
+
+  private simulate(delayMs = 400): Promise<void> {
     return new Promise((resolve) => {
-      setTimeout(() => {
-        this.loading.set(false);
-        resolve();
-      }, delayMs);
+      setTimeout(() => resolve(), delayMs);
     });
   }
 }

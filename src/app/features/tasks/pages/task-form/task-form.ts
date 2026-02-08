@@ -52,7 +52,6 @@ export class TaskForm {
           status: task.status,
         });
       } else {
-        // edge case: /tasks/:id/edit but task is missing
         this.toast.error('Task not found');
         this.router.navigateByUrl('/tasks');
       }
