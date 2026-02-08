@@ -2,8 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+
 import { TasksService } from '../../tasks.service';
 import { TaskStatus } from '../../task';
+import { ToastService } from '@/shared/ui/toast/toast.service';
 
 type TaskFormValue = {
   title: string;
@@ -23,11 +25,11 @@ export class TaskForm {
   private route = inject(ActivatedRoute);
   private tasksService = inject(TasksService);
   private router = inject(Router);
+  private toast = inject(ToastService);
 
   isEdit = false;
   taskId: string | null = null;
 
-  // ✅ teraz działa, bo tasksService już istnieje (inject jest wykonywany od razu)
   readonly loading = this.tasksService.loading;
 
   form: FormGroup = this.fb.group({
@@ -49,6 +51,10 @@ export class TaskForm {
           description: task.description ?? '',
           status: task.status,
         });
+      } else {
+        // edge case: /tasks/:id/edit but task is missing
+        this.toast.error('Task not found');
+        this.router.navigateByUrl('/tasks');
       }
     }
   }
@@ -61,12 +67,18 @@ export class TaskForm {
 
     const value = this.form.getRawValue() as TaskFormValue;
 
-    if (this.isEdit && this.taskId) {
-      await this.tasksService.update(this.taskId, value);
-    } else {
-      await this.tasksService.create(value);
-    }
+    try {
+      if (this.isEdit && this.taskId) {
+        await this.tasksService.update(this.taskId, value);
+        this.toast.success('Task updated');
+      } else {
+        await this.tasksService.create(value);
+        this.toast.success('Task created');
+      }
 
-    await this.router.navigateByUrl('/tasks');
+      await this.router.navigateByUrl('/tasks');
+    } catch {
+      this.toast.error('Something went wrong');
+    }
   }
 }

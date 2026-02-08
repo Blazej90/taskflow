@@ -2,11 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { TaskCard } from '../../components/task-card/task-card';
+import { TaskCard } from '@/features/tasks/components/task-card/task-card';
 import { TaskStatus } from '../../task';
 import { TasksService } from '../../tasks.service';
 
-import { ToastService } from '../../../../shared/ui/toast/toast.service';
+import { ToastService } from '@/shared/ui/toast/toast.service';
 type Filter = 'all' | TaskStatus;
 
 @Component({
