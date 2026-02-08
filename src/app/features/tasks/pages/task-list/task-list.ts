@@ -1,3 +1,4 @@
+import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -27,6 +28,7 @@ type SortOption = 'newest' | 'oldest' | 'status';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    DragDropModule,
   ],
   templateUrl: './task-list.html',
   styleUrl: './task-list.scss',
@@ -177,5 +179,14 @@ export class TaskList {
 
     this.selectedIds.set(new Set());
     this.selectMode.set(false);
+  }
+
+  onDrop(event: CdkDragDrop<unknown>) {
+    const list = [...this.filteredTasks()];
+    moveItemInArray(list, event.previousIndex, event.currentIndex);
+
+    // Na razie tylko wizualnie na ekranie nic się nie zmieni,
+    // bo filteredTasks() jest computed.
+    // W następnym kroku zrobimy to poprawnie: reorder w TasksService.
   }
 }
