@@ -49,6 +49,20 @@
   </button>
 </div>
 
+<div class="search">
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Search</mat-label>
+    <input
+      matInput
+      type="text"
+      placeholder="Search tasks by title..."
+      [disabled]="loading()"
+      [ngModel]="searchTerm()"
+      (ngModelChange)="searchTerm.set($event)"
+    />
+  </mat-form-field>
+</div>
+
 <section class="list">
   <app-task-card
     *ngFor="let t of filteredTasks()"

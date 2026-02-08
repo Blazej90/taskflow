@@ -1,3 +1,6 @@
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
@@ -14,7 +17,7 @@ type Filter = 'all' | TaskStatus;
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, TaskCard],
+  imports: [CommonModule, RouterLink, TaskCard, FormsModule, MatFormFieldModule, MatInputModule],
   templateUrl: './task-list.html',
   styleUrl: './task-list.scss',
 })
@@ -25,11 +28,17 @@ export class TaskList {
 
   readonly tasks = this.tasksService.tasks;
   readonly statusFilter = signal<Filter>('all');
+  readonly searchTerm = signal('');
 
   readonly filteredTasks = computed(() => {
     const f = this.statusFilter();
+    const q = this.searchTerm().trim().toLowerCase();
     const tasks = this.tasks();
-    return f === 'all' ? tasks : tasks.filter((t) => t.status === f);
+
+    const byStatus = f === 'all' ? tasks : tasks.filter((t) => t.status === f);
+    if (!q) return byStatus;
+
+    return byStatus.filter((t) => t.title.toLowerCase().includes(q));
   });
 
   setFilter(next: Filter) {
