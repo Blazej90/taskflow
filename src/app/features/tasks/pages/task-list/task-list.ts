@@ -182,11 +182,10 @@ export class TaskList {
   }
 
   onDrop(event: CdkDragDrop<unknown>) {
-    const list = [...this.filteredTasks()];
-    moveItemInArray(list, event.previousIndex, event.currentIndex);
-
-    // Na razie tylko wizualnie na ekranie nic się nie zmieni,
-    // bo filteredTasks() jest computed.
-    // W następnym kroku zrobimy to poprawnie: reorder w TasksService.
+    if (event.previousIndex === event.currentIndex) return;
+    const visible = [...this.filteredTasks()];
+    moveItemInArray(visible, event.previousIndex, event.currentIndex);
+    this.tasksService.reorder(visible.map((t) => t.id));
+    this.toast.success('Order saved');
   }
 }

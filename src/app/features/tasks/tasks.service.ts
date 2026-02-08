@@ -112,6 +112,29 @@ export class TasksService {
     });
   }
 
+  reorder(orderedIds: string[]) {
+    const current = this._tasks();
+
+    // mapka dla szybkiego lookup
+    const byId = new Map(current.map((t) => [t.id, t] as const));
+
+    // nowa kolejność dla elementów które znamy
+    const next: Task[] = [];
+    for (const id of orderedIds) {
+      const task = byId.get(id);
+      if (task) next.push(task);
+      byId.delete(id);
+    }
+
+    // reszta (nie na liście) zostaje na końcu w dotychczasowej kolejności
+    for (const t of current) {
+      if (byId.has(t.id)) next.push(t);
+    }
+
+    this._tasks.set(next);
+    this.repo.save(next);
+  }
+
   private addId(store: typeof this._updatingIds, id: string) {
     store.update((set) => {
       const next = new Set(set);
