@@ -122,10 +122,31 @@
     </mat-select>
   </mat-form-field>
 </div>
+
+<div class="view-switch">
+  <button
+    class="btn ghost"
+    type="button"
+    (click)="viewMode.set('list')"
+    [class.active]="viewMode() === 'list'"
+  >
+    List
+  </button>
+
+  <button
+    class="btn ghost"
+    type="button"
+    (click)="viewMode.set('board')"
+    [class.active]="viewMode() === 'board'"
+  >
+    Board
+  </button>
+</div>
 <p *ngIf="!isManualOrder()" class="hint">
   Reordering is available only in <strong>Oldest first</strong> mode.
 </p>
 <section
+  *ngIf="viewMode() === 'list'; else boardView"
   class="list"
   cdkDropList
   [cdkDropListDisabled]="!isManualOrder()"
@@ -147,6 +168,81 @@
     ></app-task-card>
   </div>
 </section>
+<ng-template #boardView>
+  <div class="board">
+    <div class="col">
+      <div class="col-title">Todo</div>
+
+      <div
+        class="col-list"
+        cdkDropList
+        [cdkDropListData]="boardTodo()"
+        [cdkDropListConnectedTo]="['doingList', 'doneList']"
+        (cdkDropListDropped)="onBoardDrop('todo', $event)"
+        id="todoList"
+      >
+        <div *ngFor="let t of boardTodo()" cdkDrag class="draggable-row">
+          <app-task-card
+            [task]="t"
+            [selectable]="selectMode()"
+            [selected]="isSelected(t.id)"
+            (selectedChange)="onSelectedChange($event)"
+            (remove)="removeTask($event)"
+            (toggle)="toggleTaskStatus($event)"
+          ></app-task-card>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="col-title">Doing</div>
+
+      <div
+        class="col-list"
+        cdkDropList
+        [cdkDropListData]="boardDoing()"
+        [cdkDropListConnectedTo]="['todoList', 'doneList']"
+        (cdkDropListDropped)="onBoardDrop('doing', $event)"
+        id="doingList"
+      >
+        <div *ngFor="let t of boardDoing()" cdkDrag class="draggable-row">
+          <app-task-card
+            [task]="t"
+            [selectable]="selectMode()"
+            [selected]="isSelected(t.id)"
+            (selectedChange)="onSelectedChange($event)"
+            (remove)="removeTask($event)"
+            (toggle)="toggleTaskStatus($event)"
+          ></app-task-card>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="col-title">Done</div>
+
+      <div
+        class="col-list"
+        cdkDropList
+        [cdkDropListData]="boardDone()"
+        [cdkDropListConnectedTo]="['todoList', 'doingList']"
+        (cdkDropListDropped)="onBoardDrop('done', $event)"
+        id="doneList"
+      >
+        <div *ngFor="let t of boardDone()" cdkDrag class="draggable-row">
+          <app-task-card
+            [task]="t"
+            [selectable]="selectMode()"
+            [selected]="isSelected(t.id)"
+            (selectedChange)="onSelectedChange($event)"
+            (remove)="removeTask($event)"
+            (toggle)="toggleTaskStatus($event)"
+          ></app-task-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
 <div *ngIf="isEmpty()" class="empty">
   <h3>No tasks here 👀</h3>
   <p>Create a new task or change the filter.</p>
