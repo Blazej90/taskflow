@@ -123,4 +123,29 @@ export class TaskList {
 
   readonly isEmpty = computed(() => this.filteredTasks().length === 0);
   readonly loading = this.tasksService.loading;
+
+  async bulkDelete() {
+    const count = this.selectedCount();
+    if (count === 0) return;
+
+    const confirmed = await this.confirm.open({
+      title: 'Delete tasks',
+      message: `Are you sure you want to delete ${count} selected tasks?`,
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+    });
+
+    if (!confirmed) return;
+
+    const ids = Array.from(this.selectedIds());
+
+    for (const id of ids) {
+      await this.tasksService.delete(id);
+    }
+
+    this.toast.success(`${ids.length} tasks deleted`);
+
+    this.selectedIds.set(new Set());
+    this.selectMode.set(false);
+  }
 }

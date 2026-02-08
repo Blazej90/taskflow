@@ -24,7 +24,11 @@
       <strong>{{ selectedCount() }} selected</strong>
     </div>
 
-    <div class="right"></div>
+    <div class="right">
+      <button class="btn danger" (click)="bulkDelete()" [disabled]="selectedCount() === 0">
+        Delete selected
+      </button>
+    </div>
   </header>
 </ng-template>
 
