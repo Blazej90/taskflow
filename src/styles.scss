@@ -24,3 +24,13 @@ body {
   margin: 0;
   height: 100%;
 }
+
+.btn.ghost {
+  background: transparent;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+}
+
+.btn.ghost:hover {
+  background: #f1f5f9;
+}
