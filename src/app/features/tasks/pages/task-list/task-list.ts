@@ -7,6 +7,8 @@ import { TaskStatus } from '../../task';
 import { TasksService } from '../../tasks.service';
 
 import { ToastService } from '@/shared/ui/toast/toast.service';
+import { ConfirmService } from '@/shared/ui/confirm-dialog/confirm.service';
+
 type Filter = 'all' | TaskStatus;
 
 @Component({
@@ -19,6 +21,7 @@ type Filter = 'all' | TaskStatus;
 export class TaskList {
   private tasksService = inject(TasksService);
   private toast = inject(ToastService);
+  private confirm = inject(ConfirmService);
 
   readonly tasks = this.tasksService.tasks;
   readonly statusFilter = signal<Filter>('all');
@@ -34,6 +37,17 @@ export class TaskList {
   }
 
   async removeTask(id: string) {
+    const task = this.tasksService.getById(id);
+
+    const confirmed = await this.confirm.open({
+      title: 'Delete task',
+      message: `Are you sure you want to delete "${task?.title ?? 'this task'}"?`,
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+    });
+
+    if (!confirmed) return;
+
     await this.tasksService.delete(id);
     this.toast.success('Task deleted');
   }
