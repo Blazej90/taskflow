@@ -8,14 +8,14 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { TaskCard } from '@/features/tasks/components/task-card/task-card';
-import { TaskStatus } from '../../task';
+import { Task, TaskStatus } from '../../task';
 import { TasksService } from '../../tasks.service';
 
 import { ToastService } from '@/shared/ui/toast/toast.service';
 import { ConfirmService } from '@/shared/ui/confirm-dialog/confirm.service';
 
 type Filter = 'all' | TaskStatus;
-type SortOption = 'newest' | 'oldest' | 'status';
+type SortOption = 'manual' | 'newest' | 'oldest' | 'status';
 
 @Component({
   selector: 'app-task-list',
@@ -42,10 +42,12 @@ export class TaskList {
 
   readonly statusFilter = signal<Filter>('all');
   readonly searchTerm = signal('');
-  readonly sortBy = signal<SortOption>('newest');
+  readonly sortBy = signal<SortOption>('manual');
 
   readonly selectMode = signal(false);
   readonly selectedIds = signal<Set<string>>(new Set());
+
+  readonly isManualOrder = computed(() => this.sortBy() === 'manual');
 
   toggleSelectMode() {
     const next = !this.selectMode();
@@ -80,6 +82,8 @@ export class TaskList {
     const byStatus = f === 'all' ? tasks : tasks.filter((t) => t.status === f);
 
     const bySearch = !q ? byStatus : byStatus.filter((t) => t.title.toLowerCase().includes(q));
+
+    if (sort === 'manual') return bySearch;
 
     const sorted = [...bySearch];
 
@@ -126,7 +130,6 @@ export class TaskList {
   readonly isEmpty = computed(() => this.filteredTasks().length === 0);
   readonly loading = this.tasksService.loading;
 
-  readonly isManualOrder = computed(() => this.sortBy() === 'oldest');
   async bulkDelete() {
     const count = this.selectedCount();
     if (count === 0) return;
@@ -182,10 +185,13 @@ export class TaskList {
     this.selectMode.set(false);
   }
 
-  onDrop(event: CdkDragDrop<unknown>) {
+  onDrop(event: CdkDragDrop<Task[]>) {
+    if (!this.isManualOrder()) return;
     if (event.previousIndex === event.currentIndex) return;
+
     const visible = [...this.filteredTasks()];
     moveItemInArray(visible, event.previousIndex, event.currentIndex);
+
     this.tasksService.reorder(visible.map((t) => t.id));
     this.toast.success('Order saved');
   }

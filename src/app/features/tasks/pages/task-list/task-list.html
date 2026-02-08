@@ -115,6 +115,7 @@
   <mat-form-field appearance="outline" class="sort-field">
     <mat-label>Sort</mat-label>
     <mat-select [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)">
+      <mat-option value="manual">Manual (drag)</mat-option>
       <mat-option value="newest">Newest first</mat-option>
       <mat-option value="oldest">Oldest first</mat-option>
       <mat-option value="status">Status</mat-option>
