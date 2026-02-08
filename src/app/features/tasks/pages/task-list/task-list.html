@@ -2,6 +2,27 @@
   <h1>Tasks</h1>
 
   <div class="header-actions">
+    <div class="segmented">
+      <button
+        type="button"
+        class="segmented-btn"
+        [class.active]="viewMode() === 'list'"
+        (click)="setViewMode('list')"
+        [disabled]="loading()"
+      >
+        List
+      </button>
+      <button
+        type="button"
+        class="segmented-btn"
+        [class.active]="viewMode() === 'board'"
+        (click)="setViewMode('board')"
+        [disabled]="loading()"
+      >
+        Board
+      </button>
+    </div>
+
     <button class="btn ghost" type="button" (click)="toggleSelectMode()" [disabled]="loading()">
       Select
     </button>

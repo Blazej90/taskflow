@@ -46,18 +46,21 @@ export class TaskList {
 
   readonly tasks = this.tasksService.tasks;
 
-  readonly viewMode = signal<ViewMode>('list');
-
   readonly statusFilter = signal<Filter>('all');
   readonly searchTerm = signal('');
   readonly sortBy = signal<SortOption>('manual');
+
+  readonly viewMode = signal<ViewMode>('list'); // ✅ NOWE
 
   readonly selectMode = signal(false);
   readonly selectedIds = signal<Set<string>>(new Set());
 
   readonly isManualOrder = computed(() => this.sortBy() === 'manual');
 
-  // --- selection mode ---
+  setViewMode(mode: ViewMode) {
+    this.viewMode.set(mode);
+  }
+
   toggleSelectMode() {
     const next = !this.selectMode();
     this.selectMode.set(next);
@@ -82,7 +85,6 @@ export class TaskList {
 
   readonly selectedCount = computed(() => this.selectedIds().size);
 
-  // --- list view computed ---
   readonly filteredTasks = computed(() => {
     const f = this.statusFilter();
     const q = this.searchTerm().trim().toLowerCase();
@@ -92,7 +94,6 @@ export class TaskList {
     const byStatus = f === 'all' ? tasks : tasks.filter((t) => t.status === f);
     const bySearch = !q ? byStatus : byStatus.filter((t) => t.title.toLowerCase().includes(q));
 
-    // MANUAL: zostawiamy kolejność jak w serwisie
     if (sort === 'manual') return bySearch;
 
     const sorted = [...bySearch];
@@ -108,30 +109,15 @@ export class TaskList {
     return sorted;
   });
 
-  // --- board view computed (kolumny) ---
-  readonly boardTodo = computed(() => this.applyBoardFilters('todo'));
-  readonly boardDoing = computed(() => this.applyBoardFilters('doing'));
-  readonly boardDone = computed(() => this.applyBoardFilters('done'));
-
-  private applyBoardFilters(status: TaskStatus): Task[] {
-    const q = this.searchTerm().trim().toLowerCase();
-    const f = this.statusFilter();
-    const tasks = this.tasks();
-
-    // jak user ustawi filtr statusu, to na boardzie pokazujemy tylko ten status (albo all)
-    if (f !== 'all' && f !== status) return [];
-
-    const byStatus = tasks.filter((t) => t.status === status);
-
-    if (!q) return byStatus;
-    return byStatus.filter((t) => t.title.toLowerCase().includes(q));
-  }
+  // ✅ NOWE: dane do kolumn boarda
+  readonly boardTodo = computed(() => this.filteredTasks().filter((t) => t.status === 'todo'));
+  readonly boardDoing = computed(() => this.filteredTasks().filter((t) => t.status === 'doing'));
+  readonly boardDone = computed(() => this.filteredTasks().filter((t) => t.status === 'done'));
 
   setFilter(next: Filter) {
     this.statusFilter.set(next);
   }
 
-  // --- actions ---
   async removeTask(id: string) {
     const task = this.tasksService.getById(id);
 
@@ -157,16 +143,9 @@ export class TaskList {
   readonly doingCount = computed(() => this.tasks().filter((t) => t.status === 'doing').length);
   readonly doneCount = computed(() => this.tasks().filter((t) => t.status === 'done').length);
 
-  readonly isEmpty = computed(() => {
-    if (this.viewMode() === 'board') {
-      return this.boardTodo().length + this.boardDoing().length + this.boardDone().length === 0;
-    }
-    return this.filteredTasks().length === 0;
-  });
-
+  readonly isEmpty = computed(() => this.filteredTasks().length === 0);
   readonly loading = this.tasksService.loading;
 
-  // --- bulk ---
   async bulkDelete() {
     const count = this.selectedCount();
     if (count === 0) return;
@@ -181,9 +160,7 @@ export class TaskList {
     if (!confirmed) return;
 
     const ids = Array.from(this.selectedIds());
-    for (const id of ids) {
-      await this.tasksService.delete(id);
-    }
+    for (const id of ids) await this.tasksService.delete(id);
 
     this.toast.success(`${ids.length} tasks deleted`);
     this.selectedIds.set(new Set());
@@ -219,7 +196,7 @@ export class TaskList {
     this.selectMode.set(false);
   }
 
-  // --- list drag (manual order) ---
+  // ✅ list view reorder (tylko manual)
   onDrop(event: CdkDragDrop<Task[]>) {
     if (!this.isManualOrder()) return;
     if (event.previousIndex === event.currentIndex) return;
@@ -231,38 +208,36 @@ export class TaskList {
     this.toast.success('Order saved');
   }
 
-  // --- board drag (status + kolejność w kolumnach) ---
-  async onBoardDrop(nextStatus: TaskStatus, event: CdkDragDrop<Task[]>) {
-    if (this.loading()) return;
+  // ✅ board drop: przenoszenie między kolumnami = zmiana statusu
+  async onBoardDrop(targetStatus: TaskStatus, event: CdkDragDrop<Task[]>) {
+    if (event.previousContainer === event.container && event.previousIndex === event.currentIndex)
+      return;
 
-    // tablice robocze – w cdkDropListData będziemy podawać konkretną listę z kolumny
-    const source = event.previousContainer.data;
-    const target = event.container.data;
-
+    // reorder w tej samej kolumnie (tylko UI)
     if (event.previousContainer === event.container) {
-      // reorder w tej samej kolumnie (tylko UI + zapis kolejności globalnej)
-      moveItemInArray(target, event.previousIndex, event.currentIndex);
-    } else {
-      // przeniesienie między kolumnami
-      transferArrayItem(source, target, event.previousIndex, event.currentIndex);
-
-      const moved = target[event.currentIndex];
-      if (moved && moved.status !== nextStatus) {
-        await this.tasksService.update(moved.id, {
-          title: moved.title,
-          description: moved.description ?? '',
-          status: nextStatus,
-        });
-      }
+      const next = [...event.container.data];
+      moveItemInArray(next, event.previousIndex, event.currentIndex);
+      return; // status bez zmian
     }
 
-    // zapisujemy globalną kolejność jako: todo -> doing -> done (wg widoku board)
-    const ids = [
-      ...this.boardTodo().map((t) => t.id),
-      ...this.boardDoing().map((t) => t.id),
-      ...this.boardDone().map((t) => t.id),
-    ];
+    // przerzut do innej kolumny (zmieniamy status w serwisie)
+    const movedTask = event.previousContainer.data[event.previousIndex];
+    if (!movedTask) return;
 
-    this.tasksService.reorder(ids);
+    // przeniesienie w UI (żeby było responsywne)
+    transferArrayItem(
+      event.previousContainer.data,
+      event.container.data,
+      event.previousIndex,
+      event.currentIndex,
+    );
+
+    await this.tasksService.update(movedTask.id, {
+      title: movedTask.title,
+      description: movedTask.description ?? '',
+      status: targetStatus,
+    });
+
+    this.toast.success(`Moved to ${targetStatus.toUpperCase()}`);
   }
 }
