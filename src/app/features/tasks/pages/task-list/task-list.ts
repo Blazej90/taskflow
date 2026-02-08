@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+
 import { TaskCard } from '../../components/task-card/task-card';
 import { TaskStatus } from '../../task';
 import { TasksService } from '../../tasks.service';
 
+import { ToastService } from '../../../../shared/ui/toast/toast.service';
 type Filter = 'all' | TaskStatus;
 
 @Component({
@@ -16,6 +18,7 @@ type Filter = 'all' | TaskStatus;
 })
 export class TaskList {
   private tasksService = inject(TasksService);
+  private toast = inject(ToastService);
 
   readonly tasks = this.tasksService.tasks;
   readonly statusFilter = signal<Filter>('all');
@@ -32,6 +35,7 @@ export class TaskList {
 
   async removeTask(id: string) {
     await this.tasksService.delete(id);
+    this.toast.success('Task deleted');
   }
 
   async toggleTaskStatus(id: string) {
