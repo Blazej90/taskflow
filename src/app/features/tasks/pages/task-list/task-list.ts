@@ -42,6 +42,33 @@ export class TaskList {
   readonly searchTerm = signal('');
   readonly sortBy = signal<SortOption>('newest');
 
+  readonly selectMode = signal(false);
+  readonly selectedIds = signal<Set<string>>(new Set());
+
+  toggleSelectMode() {
+    const next = !this.selectMode();
+    this.selectMode.set(next);
+
+    if (!next) {
+      this.selectedIds.set(new Set());
+    }
+  }
+
+  onSelectedChange(e: { id: string; selected: boolean }) {
+    this.selectedIds.update((set) => {
+      const next = new Set(set);
+      if (e.selected) next.add(e.id);
+      else next.delete(e.id);
+      return next;
+    });
+  }
+
+  isSelected(id: string): boolean {
+    return this.selectedIds().has(id);
+  }
+
+  readonly selectedCount = computed(() => this.selectedIds().size);
+
   readonly filteredTasks = computed(() => {
     const f = this.statusFilter();
     const q = this.searchTerm().trim().toLowerCase();

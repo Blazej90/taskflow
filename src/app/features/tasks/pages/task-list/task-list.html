@@ -10,6 +10,12 @@
   </a>
 </header>
 
+<button class="btn" type="button" (click)="toggleSelectMode()" [disabled]="loading()">
+  {{ selectMode() ? 'Cancel selection' : 'Select' }}
+</button>
+
+<span *ngIf="selectMode()" style="margin-left: 12px"> Selected: {{ selectedCount() }} </span>
+
 <div class="filters">
   <button
     type="button"
@@ -76,6 +82,9 @@
   <app-task-card
     *ngFor="let t of filteredTasks()"
     [task]="t"
+    [selectable]="selectMode()"
+    [selected]="isSelected(t.id)"
+    (selectedChange)="onSelectedChange($event)"
     (remove)="removeTask($event)"
     (toggle)="toggleTaskStatus($event)"
   ></app-task-card>

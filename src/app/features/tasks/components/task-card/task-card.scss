@@ -77,3 +77,14 @@ small {
   background: #ecfdf5;
   color: #047857;
 }
+
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.select input {
+  width: 16px;
+  height: 16px;
+}

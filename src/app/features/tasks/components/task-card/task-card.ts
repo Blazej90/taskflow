@@ -17,6 +17,11 @@ export class TaskCard {
 
   @Input({ required: true }) task!: Task;
 
+  @Input() selectable = false;
+  @Input() selected = false;
+
+  @Output() selectedChange = new EventEmitter<{ id: string; selected: boolean }>();
+
   @Output() remove = new EventEmitter<string>();
   @Output() toggle = new EventEmitter<string>();
 
@@ -30,5 +35,9 @@ export class TaskCard {
 
   get isBusy(): boolean {
     return this.isDeleting || this.isUpdating;
+  }
+
+  onToggleSelected(next: boolean) {
+    this.selectedChange.emit({ id: this.task.id, selected: next });
   }
 }
