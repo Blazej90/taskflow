@@ -1,26 +1,32 @@
 <article class="card">
   <div class="top">
-    <div class="title-row">
-      <label *ngIf="selectable" class="select">
-        <input
-          type="checkbox"
-          [checked]="selected"
-          [disabled]="isBusy"
-          (change)="onToggleSelected($any($event.target).checked)"
-        />
-      </label>
-
-      <h3>{{ task.title }}</h3>
-    </div>
+    <h3>{{ task.title }}</h3>
 
     <div class="actions">
-      <a class="btn" [routerLink]="['/tasks', task.id, 'edit']" [class.disabled]="isBusy"> Edit </a>
+      <a
+        class="btn"
+        [routerLink]="['/tasks', task.id, 'edit']"
+        [class.disabled]="isBusy"
+        (click)="$event.stopPropagation()"
+      >
+        Edit
+      </a>
 
-      <button class="btn" type="button" (click)="toggle.emit(task.id)" [disabled]="isBusy">
+      <button
+        class="btn"
+        type="button"
+        (click)="$event.stopPropagation(); toggle.emit(task.id)"
+        [disabled]="isBusy"
+      >
         {{ isUpdating ? 'Saving…' : 'Next status' }}
       </button>
 
-      <button class="btn danger" type="button" (click)="remove.emit(task.id)" [disabled]="isBusy">
+      <button
+        class="btn danger"
+        type="button"
+        (click)="$event.stopPropagation(); remove.emit(task.id)"
+        [disabled]="isBusy"
+      >
         {{ isDeleting ? 'Deleting…' : 'Delete' }}
       </button>
     </div>

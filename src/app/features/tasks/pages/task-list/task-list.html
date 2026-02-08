@@ -121,9 +121,21 @@
     </mat-select>
   </mat-form-field>
 </div>
-
-<section class="list" cdkDropList (cdkDropListDropped)="onDrop($event)">
-  <div *ngFor="let t of filteredTasks(); let i = index" cdkDrag>
+<p *ngIf="!isManualOrder()" class="hint">
+  Reordering is available only in <strong>Oldest first</strong> mode.
+</p>
+<section
+  class="list"
+  cdkDropList
+  [cdkDropListDisabled]="!isManualOrder()"
+  (cdkDropListDropped)="onDrop($event)"
+>
+  <div
+    *ngFor="let t of filteredTasks(); let i = index"
+    class="draggable-row"
+    cdkDrag
+    [cdkDragDisabled]="!isManualOrder()"
+  >
     <app-task-card
       [task]="t"
       [selectable]="selectMode()"
@@ -134,7 +146,6 @@
     ></app-task-card>
   </div>
 </section>
-
 <div *ngIf="isEmpty()" class="empty">
   <h3>No tasks here 👀</h3>
   <p>Create a new task or change the filter.</p>

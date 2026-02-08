@@ -209,3 +209,17 @@
 .cdk-drag-placeholder {
   opacity: 0.2;
 }
+
+.draggable-row {
+  cursor: grab;
+}
+
+.draggable-row:active {
+  cursor: grabbing;
+}
+
+.hint {
+  margin: 6px 0 14px;
+  font-size: 13px;
+  color: #64748b;
+}

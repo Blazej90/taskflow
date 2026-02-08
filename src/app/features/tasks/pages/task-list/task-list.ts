@@ -126,6 +126,7 @@ export class TaskList {
   readonly isEmpty = computed(() => this.filteredTasks().length === 0);
   readonly loading = this.tasksService.loading;
 
+  readonly isManualOrder = computed(() => this.sortBy() === 'oldest');
   async bulkDelete() {
     const count = this.selectedCount();
     if (count === 0) return;
