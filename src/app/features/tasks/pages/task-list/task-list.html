@@ -20,17 +20,39 @@
 <ng-template #selectionToolbar>
   <header class="selection-toolbar">
     <div class="left">
-      <button class="btn ghost" (click)="toggleSelectMode()">Cancel</button>
-      <strong>{{ selectedCount() }} selected</strong>
+      <button
+        class="icon-btn"
+        type="button"
+        (click)="toggleSelectMode()"
+        aria-label="Cancel selection"
+      >
+        ✕
+      </button>
+
+      <span class="selection-pill">
+        <strong>{{ selectedCount() }}</strong> selected
+      </span>
     </div>
 
     <div class="right">
-      <button class="btn" (click)="bulkMarkDone()" [disabled]="selectedCount() === 0">
-        Mark as done
+      <button
+        class="action-btn"
+        type="button"
+        (click)="bulkMarkDone()"
+        [disabled]="selectedCount() === 0"
+        title="Mark selected as done"
+      >
+        ✓ Done
       </button>
 
-      <button class="btn danger" (click)="bulkDelete()" [disabled]="selectedCount() === 0">
-        Delete selected
+      <button
+        class="action-btn danger"
+        type="button"
+        (click)="bulkDelete()"
+        [disabled]="selectedCount() === 0"
+        title="Delete selected"
+      >
+        🗑 Delete
       </button>
     </div>
   </header>
