@@ -25,16 +25,16 @@
     </div>
 
     <div class="right">
+      <button class="btn" (click)="bulkMarkDone()" [disabled]="selectedCount() === 0">
+        Mark as done
+      </button>
+
       <button class="btn danger" (click)="bulkDelete()" [disabled]="selectedCount() === 0">
         Delete selected
       </button>
     </div>
   </header>
 </ng-template>
-
-<button class="btn" type="button" (click)="toggleSelectMode()" [disabled]="loading()">
-  {{ selectMode() ? 'Cancel selection' : 'Select' }}
-</button>
 
 <span *ngIf="selectMode()" style="margin-left: 12px"> Selected: {{ selectedCount() }} </span>
 

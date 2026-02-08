@@ -148,4 +148,34 @@ export class TaskList {
     this.selectedIds.set(new Set());
     this.selectMode.set(false);
   }
+
+  async bulkMarkDone() {
+    const ids = Array.from(this.selectedIds());
+    if (ids.length === 0) return;
+
+    const confirmed = await this.confirm.open({
+      title: 'Update tasks',
+      message: `Mark ${ids.length} selected tasks as DONE?`,
+      confirmText: 'Update',
+      cancelText: 'Cancel',
+    });
+
+    if (!confirmed) return;
+
+    for (const id of ids) {
+      const task = this.tasksService.getById(id);
+      if (!task) continue;
+
+      await this.tasksService.update(id, {
+        title: task.title,
+        description: task.description ?? '',
+        status: 'done',
+      });
+    }
+
+    this.toast.success(`${ids.length} tasks updated`);
+
+    this.selectedIds.set(new Set());
+    this.selectMode.set(false);
+  }
 }
