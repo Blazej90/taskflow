@@ -1,3 +1,4 @@
+import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -13,11 +14,20 @@ import { ToastService } from '@/shared/ui/toast/toast.service';
 import { ConfirmService } from '@/shared/ui/confirm-dialog/confirm.service';
 
 type Filter = 'all' | TaskStatus;
+type SortOption = 'newest' | 'oldest' | 'status';
 
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, TaskCard, FormsModule, MatFormFieldModule, MatInputModule],
+  imports: [
+    CommonModule,
+    RouterLink,
+    TaskCard,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+  ],
   templateUrl: './task-list.html',
   styleUrl: './task-list.scss',
 })
@@ -27,18 +37,32 @@ export class TaskList {
   private confirm = inject(ConfirmService);
 
   readonly tasks = this.tasksService.tasks;
+
   readonly statusFilter = signal<Filter>('all');
   readonly searchTerm = signal('');
+  readonly sortBy = signal<SortOption>('newest');
 
   readonly filteredTasks = computed(() => {
     const f = this.statusFilter();
     const q = this.searchTerm().trim().toLowerCase();
+    const sort = this.sortBy();
     const tasks = this.tasks();
 
     const byStatus = f === 'all' ? tasks : tasks.filter((t) => t.status === f);
-    if (!q) return byStatus;
 
-    return byStatus.filter((t) => t.title.toLowerCase().includes(q));
+    const bySearch = !q ? byStatus : byStatus.filter((t) => t.title.toLowerCase().includes(q));
+
+    const sorted = [...bySearch];
+
+    if (sort === 'newest') return sorted.reverse();
+    if (sort === 'oldest') return sorted;
+
+    if (sort === 'status') {
+      const order = ['todo', 'doing', 'done'];
+      return sorted.sort((a, b) => order.indexOf(a.status) - order.indexOf(b.status));
+    }
+
+    return sorted;
   });
 
   setFilter(next: Filter) {
@@ -71,6 +95,5 @@ export class TaskList {
   readonly doneCount = computed(() => this.tasks().filter((t) => t.status === 'done').length);
 
   readonly isEmpty = computed(() => this.filteredTasks().length === 0);
-
   readonly loading = this.tasksService.loading;
 }

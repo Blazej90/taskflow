@@ -49,7 +49,7 @@
   </button>
 </div>
 
-<div class="search">
+<div class="search-row">
   <mat-form-field appearance="outline" class="search-field">
     <mat-label>Search</mat-label>
     <input
@@ -60,6 +60,15 @@
       [ngModel]="searchTerm()"
       (ngModelChange)="searchTerm.set($event)"
     />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="sort-field">
+    <mat-label>Sort</mat-label>
+    <mat-select [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)">
+      <mat-option value="newest">Newest first</mat-option>
+      <mat-option value="oldest">Oldest first</mat-option>
+      <mat-option value="status">Status</mat-option>
+    </mat-select>
   </mat-form-field>
 </div>
 

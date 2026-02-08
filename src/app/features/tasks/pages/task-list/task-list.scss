@@ -73,3 +73,17 @@
 .search-field {
   width: 100%;
 }
+
+.search-row {
+  display: flex;
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.search-field {
+  flex: 1;
+}
+
+.sort-field {
+  width: 200px;
+}
