@@ -3,15 +3,20 @@
     <h3>{{ task.title }}</h3>
 
     <div class="actions">
-      <a class="btn" [routerLink]="['/tasks', task.id, 'edit']">Edit</a>
+      <a class="btn" [routerLink]="['/tasks', task.id, 'edit']" [class.disabled]="isBusy"> Edit </a>
 
-      <button class="btn" type="button" (click)="toggle.emit(task.id)">Next status</button>
+      <button class="btn" type="button" (click)="toggle.emit(task.id)" [disabled]="isBusy">
+        {{ isUpdating ? 'Saving…' : 'Next status' }}
+      </button>
 
-      <button class="btn danger" type="button" (click)="remove.emit(task.id)">Delete</button>
+      <button class="btn danger" type="button" (click)="remove.emit(task.id)" [disabled]="isBusy">
+        {{ isDeleting ? 'Deleting…' : 'Delete' }}
+      </button>
     </div>
   </div>
 
   <p *ngIf="task.description">{{ task.description }}</p>
+
   <div class="footer">
     <span class="badge" [ngClass]="'badge-' + task.status">
       {{ task.status }}

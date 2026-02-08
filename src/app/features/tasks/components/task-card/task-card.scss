@@ -45,6 +45,11 @@ small {
   background: #fff0f0;
 }
 
+.btn.disabled {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
 .footer {
   margin-top: 10px;
 }
