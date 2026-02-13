@@ -1,0 +1,25 @@
+.auth {
+  max-width: 420px;
+  margin: 64px auto;
+  padding: 24px;
+  display: grid;
+  gap: 16px;
+}
+
+.subtitle {
+  opacity: 0.8;
+  margin-top: -8px;
+}
+
+.divider {
+  text-align: center;
+  opacity: 0.7;
+}
+
+.full {
+  width: 100%;
+}
+
+.error {
+  color: #ff5252;
+}

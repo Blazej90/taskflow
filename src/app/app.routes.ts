@@ -1,6 +1,9 @@
 import { Routes } from '@angular/router';
+import { AuthPage } from './features/auth/pages/auth-page/auth-page';
 
 export const routes: Routes = [
+  { path: 'auth', component: AuthPage },
+
   {
     path: 'tasks',
     children: [
@@ -21,5 +24,8 @@ export const routes: Routes = [
       },
     ],
   },
-  { path: '', redirectTo: 'tasks', pathMatch: 'full' },
+
+  { path: '', redirectTo: 'auth', pathMatch: 'full' },
+
+  { path: '**', redirectTo: 'auth' },
 ];
