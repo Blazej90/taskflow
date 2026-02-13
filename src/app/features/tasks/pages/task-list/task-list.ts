@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import {
   DragDropModule,
   CdkDragDrop,
@@ -18,6 +19,8 @@ import { TasksService } from '../../tasks.service';
 
 import { ToastService } from '@/shared/ui/toast/toast.service';
 import { ConfirmService } from '@/shared/ui/confirm-dialog/confirm.service';
+
+import { AuthService } from '@/features/auth/auth.service';
 
 type Filter = 'all' | TaskStatus;
 type SortOption = 'manual' | 'newest' | 'oldest' | 'status';
@@ -50,13 +53,20 @@ export class TaskList {
   readonly searchTerm = signal('');
   readonly sortBy = signal<SortOption>('manual');
 
-  readonly viewMode = signal<ViewMode>('list'); // ✅ NOWE
+  readonly viewMode = signal<ViewMode>('list');
 
   readonly selectMode = signal(false);
   readonly selectedIds = signal<Set<string>>(new Set());
 
   readonly isManualOrder = computed(() => this.sortBy() === 'manual');
 
+  private readonly router = inject(Router);
+  readonly auth = inject(AuthService);
+
+  async logout() {
+    await this.auth.logout();
+    await this.router.navigateByUrl('/auth');
+  }
   setViewMode(mode: ViewMode) {
     this.viewMode.set(mode);
   }
@@ -109,7 +119,6 @@ export class TaskList {
     return sorted;
   });
 
-  // ✅ NOWE: dane do kolumn boarda
   readonly boardTodo = computed(() => this.filteredTasks().filter((t) => t.status === 'todo'));
   readonly boardDoing = computed(() => this.filteredTasks().filter((t) => t.status === 'doing'));
   readonly boardDone = computed(() => this.filteredTasks().filter((t) => t.status === 'done'));
@@ -196,7 +205,6 @@ export class TaskList {
     this.selectMode.set(false);
   }
 
-  // ✅ list view reorder (tylko manual)
   onDrop(event: CdkDragDrop<Task[]>) {
     if (!this.isManualOrder()) return;
     if (event.previousIndex === event.currentIndex) return;
@@ -208,23 +216,19 @@ export class TaskList {
     this.toast.success('Order saved');
   }
 
-  // ✅ board drop: przenoszenie między kolumnami = zmiana statusu
   async onBoardDrop(targetStatus: TaskStatus, event: CdkDragDrop<Task[]>) {
     if (event.previousContainer === event.container && event.previousIndex === event.currentIndex)
       return;
 
-    // reorder w tej samej kolumnie (tylko UI)
     if (event.previousContainer === event.container) {
       const next = [...event.container.data];
       moveItemInArray(next, event.previousIndex, event.currentIndex);
-      return; // status bez zmian
+      return;
     }
 
-    // przerzut do innej kolumny (zmieniamy status w serwisie)
     const movedTask = event.previousContainer.data[event.previousIndex];
     if (!movedTask) return;
 
-    // przeniesienie w UI (żeby było responsywne)
     transferArrayItem(
       event.previousContainer.data,
       event.container.data,

@@ -1,3 +1,16 @@
+<div class="topbar">
+  <div class="user">
+    <span *ngIf="auth.user() as u"
+      >Signed in as <b>{{ u.email }}</b></span
+    >
+    <span *ngIf="!auth.user()">Not signed in</span>
+  </div>
+
+  <button mat-stroked-button (click)="logout()" [disabled]="auth.loading() || !auth.user()">
+    Logout
+  </button>
+</div>
+
 <header class="header" *ngIf="!selectMode(); else selectionToolbar">
   <h1>Tasks</h1>
 

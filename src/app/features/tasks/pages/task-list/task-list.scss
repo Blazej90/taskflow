@@ -354,3 +354,14 @@
 .col-list.cdk-drop-list-dragging {
   background: #f8fafc;
 }
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.user {
+  opacity: 0.9;
+}

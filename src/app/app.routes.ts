@@ -1,3 +1,4 @@
+import { authGuard } from './features/auth/auth.guard';
 import { Routes } from '@angular/router';
 import { AuthPage } from './features/auth/pages/auth-page/auth-page';
 
@@ -6,6 +7,7 @@ export const routes: Routes = [
 
   {
     path: 'tasks',
+    canActivate: [authGuard],
     children: [
       {
         path: '',
