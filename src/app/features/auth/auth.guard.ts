@@ -8,10 +8,8 @@ export const authGuard: CanActivateFn = () => {
 
   const user = auth.user();
 
-  // jeśli user zalogowany → wpuszczamy
   if (user) return true;
 
-  // jeśli nie → redirect do /auth
   router.navigateByUrl('/auth');
   return false;
 };
