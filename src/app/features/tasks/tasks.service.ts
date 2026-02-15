@@ -2,16 +2,14 @@ import { Inject, Injectable, computed, signal } from '@angular/core';
 import { Task } from './task';
 import { TASKS_REPOSITORY, TasksRepository } from './task.repository';
 
-const SEED_TASKS: Task[] = [
-  { id: '1', title: 'Zrobić layout TaskFlow', status: 'todo' },
-  { id: '2', title: 'Dodać TaskCard', description: 'Input + template', status: 'doing' },
-  { id: '3', title: 'Nauczyć się *ngFor', status: 'done' },
-];
-
 @Injectable({ providedIn: 'root' })
 export class TasksService {
   private _tasks = signal<Task[]>([]);
   readonly tasks = this._tasks.asReadonly();
+
+  // loading początkowy (np. Firestore)
+  private _bootLoading = signal(true);
+  readonly bootLoading = this._bootLoading.asReadonly();
 
   readonly creating = signal(false);
   private _updatingIds = signal<Set<string>>(new Set());
@@ -20,14 +18,18 @@ export class TasksService {
   readonly updatingIds = this._updatingIds.asReadonly();
   readonly deletingIds = this._deletingIds.asReadonly();
 
+  // globalny loading: init + operacje CRUD
   readonly loading = computed(() => {
-    return this.creating() || this._updatingIds().size > 0 || this._deletingIds().size > 0;
+    return (
+      this._bootLoading() ||
+      this.creating() ||
+      this._updatingIds().size > 0 ||
+      this._deletingIds().size > 0
+    );
   });
 
   constructor(@Inject(TASKS_REPOSITORY) private repo: TasksRepository) {
-    const initial = this.repo.load() ?? SEED_TASKS;
-    this._tasks.set(initial);
-    this.repo.save(initial);
+    this.hydrateFromRepo();
   }
 
   getAll(): Task[] {
@@ -115,10 +117,8 @@ export class TasksService {
   reorder(orderedIds: string[]) {
     const current = this._tasks();
 
-    // mapka dla szybkiego lookup
     const byId = new Map(current.map((t) => [t.id, t] as const));
 
-    // nowa kolejność dla elementów które znamy
     const next: Task[] = [];
     for (const id of orderedIds) {
       const task = byId.get(id);
@@ -126,7 +126,6 @@ export class TasksService {
       byId.delete(id);
     }
 
-    // reszta (nie na liście) zostaje na końcu w dotychczasowej kolejności
     for (const t of current) {
       if (byId.has(t.id)) next.push(t);
     }
@@ -134,6 +133,43 @@ export class TasksService {
     this._tasks.set(next);
     this.repo.save(next);
   }
+
+  // --- init / hydration ---
+
+  private hydrateFromRepo() {
+    const initial = this.repo.load();
+
+    // Repo jeszcze nie gotowe (np. Firestore ładuje async do cache)
+    if (initial === null) {
+      this._tasks.set([]);
+      this._bootLoading.set(true);
+
+      // retry co 200ms, max ~4s (20 prób)
+      let tries = 0;
+      const timer = setInterval(() => {
+        tries++;
+        const next = this.repo.load();
+
+        if (next !== null) {
+          this._tasks.set(next);
+          this._bootLoading.set(false);
+          clearInterval(timer);
+        } else if (tries >= 20) {
+          // nie wieszamy loadingu w nieskończoność
+          this._bootLoading.set(false);
+          clearInterval(timer);
+        }
+      }, 200);
+
+      return;
+    }
+
+    // Repo gotowe od razu (np. local/in-memory)
+    this._tasks.set(initial);
+    this._bootLoading.set(false);
+  }
+
+  // --- helpers ---
 
   private addId(store: typeof this._updatingIds, id: string) {
     store.update((set) => {
