@@ -7,7 +7,6 @@ export class TasksService {
   private _tasks = signal<Task[]>([]);
   readonly tasks = this._tasks.asReadonly();
 
-  // loading początkowy (np. Firestore)
   private _bootLoading = signal(true);
   readonly bootLoading = this._bootLoading.asReadonly();
 
@@ -18,7 +17,6 @@ export class TasksService {
   readonly updatingIds = this._updatingIds.asReadonly();
   readonly deletingIds = this._deletingIds.asReadonly();
 
-  // globalny loading: init + operacje CRUD
   readonly loading = computed(() => {
     return (
       this._bootLoading() ||
@@ -58,7 +56,12 @@ export class TasksService {
       const next = [...this._tasks(), newTask];
 
       this._tasks.set(next);
-      this.repo.save(next);
+
+      if (this.repo.create) {
+        await this.repo.create(newTask);
+      } else {
+        this.repo.save(next);
+      }
     } finally {
       this.creating.set(false);
     }
@@ -78,7 +81,14 @@ export class TasksService {
       next[index] = { id, ...updated };
 
       this._tasks.set(next);
-      this.repo.save(next);
+
+      const updatedTask = next[index];
+
+      if (this.repo.update) {
+        await this.repo.update(updatedTask);
+      } else {
+        this.repo.save(next);
+      }
     } finally {
       this.removeId(this._updatingIds, id);
     }
@@ -91,8 +101,16 @@ export class TasksService {
       await this.simulate();
 
       const next = this._tasks().filter((t) => t.id !== id);
+
+      // 1️⃣ optimistic update UI
       this._tasks.set(next);
-      this.repo.save(next);
+
+      // 2️⃣ zapis do repo (CRUD jeśli jest)
+      if (this.repo.delete) {
+        await this.repo.delete(id); // 🔥 Firestore CRUD
+      } else {
+        this.repo.save(next); // fallback
+      }
     } finally {
       this.removeId(this._deletingIds, id);
     }
@@ -134,17 +152,13 @@ export class TasksService {
     this.repo.save(next);
   }
 
-  // --- init / hydration ---
-
   private hydrateFromRepo() {
     const initial = this.repo.load();
 
-    // Repo jeszcze nie gotowe (np. Firestore ładuje async do cache)
     if (initial === null) {
       this._tasks.set([]);
       this._bootLoading.set(true);
 
-      // retry co 200ms, max ~4s (20 prób)
       let tries = 0;
       const timer = setInterval(() => {
         tries++;
@@ -155,7 +169,6 @@ export class TasksService {
           this._bootLoading.set(false);
           clearInterval(timer);
         } else if (tries >= 20) {
-          // nie wieszamy loadingu w nieskończoność
           this._bootLoading.set(false);
           clearInterval(timer);
         }
@@ -164,12 +177,9 @@ export class TasksService {
       return;
     }
 
-    // Repo gotowe od razu (np. local/in-memory)
     this._tasks.set(initial);
     this._bootLoading.set(false);
   }
-
-  // --- helpers ---
 
   private addId(store: typeof this._updatingIds, id: string) {
     store.update((set) => {
