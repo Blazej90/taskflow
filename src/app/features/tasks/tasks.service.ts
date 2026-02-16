@@ -102,14 +102,12 @@ export class TasksService {
 
       const next = this._tasks().filter((t) => t.id !== id);
 
-      // 1️⃣ optimistic update UI
       this._tasks.set(next);
 
-      // 2️⃣ zapis do repo (CRUD jeśli jest)
       if (this.repo.delete) {
-        await this.repo.delete(id); // 🔥 Firestore CRUD
+        await this.repo.delete(id);
       } else {
-        this.repo.save(next); // fallback
+        this.repo.save(next);
       }
     } finally {
       this.removeId(this._deletingIds, id);
@@ -148,8 +146,15 @@ export class TasksService {
       if (byId.has(t.id)) next.push(t);
     }
 
-    this._tasks.set(next);
-    this.repo.save(next);
+    const withOrder = next.map((t, i) => ({ ...t, order: i }));
+
+    this._tasks.set(withOrder);
+
+    if (this.repo.reorder) {
+      void this.repo.reorder(withOrder);
+    } else {
+      this.repo.save(withOrder);
+    }
   }
 
   private hydrateFromRepo() {
