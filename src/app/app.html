@@ -1,4 +1,4 @@
-<div class="shell">
+<!-- <div class="shell">
   <header class="topbar">
     <div class="topbar-inner">
       <a class="brand" routerLink="/tasks">TaskFlow</a>
@@ -13,4 +13,38 @@
   <main class="container">
     <router-outlet></router-outlet>
   </main>
+</div> -->
+
+<div class="app">
+  <header class="app-header">
+    <div class="app-header-container">
+      <a class="brand" routerLink="/tasks">
+        <span class="brand-logo">◆</span>
+        <span class="brand-name">TaskFlow</span>
+      </a>
+
+      <nav class="main-nav">
+        <a class="nav-link" routerLink="/tasks" routerLinkActive="active">
+          <span class="nav-link-icon">📋</span>
+          <span class="nav-link-text">Tasks</span>
+        </a>
+        <a class="nav-link primary" routerLink="/tasks/new" routerLinkActive="active">
+          <span class="nav-link-icon">+</span>
+          <span class="nav-link-text">New</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <div class="app-main-container">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+
+  <footer class="app-footer">
+    <div class="app-footer-container">
+      <p class="app-footer-text">TaskFlow — Stay organized</p>
+    </div>
+  </footer>
 </div>
