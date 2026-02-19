@@ -1,90 +1,229 @@
+// ==========================================
+// TASK CARD - Fixed
+// ==========================================
+
 .card {
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: white;
+  border: 1px solid #e2e8f0;
   border-radius: 12px;
-  padding: 12px 14px;
-  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  @media (min-width: 768px) {
+    padding: 20px;
+    border-radius: 16px;
+  }
 }
 
-h3 {
-  margin: 0 0 6px;
-  font-size: 16px;
-}
-
-p {
-  margin: 0 0 8px;
-  opacity: 0.8;
-}
-
-small {
-  opacity: 0.7;
-}
+// ==========================================
+// TOP - Tytuł i przyciski
+// ==========================================
 
 .top {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
   gap: 12px;
+
+  @media (min-width: 640px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
 }
+
+h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.4;
+
+  @media (min-width: 768px) {
+    font-size: 18px;
+  }
+}
+
+// ==========================================
+// ACTIONS - Fixed!
+// ==========================================
 
 .actions {
   display: flex;
-  gap: 6px;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .btn {
-  padding: 4px 8px;
-  border-radius: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 0 16px;
   background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  color: #0f172a;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
   cursor: pointer;
-  font-size: 12px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  &:hover:not(:disabled) {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  // Edit - szary
+  &:first-child {
+    background: #f1f5f9;
+    border-color: #e2e8f0;
+
+    &:hover:not(:disabled) {
+      background: #e2e8f0;
+    }
+  }
+
+  // Next status - kolorowy w zależności od kontekstu (dodaj klasę w HTML)
+  &.next-todo {
+    background: #fef3c7;
+    border-color: #fcd34d;
+    color: #92400e;
+
+    &:hover:not(:disabled) {
+      background: #fde68a;
+    }
+  }
+
+  &.next-doing {
+    background: #dbeafe;
+    border-color: #93c5fd;
+    color: #1e40af;
+
+    &:hover:not(:disabled) {
+      background: #bfdbfe;
+    }
+  }
+
+  &.next-done {
+    background: #d1fae5;
+    border-color: #6ee7b7;
+    color: #065f46;
+
+    &:hover:not(:disabled) {
+      background: #a7f3d0;
+    }
+  }
+
+  // Delete - czerwony
+  &.danger {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #dc2626;
+
+    &:hover:not(:disabled) {
+      background: #fee2e2;
+      border-color: #f87171;
+    }
+  }
 }
 
-.btn.danger {
-  border-color: #ffb3b3;
-  background: #fff0f0;
+// ==========================================
+// DESCRIPTION
+// ==========================================
+
+p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #64748b;
+
+  // Jeśli nie ma opisu, nie zajmuje miejsca
+  &:empty {
+    display: none;
+  }
 }
 
-.btn.disabled {
-  pointer-events: none;
-  opacity: 0.6;
-}
+// ==========================================
+// FOOTER & BADGE
+// ==========================================
 
 .footer {
-  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid #e2e8f0;
 }
 
 .badge {
-  padding: 4px 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
   border-radius: 999px;
   font-size: 12px;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+
+  &::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
 }
 
-/* status colors */
+// Status colors
 .badge-todo {
-  background: #eef2ff;
-  color: #4338ca;
+  background: #fef3c7;
+  color: #92400e;
+
+  &::before {
+    background: #f59e0b;
+  }
 }
 
 .badge-doing {
-  background: #fff7ed;
-  color: #c2410c;
+  background: #dbeafe;
+  color: #1e40af;
+
+  &::before {
+    background: #3b82f6;
+  }
 }
 
 .badge-done {
-  background: #ecfdf5;
-  color: #047857;
+  background: #d1fae5;
+  color: #065f46;
+
+  &::before {
+    background: #10b981;
+  }
 }
+
+// ==========================================
+// SELECT MODE
+// ==========================================
 
 .title-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .select input {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  cursor: pointer;
 }

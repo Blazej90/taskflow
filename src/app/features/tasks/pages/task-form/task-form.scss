@@ -1,5 +1,5 @@
 // ==========================================
-// TASK FORM - Gentle Validation
+// TASK FORM
 // ==========================================
 
 .page {
@@ -101,7 +101,6 @@
     align-items: center;
     gap: 6px;
 
-    // Gwiazdka - szara, nie czerwona (mniej agresywna)
     &.required::after {
       content: '*';
       color: #94a3b8;
@@ -109,7 +108,6 @@
     }
   }
 
-  // Błąd walidacji - subtelny, pod inputem
   small {
     display: flex;
     align-items: center;
@@ -130,7 +128,7 @@
 }
 
 // ==========================================
-// INPUTS - No Red Border!
+// INPUTS
 // ==========================================
 
 input[type='text'],
@@ -163,12 +161,10 @@ select {
   }
 }
 
-// Input tekstowy
 input[type='text'] {
   height: 48px;
 }
 
-// Textarea
 textarea {
   min-height: 100px;
   max-height: 200px;
@@ -177,7 +173,6 @@ textarea {
   line-height: 1.5;
 }
 
-// Select
 select {
   height: 48px;
   cursor: pointer;
