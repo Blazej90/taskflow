@@ -6,8 +6,20 @@
     <span *ngIf="!auth.user()">Not signed in</span>
   </div>
 
-  <button mat-stroked-button (click)="logout()" [disabled]="auth.loading() || !auth.user()">
-    Logout
+  <button class="btn logout-btn" (click)="logout()" [disabled]="auth.loading() || !auth.user()">
+    <span>Logout</span>
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+    >
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+      <polyline points="16 17 21 12 16 7"></polyline>
+      <line x1="21" y1="12" x2="9" y2="12"></line>
+    </svg>
   </button>
 </div>
 
@@ -101,8 +113,9 @@
     [class.active]="statusFilter() === 'all'"
     [disabled]="loading()"
     (click)="setFilter('all')"
+    [attr.data-count]="totalCount()"
   >
-    All ({{ totalCount() }})
+    All
   </button>
   <button
     type="button"
@@ -110,8 +123,9 @@
     [class.active]="statusFilter() === 'todo'"
     [disabled]="loading()"
     (click)="setFilter('todo')"
+    [attr.data-count]="todoCount()"
   >
-    Todo ({{ todoCount() }})
+    Todo
   </button>
   <button
     type="button"
@@ -119,8 +133,9 @@
     [class.active]="statusFilter() === 'doing'"
     [disabled]="loading()"
     (click)="setFilter('doing')"
+    [attr.data-count]="doingCount()"
   >
-    Doing ({{ doingCount() }})
+    Doing
   </button>
   <button
     type="button"
@@ -128,33 +143,60 @@
     [class.active]="statusFilter() === 'done'"
     [disabled]="loading()"
     (click)="setFilter('done')"
+    [attr.data-count]="doneCount()"
   >
-    Done ({{ doneCount() }})
+    Done
   </button>
 </div>
 
 <div class="search-row">
-  <mat-form-field appearance="outline" class="search-field">
-    <mat-label>Search</mat-label>
-    <input
-      matInput
-      type="text"
-      placeholder="Search tasks by title..."
-      [disabled]="loading()"
-      [ngModel]="searchTerm()"
-      (ngModelChange)="searchTerm.set($event)"
-    />
-  </mat-form-field>
+  <div class="search-field">
+    <label>Search</label>
+    <div class="input-wrapper">
+      <svg
+        class="search-icon"
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+      <input
+        type="text"
+        placeholder="Search tasks by title..."
+        [disabled]="loading()"
+        [ngModel]="searchTerm()"
+        (ngModelChange)="searchTerm.set($event)"
+      />
+    </div>
+  </div>
 
-  <mat-form-field appearance="outline" class="sort-field">
-    <mat-label>Sort</mat-label>
-    <mat-select [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)">
-      <mat-option value="manual">Manual (drag)</mat-option>
-      <mat-option value="newest">Newest first</mat-option>
-      <mat-option value="oldest">Oldest first</mat-option>
-      <mat-option value="status">Status</mat-option>
-    </mat-select>
-  </mat-form-field>
+  <div class="sort-field">
+    <label>Sort</label>
+    <div class="select-wrapper">
+      <select [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)">
+        <option value="manual">Manual (drag)</option>
+        <option value="newest">Newest first</option>
+        <option value="oldest">Oldest first</option>
+        <option value="status">Status</option>
+      </select>
+      <svg
+        class="select-arrow"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </div>
+  </div>
 </div>
 
 <div class="view-switch">
