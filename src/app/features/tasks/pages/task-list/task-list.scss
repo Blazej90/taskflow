@@ -1,376 +1,3 @@
-// .header {
-//   display: flex;
-//   align-items: baseline;
-//   justify-content: space-between;
-//   gap: 12px;
-// }
-
-// .subtitle {
-//   margin: 6px 0 0;
-//   opacity: 0.7;
-// }
-
-// .list {
-//   display: grid;
-//   gap: 12px;
-// }
-
-// .filters {
-//   display: flex;
-//   gap: 8px;
-//   flex-wrap: wrap;
-//   margin: 12px 0 16px;
-// }
-
-// .chip {
-//   padding: 8px 10px;
-//   border-radius: 999px;
-//   border: 1px solid rgba(0, 0, 0, 0.15);
-//   background: white;
-//   cursor: pointer;
-// }
-
-// .chip.active {
-//   background: rgba(0, 0, 0, 0.08);
-// }
-
-// .empty {
-//   margin-top: 16px;
-//   padding: 18px;
-//   border: 1px dashed rgba(0, 0, 0, 0.2);
-//   border-radius: 14px;
-//   background: rgba(255, 255, 255, 0.7);
-// }
-
-// .empty h3 {
-//   margin: 0 0 6px;
-// }
-
-// .empty p {
-//   margin: 0 0 12px;
-//   opacity: 0.75;
-// }
-
-// .loading {
-//   margin: 8px 0 12px;
-//   opacity: 0.7;
-// }
-
-// .btn.disabled {
-//   pointer-events: none;
-//   opacity: 0.6;
-// }
-
-// .chip:disabled {
-//   opacity: 0.6;
-//   cursor: not-allowed;
-// }
-
-// .search {
-//   margin: 12px 0;
-// }
-
-// .search-field {
-//   width: 100%;
-// }
-
-// .search-row {
-//   display: flex;
-//   gap: 12px;
-//   margin: 12px 0;
-// }
-
-// .search-field {
-//   flex: 1;
-// }
-
-// .sort-field {
-//   width: 200px;
-// }
-
-// .header-actions {
-//   display: flex;
-//   gap: 10px;
-// }
-
-// .selection-toolbar {
-//   display: flex;
-//   justify-content: space-between;
-//   align-items: center;
-
-//   padding: 10px 12px;
-//   border-radius: 14px;
-
-//   background: #ffffff;
-//   border: 1px solid #e2e8f0;
-//   box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
-
-//   margin-bottom: 16px;
-// }
-
-// .selection-toolbar .left {
-//   display: flex;
-//   align-items: center;
-//   gap: 10px;
-// }
-
-// .selection-toolbar .right {
-//   display: flex;
-//   align-items: center;
-//   gap: 10px;
-// }
-
-// .selection-pill {
-//   display: inline-flex;
-//   align-items: center;
-//   gap: 6px;
-
-//   padding: 6px 10px;
-//   border-radius: 999px;
-
-//   background: #f1f5f9;
-//   color: #0f172a;
-//   font-size: 14px;
-// }
-
-// .icon-btn {
-//   width: 34px;
-//   height: 34px;
-//   border-radius: 10px;
-
-//   border: 1px solid #e2e8f0;
-//   background: #fff;
-//   cursor: pointer;
-
-//   display: inline-flex;
-//   align-items: center;
-//   justify-content: center;
-
-//   transition:
-//     background 120ms ease,
-//     transform 120ms ease;
-// }
-
-// .icon-btn:hover {
-//   background: #f8fafc;
-// }
-
-// .icon-btn:active {
-//   transform: scale(0.98);
-// }
-
-// .action-btn {
-//   height: 34px;
-//   padding: 0 12px;
-//   border-radius: 10px;
-
-//   border: 1px solid #e2e8f0;
-//   background: #fff;
-//   color: #0f172a;
-
-//   cursor: pointer;
-//   font-weight: 600;
-//   font-size: 14px;
-
-//   transition:
-//     background 120ms ease,
-//     transform 120ms ease;
-// }
-
-// .action-btn:hover {
-//   background: #f8fafc;
-// }
-
-// .action-btn:active {
-//   transform: scale(0.98);
-// }
-
-// .action-btn:disabled,
-// .icon-btn:disabled {
-//   opacity: 0.55;
-//   cursor: not-allowed;
-// }
-
-// .action-btn.danger {
-//   border-color: #fecaca;
-//   color: #b91c1c;
-//   background: #fff5f5;
-// }
-
-// .action-btn.danger:hover {
-//   background: #ffecec;
-// }
-
-// .cdk-drag-preview {
-//   border-radius: 14px;
-//   box-shadow: 0 10px 26px rgba(15, 23, 42, 0.18);
-// }
-
-// .cdk-drag-placeholder {
-//   opacity: 0.2;
-// }
-
-// .draggable-row {
-//   cursor: grab;
-// }
-
-// .draggable-row:active {
-//   cursor: grabbing;
-// }
-
-// .hint {
-//   margin: 6px 0 14px;
-//   font-size: 13px;
-//   color: #64748b;
-// }
-
-// .view-switch {
-//   display: flex;
-//   gap: 10px;
-//   margin: 10px 0 12px;
-// }
-
-// .view-switch .btn.ghost.active {
-//   background: #0f172a;
-//   border-color: #0f172a;
-//   color: white;
-// }
-
-// .board {
-//   display: grid;
-//   grid-template-columns: repeat(3, minmax(0, 1fr));
-//   gap: 14px;
-// }
-
-// .col {
-//   border: 1px solid #e2e8f0;
-//   border-radius: 14px;
-//   background: #fff;
-//   box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
-//   overflow: hidden;
-// }
-
-// .col-title {
-//   padding: 12px 12px;
-//   font-weight: 800;
-//   border-bottom: 1px solid #e2e8f0;
-//   background: #f8fafc;
-// }
-
-// .col-list {
-//   padding: 12px;
-//   min-height: 140px;
-//   display: flex;
-//   flex-direction: column;
-//   gap: 12px;
-// }
-
-// .cdk-drag-preview {
-//   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
-//   border-radius: 14px;
-// }
-
-// .cdk-drag-placeholder {
-//   opacity: 0.25;
-// }
-
-// .segmented {
-//   display: inline-flex;
-//   border: 1px solid #e2e8f0;
-//   background: #ffffff;
-//   border-radius: 12px;
-//   padding: 3px;
-//   box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
-// }
-
-// .segmented-btn {
-//   height: 34px;
-//   padding: 0 12px;
-//   border-radius: 10px;
-//   border: 0;
-//   background: transparent;
-//   cursor: pointer;
-//   font-weight: 700;
-//   color: #334155;
-//   transition:
-//     background 120ms ease,
-//     transform 120ms ease;
-// }
-
-// .segmented-btn:hover {
-//   background: #f1f5f9;
-// }
-
-// .segmented-btn.active {
-//   background: #0f172a;
-//   color: #fff;
-// }
-
-// .segmented-btn:disabled {
-//   opacity: 0.6;
-//   cursor: not-allowed;
-// }
-
-// .board {
-//   display: grid;
-//   grid-template-columns: repeat(3, minmax(0, 1fr));
-//   gap: 14px;
-//   margin-top: 12px;
-// }
-
-// .col {
-//   border: 1px solid #e2e8f0;
-//   border-radius: 16px;
-//   background: #fff;
-//   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
-//   overflow: hidden;
-// }
-
-// .col-title {
-//   padding: 12px 14px;
-//   font-weight: 800;
-//   color: #0f172a;
-//   background: #f8fafc;
-//   border-bottom: 1px solid #e2e8f0;
-// }
-
-// .col-list {
-//   padding: 12px;
-//   min-height: 220px;
-//   display: flex;
-//   flex-direction: column;
-//   gap: 10px;
-// }
-
-// .draggable-row.cdk-drag-preview {
-//   box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
-//   border-radius: 16px;
-// }
-
-// .draggable-row.cdk-drag-placeholder {
-//   opacity: 0.35;
-// }
-
-// .col-list.cdk-drop-list-dragging {
-//   background: #f8fafc;
-// }
-
-// .topbar {
-//   display: flex;
-//   align-items: center;
-//   justify-content: space-between;
-//   gap: 12px;
-//   margin-bottom: 16px;
-// }
-// .user {
-//   opacity: 0.9;
-// }
-
-// ==========================================
-// TASK LIST - MODERN DESIGN SYSTEM
-// ==========================================
-
-// CSS Custom Properties dla łatwej konfiguracji
 :root {
   --tl-space-xs: 4px;
   --tl-space-sm: 8px;
@@ -573,7 +200,6 @@
     }
   }
 
-  // Tylko New task jest wyróżniony
   &[routerLink] {
     background: #0f172a;
     color: white;
@@ -706,7 +332,6 @@
   border: 1px solid #e2e8f0;
   border-radius: 12px;
 
-  // Tablet i większe
   @media (min-width: 768px) {
     gap: 10px;
     padding: 16px;
@@ -714,7 +339,6 @@
     margin-bottom: 24px;
   }
 
-  // Laptop i większe - label "Filter by status"
   @media (min-width: 1024px) {
     position: relative;
     padding-top: 20px;
@@ -754,7 +378,6 @@
   min-width: calc(50% - 4px);
   justify-content: center;
 
-  // Tablet - większe, nie rozciągają się na całą szerokość
   @media (min-width: 768px) {
     flex: 0 1 auto;
     min-width: auto;
@@ -762,13 +385,11 @@
     border-radius: 12px;
   }
 
-  // Laptop - pełne style
   @media (min-width: 1024px) {
     padding: 10px 18px;
     gap: 8px;
   }
 
-  // Status indicator (kropka)
   &::before {
     content: '';
     width: 6px;
@@ -785,7 +406,6 @@
     }
   }
 
-  // Kolory dla poszczególnych statusów
   &:nth-child(1)::before {
     background: #64748b;
   }
@@ -814,7 +434,6 @@
     }
   }
 
-  // Active state
   &.active {
     color: white;
     font-weight: 600;
@@ -854,7 +473,6 @@
     box-shadow: none;
   }
 
-  // Licznik
   &::after {
     content: attr(data-count);
     font-size: 12px;
@@ -877,7 +495,6 @@
   }
 }
 
-// Landscape mobile - 4 kolumny obok siebie
 @media (max-height: 500px) and (orientation: landscape) {
   .filters {
     flex-wrap: nowrap;
@@ -901,7 +518,6 @@
   gap: 16px;
   margin-bottom: 24px;
 
-  // Tablet i większe - obok siebie
   @media (min-width: 768px) {
     flex-direction: row;
     align-items: flex-end;
@@ -953,15 +569,15 @@
 
     input {
       width: 100%;
-      height: 56px; // Większy dla łatwiejszego klikania na mobile
+      height: 56px;
       padding: 0 16px 0 52px;
       background: white;
       border: 2px solid #e2e8f0;
-      border-radius: 16px; // Bardziej zaokrąglone na mobile
-      font-size: 16px; // Minimum 16px żeby iOS nie zoomował
+      border-radius: 16px;
+      font-size: 16px;
       color: #0f172a;
       transition: all 0.2s ease;
-      -webkit-appearance: none; // Usuwa domyślne style iOS
+      -webkit-appearance: none;
       appearance: none;
 
       &::placeholder {
@@ -984,7 +600,6 @@
         background: #f1f5f9;
       }
 
-      // Mniejsze na tablet/desktop
       @media (min-width: 768px) {
         height: 48px;
         padding: 0 16px 0 44px;
@@ -997,7 +612,6 @@
       color: #3b82f6;
     }
 
-    // Clear button (opcjonalnie)
     .clear-btn {
       position: absolute;
       right: 12px;
@@ -1054,12 +668,12 @@
 
     select {
       width: 100%;
-      height: 56px; // Większy cel dotykowy
+      height: 56px;
       padding: 0 48px 0 16px;
       background: white;
       border: 2px solid #e2e8f0;
       border-radius: 16px;
-      font-size: 16px; // Zapobiega zoom na iOS
+      font-size: 16px;
       color: #0f172a;
       cursor: pointer;
       appearance: none;
@@ -1082,7 +696,6 @@
         background: #f1f5f9;
       }
 
-      // Mniejsze na tablet/desktop
       @media (min-width: 768px) {
         height: 48px;
         padding: 0 40px 0 16px;
@@ -1122,7 +735,6 @@
   }
 }
 
-// Dodatkowe style dla landscape mobile
 @media (max-height: 500px) and (orientation: landscape) {
   .search-row {
     flex-direction: row;
@@ -1148,7 +760,7 @@
 // ==========================================
 
 .view-switch {
-  display: none; // Ukryte, używamy segmented zamiast tego
+  display: none;
 }
 
 .hint {
@@ -1190,12 +802,10 @@
   gap: var(--tl-space-lg);
   margin-top: var(--tl-space-md);
 
-  // TABLET: 2 kolumny
   @media (max-width: 1024px) {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  // MOBILE: Horizontal scroll z fixed width columns
   @media (max-width: 768px) {
     display: flex;
     gap: var(--tl-space-md);
@@ -1204,9 +814,8 @@
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: var(--tl-space-md); // Miejsce na scrollbar
+    padding-bottom: var(--tl-space-md);
 
-    // Ukrycie scrollbar'a dla czystego look'u
     scrollbar-width: none;
     -ms-overflow-style: none;
     &::-webkit-scrollbar {
@@ -1229,26 +838,20 @@
     box-shadow: var(--tl-shadow-md);
   }
 
-  // Mobile: Fixed width dla swipe'owania
   @media (max-width: 768px) {
-    flex: 0 0 85vw; // 85% szerokości viewportu
-    max-width: 320px;
+    flex: 0 0 85vw;
     scroll-snap-align: start;
   }
 
-  // Kolory nagłówków dla różnych statusów
   &:nth-child(1) .col-title {
-    // Todo
     border-left: 4px solid #f59e0b;
   }
 
   &:nth-child(2) .col-title {
-    // Doing
     border-left: 4px solid var(--tl-color-accent);
   }
 
   &:nth-child(3) .col-title {
-    // Done
     border-left: 4px solid var(--tl-color-success);
   }
 }
@@ -1266,7 +869,6 @@
   align-items: center;
   justify-content: space-between;
 
-  // Counter w nagłówku
   &::after {
     content: attr(data-count);
     font-size: 12px;
@@ -1287,13 +889,11 @@
   flex-direction: column;
   gap: var(--tl-space-md);
   overflow-y: auto;
-  max-height: calc(100vh - 400px); // Ograniczenie wysokości z scroll'em
-
+  max-height: calc(100vh - 400px);
   @media (max-width: 768px) {
     max-height: 60vh;
   }
 
-  // Puste stanu
   &:empty::after {
     content: 'Drop tasks here';
     display: flex;
@@ -1307,7 +907,6 @@
     border-radius: var(--tl-radius-md);
   }
 
-  // Podświetlenie podczas drag
   &.cdk-drop-list-dragging {
     background: rgba(59, 130, 246, 0.05);
     border-radius: var(--tl-radius-md);
@@ -1414,7 +1013,6 @@
   font-size: 14px;
 }
 
-// Hide Material form fields (jeśli zdecydujesz się je usunąć z HTML)
 mat-form-field {
   &.search-field,
   &.sort-field {
@@ -1422,7 +1020,6 @@ mat-form-field {
   }
 }
 
-// Responsywne poprawki
 @media (max-width: 640px) {
   .header {
     flex-direction: column;

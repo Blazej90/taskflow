@@ -4,7 +4,9 @@
     <a routerLink="/tasks">← Back to list</a>
   </header>
 
-  <p class="loading" *ngIf="loading()">Saving...</p>
+  <p class="loading" *ngIf="loading()">
+    <span>Saving...</span>
+  </p>
 
   <form class="form" [formGroup]="form" (ngSubmit)="submit()">
     <label class="field">
@@ -17,8 +19,8 @@
     </label>
 
     <label class="field">
-      <span>Description</span>
-      <textarea rows="3" formControlName="description" [disabled]="loading()"></textarea>
+      <span class="optional">Description</span>
+      <textarea ...></textarea>
     </label>
 
     <label class="field">
