@@ -943,10 +943,6 @@
 // EMPTY STATE
 // ==========================================
 
-// ==========================================
-// EMPTY STATE - Modern Design
-// ==========================================
-
 .empty {
   display: flex;
   flex-direction: column;
@@ -964,7 +960,6 @@
     margin-top: 48px;
   }
 
-  // Ikona/ilustracja
   &::before {
     content: '📋';
     font-size: 48px;
