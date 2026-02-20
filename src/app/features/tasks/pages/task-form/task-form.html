@@ -20,7 +20,12 @@
 
     <label class="field">
       <span class="optional">Description</span>
-      <textarea ...></textarea>
+      <textarea
+        rows="3"
+        formControlName="description"
+        [disabled]="loading()"
+        placeholder="Add description (optional)..."
+      ></textarea>
     </label>
 
     <label class="field">
