@@ -83,7 +83,6 @@ h3 {
     cursor: not-allowed;
   }
 
-  // Edit - szary
   &:first-child {
     background: #f1f5f9;
     border-color: #e2e8f0;
@@ -93,7 +92,6 @@ h3 {
     }
   }
 
-  // Next status - kolorowy w zależności od kontekstu (dodaj klasę w HTML)
   &.next-todo {
     background: #fef3c7;
     border-color: #fcd34d;
@@ -124,7 +122,6 @@ h3 {
     }
   }
 
-  // Delete - czerwony
   &.danger {
     background: #fef2f2;
     border-color: #fecaca;
@@ -147,7 +144,6 @@ p {
   line-height: 1.5;
   color: #64748b;
 
-  // Jeśli nie ma opisu, nie zajmuje miejsca
   &:empty {
     display: none;
   }
@@ -183,7 +179,6 @@ p {
   }
 }
 
-// Status colors
 .badge-todo {
   background: #fef3c7;
   color: #92400e;
