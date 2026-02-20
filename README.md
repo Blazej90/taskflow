@@ -57,9 +57,11 @@ pnpm start
 - Responsive mobile-first design
 
 👨‍💻 Author
-Błażej Bartoszewski
-Portfolio: https://blazej-portfolio-sand.vercel.app
-GitHub: @Blazej90
-LinkedIn: Błażej Bartoszewski
+
+- Błażej Bartoszewski
+- Portfolio: https://blazej-portfolio-sand.vercel.app
+- GitHub: @Blazej90
+- LinkedIn: Błażej Bartoszewski
+
 📄 License
 MIT License
