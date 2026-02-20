@@ -943,33 +943,97 @@
 // EMPTY STATE
 // ==========================================
 
+// ==========================================
+// EMPTY STATE - Modern Design
+// ==========================================
+
 .empty {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--tl-space-xl);
-  margin-top: var(--tl-space-xl);
+  padding: 48px 24px;
   text-align: center;
-  background: var(--tl-color-surface);
-  border: 2px dashed var(--tl-color-border);
-  border-radius: var(--tl-radius-lg);
+  background: #f8fafc;
+  border: 2px dashed #e2e8f0;
+  border-radius: 16px;
+  margin-top: 32px;
+
+  @media (min-width: 768px) {
+    padding: 64px 32px;
+    margin-top: 48px;
+  }
+
+  // Ikona/ilustracja
+  &::before {
+    content: '📋';
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.8;
+
+    @media (min-width: 768px) {
+      font-size: 64px;
+      margin-bottom: 24px;
+    }
+  }
 
   h3 {
-    margin: 0 0 var(--tl-space-sm);
     font-size: 20px;
     font-weight: 700;
-    color: var(--tl-color-text);
+    color: #0f172a;
+    margin: 0 0 8px;
+
+    @media (min-width: 768px) {
+      font-size: 24px;
+    }
   }
 
   p {
-    margin: 0 0 var(--tl-space-lg);
-    color: var(--tl-color-text-muted);
-    font-size: 14px;
+    font-size: 15px;
+    color: #64748b;
+    margin: 0 0 24px;
+    max-width: 280px;
+    line-height: 1.5;
+
+    @media (min-width: 768px) {
+      font-size: 16px;
+      max-width: 320px;
+    }
   }
 
   .btn {
-    padding: var(--tl-space-sm) var(--tl-space-xl);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 44px;
+    padding: 0 24px;
+    background: #0f172a;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: #1e293b;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);
+    }
+
+    &::before {
+      content: '+';
+      font-size: 18px;
+      font-weight: 400;
+    }
+
+    @media (min-width: 768px) {
+      height: 48px;
+      padding: 0 28px;
+      font-size: 16px;
+    }
   }
 }
 
