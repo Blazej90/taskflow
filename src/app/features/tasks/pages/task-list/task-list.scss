@@ -904,7 +904,7 @@ h1 {
 }
 
 // ==========================================
-// BOARD VIEW - Modern Kanban
+// BOARD VIEW
 // ==========================================
 
 .board {
@@ -949,7 +949,6 @@ h1 {
     min-height: 60vh;
   }
 
-  // Kolory kolumn
   &.col-todo {
     --col-color: #f59e0b;
     --col-bg: #fffbeb;
@@ -1019,7 +1018,6 @@ h1 {
   }
 }
 
-// Pusty stan - nowoczesny
 .col-empty {
   display: flex;
   flex-direction: column;

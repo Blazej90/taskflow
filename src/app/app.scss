@@ -66,57 +66,65 @@
 .nav-link {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
+  gap: 8px; // Zwiększone z 6px dla lepszego balansu z ikoną SVG
+  height: 40px; // Stała wysokość jak inne przyciski
+  padding: 0 16px; // Poziomy padding
   border-radius: 10px;
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 14px; // Zmniejszone z 15px - spójność z resztą
+  font-weight: 500; // Zmniejszone z 600 - mniej agresywne
   color: #64748b;
   text-decoration: none;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
+
+  svg {
+    width: 18px; // Stały rozmiar ikony
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    color: #0f172a;
+    background: #f1f5f9;
+  }
+
+  &.active {
+    color: #3b82f6; // Niebieski zamiast ciemnoniebieskiego
+    background: #eff6ff;
+  }
+
+  // Primary - niebieski zamiast czarnego (spójność z projektem)
+  &.primary {
+    background: #3b82f6;
+    color: white;
+    box-shadow: 0 1px 3px rgba(59, 130, 246, 0.3);
+
+    &:hover {
+      background: #2563eb;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    }
+
+    &.active {
+      background: #1d4ed8; // Ciemniejszy niebieski
+    }
+  }
 }
 
-.nav-link:hover {
-  color: #0f172a;
-  background: #f1f5f9;
-}
-
-.nav-link.active {
-  color: #0369a1;
-  background: #f0f9ff;
-}
-
-.nav-link.primary {
-  background: #0f172a;
-  color: white;
-  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-}
-
-.nav-link.primary:hover {
-  background: #1e293b;
-  color: white;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-}
-
-.nav-link.primary.active {
-  background: #0284c7;
-}
-
-.nav-link-icon {
-  font-size: 18px;
-  line-height: 1;
-}
+// Usunięty .nav-link-icon - niepotrzebny przy SVG
 
 .app-main {
   flex: 1;
-  padding: 32px 0;
+  padding: 24px 0; // Zmniejszone z 32px
 }
 
 .app-main-container {
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 24px;
+
+  @media (max-width: 640px) {
+    padding: 0 16px; // Mniejszy padding na mobile
+  }
 }
 
 // ==========================================
