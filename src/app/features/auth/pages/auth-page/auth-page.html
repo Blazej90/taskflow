@@ -8,20 +8,62 @@
 
   <div class="divider">or</div>
 
-  <div class="field">
-    <label for="email">Email</label>
-    <input
-      id="email"
-      type="email"
-      [value]="email()"
-      (input)="email.set($any($event.target).value)"
-      placeholder="you@example.com"
-      autocomplete="email"
-      [disabled]="auth.loading()"
-    />
-  </div>
+  <ng-container *ngIf="auth.magicLinkSent(); else magicForm">
+    <div class="sent">
+      <h2>Link do logowania wysłany ✅</h2>
 
-  <button class="btn-primary" (click)="onSendLink()" [disabled]="auth.loading()">Send link</button>
+      <p class="sent-line">
+        Wysłaliśmy wiadomość na:
+        <b>{{ maskEmail(auth.magicLinkEmail() || email()) }}</b>
+      </p>
+
+      <div class="spam-tip">
+        <b>Ważne:</b> sprawdź folder <b>SPAM</b>, <b>Oferty</b> lub <b>Inne</b> — czasami linki do
+        logowania trafiają właśnie tam.
+      </div>
+
+      <div class="sent-actions">
+        <button
+          class="btn-primary"
+          type="button"
+          (click)="onResendLink()"
+          [disabled]="auth.loading()"
+        >
+          Wyślij ponownie
+        </button>
+
+        <button
+          class="btn-secondary"
+          type="button"
+          (click)="onChangeEmail()"
+          [disabled]="auth.loading()"
+        >
+          Zmień email
+        </button>
+      </div>
+
+      <p class="sent-small">Jeśli wiadomość nie dotrze w 2–3 minuty, spróbuj wysłać ponownie.</p>
+    </div>
+  </ng-container>
+
+  <ng-template #magicForm>
+    <div class="field">
+      <label for="email">Email</label>
+      <input
+        id="email"
+        type="email"
+        [value]="email()"
+        (input)="email.set($any($event.target).value)"
+        placeholder="you@example.com"
+        autocomplete="email"
+        [disabled]="auth.loading()"
+      />
+    </div>
+
+    <button class="btn-primary" (click)="onSendLink()" [disabled]="auth.loading() || !email()">
+      Send link
+    </button>
+  </ng-template>
 
   <p class="hint" *ngIf="auth.loading()">Working…</p>
   <p class="error" *ngIf="auth.error()">{{ auth.error() }}</p>

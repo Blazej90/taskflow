@@ -43,4 +43,38 @@ export class AuthPage {
 
     await this.auth.sendMagicLink(email);
   }
+
+  maskEmail(value: string) {
+    const email = (value || '').trim();
+    const at = email.indexOf('@');
+    if (at <= 1) return email;
+
+    const name = email.slice(0, at);
+    const domain = email.slice(at + 1);
+
+    const maskedName =
+      name.length <= 2
+        ? name[0] + '*'
+        : name.slice(0, 2) + '*'.repeat(Math.min(6, name.length - 2));
+
+    const dot = domain.indexOf('.');
+    const domainMain = dot > 0 ? domain.slice(0, dot) : domain;
+    const domainRest = dot > 0 ? domain.slice(dot) : '';
+
+    const maskedDomain =
+      domainMain.length <= 2 ? domainMain[0] + '*' : domainMain.slice(0, 2) + '***';
+
+    return `${maskedName}@${maskedDomain}${domainRest}`;
+  }
+
+  async onResendLink() {
+    const email = (this.auth.magicLinkEmail() || this.email()).trim();
+    if (!email) return;
+
+    await this.auth.sendMagicLink(email);
+  }
+
+  onChangeEmail() {
+    this.auth.resetMagicLinkState();
+  }
 }

@@ -177,3 +177,84 @@ h1 {
   margin-top: 16px;
   font-weight: 500;
 }
+
+/* ==========================================
+   MAGIC LINK: "SENT" STATE
+   ========================================== */
+
+.sent {
+  margin-top: 8px;
+  padding: 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.sent h2 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.sent-line {
+  margin: 0 0 12px;
+  color: #0f172a;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.spam-tip {
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px dashed rgba(245, 158, 11, 0.55);
+  color: #0f172a;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.sent-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+
+  .sent-actions .btn-primary {
+    margin-top: 0;
+  }
+
+  @media (max-width: 420px) {
+    flex-direction: column;
+  }
+}
+
+.btn-secondary {
+  width: 100%;
+  height: 48px;
+  padding: 0 20px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  background: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.sent-small {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.4;
+}

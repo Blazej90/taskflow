@@ -19,6 +19,8 @@ export class AuthService {
   user = signal<User | null>(null);
   loading = signal(false);
   error = signal<string | null>(null);
+  magicLinkSent = signal(false);
+  magicLinkEmail = signal<string | null>(null);
 
   constructor() {
     this.auth.onAuthStateChanged((user) => {
@@ -41,6 +43,7 @@ export class AuthService {
   async sendMagicLink(email: string) {
     try {
       this.loading.set(true);
+      this.error.set(null);
 
       const actionCodeSettings = {
         url: window.location.origin + '/auth',
@@ -49,6 +52,9 @@ export class AuthService {
 
       await sendSignInLinkToEmail(this.auth, email, actionCodeSettings);
       localStorage.setItem('emailForSignIn', email);
+
+      this.magicLinkSent.set(true);
+      this.magicLinkEmail.set(email);
     } catch (err: any) {
       this.error.set(err.message);
     } finally {
@@ -68,5 +74,10 @@ export class AuthService {
 
   async logout() {
     await signOut(this.auth);
+  }
+
+  resetMagicLinkState() {
+    this.magicLinkSent.set(false);
+    this.magicLinkEmail.set(null);
   }
 }
