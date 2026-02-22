@@ -9,7 +9,7 @@
   <div class="divider">or</div>
 
   <ng-container *ngIf="auth.magicLinkSent(); else magicForm">
-    <div class="sent">
+    <div class="sent fade-slide-in">
       <h2>Link do logowania wysłany ✅</h2>
 
       <p class="sent-line">
@@ -47,22 +47,24 @@
   </ng-container>
 
   <ng-template #magicForm>
-    <div class="field">
-      <label for="email">Email</label>
-      <input
-        id="email"
-        type="email"
-        [value]="email()"
-        (input)="email.set($any($event.target).value)"
-        placeholder="you@example.com"
-        autocomplete="email"
-        [disabled]="auth.loading()"
-      />
-    </div>
+    <div class="fade-slide-in">
+      <div class="field">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          [value]="email()"
+          (input)="email.set($any($event.target).value)"
+          placeholder="you@example.com"
+          autocomplete="email"
+          [disabled]="auth.loading()"
+        />
+      </div>
 
-    <button class="btn-primary" (click)="onSendLink()" [disabled]="auth.loading() || !email()">
-      Send link
-    </button>
+      <button class="btn-primary" (click)="onSendLink()" [disabled]="auth.loading() || !email()">
+        Send link
+      </button>
+    </div>
   </ng-template>
 
   <p class="hint" *ngIf="auth.loading()">Working…</p>
