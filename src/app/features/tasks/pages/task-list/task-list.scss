@@ -29,7 +29,7 @@
 }
 
 // ==========================================
-// TOPBAR - Fixed
+// TOPBAR - User & Logout
 // ==========================================
 
 .topbar {
@@ -38,50 +38,50 @@
   justify-content: space-between;
   gap: 16px;
   margin-bottom: 24px;
-  padding: 12px 16px;
+  padding: 16px 20px;
   background: white;
-  border: 1px solid #e2e8f0;
   border-radius: 12px;
+  border: 1px solid #e2e8f0;
 
-  .user {
-    font-size: 14px;
-    color: #64748b;
-
-    b {
-      color: #0f172a;
-      font-weight: 600;
-    }
-  }
-
-  .logout-btn {
-    display: flex;
+  // Logout button - stonowany, nowoczesny
+  .btn.logout-btn {
+    display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 16px;
-    background: white;
-    border: 1px solid #e2e8f0;
+    width: auto; // NIE kwadrat
+    height: 36px;
+    padding: 0 14px; // Padding poziomy
     border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background: transparent;
     color: #64748b;
     font-size: 14px;
     font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
 
-    &:hover {
-      border-color: #ef4444;
-      color: #ef4444;
-      background: #fef2f2;
+    &:hover:not(:disabled) {
+      color: #475569;
+      background: #f8fafc;
+      border-color: #cbd5e1;
     }
 
-    svg {
-      width: 16px;
-      height: 16px;
+    &:disabled {
+      opacity: 0.5;
     }
   }
 }
 
+.user {
+  font-size: 14px;
+  color: #64748b;
+
+  b {
+    color: #0f172a;
+    font-weight: 600;
+  }
+}
+
 // ==========================================
-// HEADER - Clean & Simple
+// HEADER - Icons only
 // ==========================================
 
 .header {
@@ -90,87 +90,157 @@
   justify-content: space-between;
   gap: 16px;
   margin-bottom: 24px;
-  flex-wrap: wrap;
-
-  h1 {
-    font-size: 28px;
-    font-weight: 700;
-    color: #0f172a;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    &::before {
-      content: '';
-      width: 8px;
-      height: 32px;
-      background: #3b82f6;
-      border-radius: 4px;
-    }
-  }
+  padding: 16px 20px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
 
   @media (max-width: 640px) {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
+    padding: 12px 16px;
   }
 }
 
+// View toggle
+.view-toggle {
+  display: flex;
+  background: #f1f5f9;
+  border-radius: 10px;
+  padding: 4px;
+  gap: 2px;
+}
+
+.view-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover:not(:disabled) {
+    color: #0f172a;
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  &.active {
+    background: white;
+    color: #3b82f6;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// Header actions
 .header-actions {
   display: flex;
   align-items: center;
   gap: 8px;
-  flex-wrap: wrap;
 }
 
+// Icon buttons
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  color: #0f172a;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover:not(:disabled):not(.disabled) {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+  }
+
+  &.icon-btn {
+    padding: 0;
+  }
+
+  &.primary {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+
+    &:hover:not(:disabled):not(.disabled) {
+      background: #2563eb;
+    }
+  }
+
+  &:disabled,
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
 // ==========================================
-// SEGMENTED - Clean
+// VIEW TOGGLE - Ikony zamiast tekstu
 // ==========================================
 
-.segmented {
+.view-toggle {
   display: flex;
   background: #f1f5f9;
   border-radius: 8px;
   padding: 4px;
+  gap: 2px;
 
-  &-btn {
+  .view-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
     height: 36px;
-    padding: 0 16px;
-    border-radius: 6px;
     border: none;
+    border-radius: 6px;
     background: transparent;
     color: #64748b;
-    font-size: 14px;
-    font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
 
     &:hover:not(:disabled) {
       color: #0f172a;
+      background: rgba(255, 255, 255, 0.5);
     }
 
     &.active {
       background: white;
-      color: #0f172a;
+      color: #3b82f6;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      font-weight: 600;
     }
 
     &:disabled {
       opacity: 0.5;
       cursor: not-allowed;
     }
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
   }
 }
 
 // ==========================================
-// BUTTONS - Clean
+// BUTTONS - Clean & Responsive
 // ==========================================
 
 .btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   height: 36px;
   padding: 0 16px;
@@ -183,12 +253,14 @@
   text-decoration: none;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
 
   &:hover:not(:disabled):not(.disabled) {
     background: #f8fafc;
     border-color: #cbd5e1;
   }
 
+  // Ghost - Select button
   &.ghost {
     background: transparent;
     border-color: transparent;
@@ -198,15 +270,36 @@
       background: #f1f5f9;
       color: #0f172a;
     }
+
+    // Ukryj tekst na mobile, pokaż ikonę
+    @media (max-width: 640px) {
+      padding: 0 12px;
+
+      span {
+        display: none;
+      }
+    }
   }
 
+  // Primary - New task
+  &.primary,
   &[routerLink] {
-    background: #0f172a;
+    background: #3b82f6;
     color: white;
-    border-color: #0f172a;
+    border-color: #3b82f6;
 
-    &:hover:not(:disabled) {
-      background: #1e293b;
+    &:hover:not(:disabled):not(.disabled) {
+      background: #2563eb;
+      border-color: #2563eb;
+    }
+
+    // Ukryj tekst na mobile, pokaż ikonę
+    @media (max-width: 640px) {
+      padding: 0 12px;
+
+      span {
+        display: none;
+      }
     }
   }
 
@@ -216,6 +309,26 @@
     cursor: not-allowed;
     pointer-events: none;
   }
+
+  svg {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+// ==========================================
+// DEPRECATED - Usuń po migracji
+// ==========================================
+
+// Stary segmented - zastąpiony przez view-toggle
+.segmented {
+  display: none;
+}
+
+// Stary h1 - zastąpiony przez header-info
+h1 {
+  display: none;
 }
 
 // ==========================================

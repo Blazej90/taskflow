@@ -1,5 +1,4 @@
 <article class="card" [class.selected]="selected">
-  <!-- CHECKBOX - widoczny tylko w trybie select -->
   <div *ngIf="selectable" class="select-checkbox" (click)="$event.stopPropagation()">
     <input
       type="checkbox"

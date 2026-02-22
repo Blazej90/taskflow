@@ -24,41 +24,93 @@
 </div>
 
 <header class="header" *ngIf="!selectMode(); else selectionToolbar">
-  <h1>Tasks</h1>
+  <div class="view-toggle">
+    <button
+      type="button"
+      class="view-btn"
+      [class.active]="viewMode() === 'list'"
+      (click)="setViewMode('list')"
+      [disabled]="loading()"
+      title="List view"
+    >
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <line x1="8" y1="6" x2="21" y2="6"></line>
+        <line x1="8" y1="12" x2="21" y2="12"></line>
+        <line x1="8" y1="18" x2="21" y2="18"></line>
+        <line x1="3" y1="6" x2="3.01" y2="6"></line>
+        <line x1="3" y1="12" x2="3.01" y2="12"></line>
+        <line x1="3" y1="18" x2="3.01" y2="18"></line>
+      </svg>
+    </button>
+    <button
+      type="button"
+      class="view-btn"
+      [class.active]="viewMode() === 'board'"
+      (click)="setViewMode('board')"
+      [disabled]="loading()"
+      title="Board view"
+    >
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <rect x="3" y="3" width="7" height="7"></rect>
+        <rect x="14" y="3" width="7" height="7"></rect>
+        <rect x="14" y="14" width="7" height="7"></rect>
+        <rect x="3" y="14" width="7" height="7"></rect>
+      </svg>
+    </button>
+  </div>
 
   <div class="header-actions">
-    <div class="segmented">
-      <button
-        type="button"
-        class="segmented-btn"
-        [class.active]="viewMode() === 'list'"
-        (click)="setViewMode('list')"
-        [disabled]="loading()"
+    <button
+      class="btn icon-btn"
+      type="button"
+      (click)="toggleSelectMode()"
+      [disabled]="loading()"
+      title="Select mode"
+    >
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
       >
-        List
-      </button>
-      <button
-        type="button"
-        class="segmented-btn"
-        [class.active]="viewMode() === 'board'"
-        (click)="setViewMode('board')"
-        [disabled]="loading()"
-      >
-        Board
-      </button>
-    </div>
-
-    <button class="btn ghost" type="button" (click)="toggleSelectMode()" [disabled]="loading()">
-      Select
+        <path d="M9 11l3 3L22 4"></path>
+        <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>
+      </svg>
     </button>
 
     <a
-      class="btn"
+      class="btn icon-btn primary"
       routerLink="/tasks/new"
       [class.disabled]="loading()"
-      [attr.aria-disabled]="loading()"
+      title="New task"
     >
-      + New task
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+      >
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
     </a>
   </div>
 </header>
