@@ -1,8 +1,9 @@
 // ==========================================
-// TASK CARD - Fixed
+// TASK CARD
 // ==========================================
 
 .card {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -11,6 +12,23 @@
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+
+  // Zaznaczony stan
+  &.selected {
+    border-color: #3b82f6;
+    background: #eff6ff;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  // Gdy checkbox jest widoczny - przesuń zawartość
+  &:has(.select-checkbox) {
+    padding-left: 52px;
+
+    @media (min-width: 768px) {
+      padding-left: 60px;
+    }
+  }
 
   @media (min-width: 768px) {
     padding: 20px;
@@ -18,8 +36,35 @@
   }
 }
 
+// Checkbox
+.select-checkbox {
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @media (min-width: 768px) {
+    left: 20px;
+  }
+
+  input[type='checkbox'] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #3b82f6;
+
+    @media (min-width: 768px) {
+      width: 24px;
+      height: 24px;
+    }
+  }
+}
+
 // ==========================================
-// TOP - Tytuł i przyciski
+// TOP
 // ==========================================
 
 .top {
@@ -47,7 +92,7 @@ h3 {
 }
 
 // ==========================================
-// ACTIONS - Fixed!
+// ACTIONS
 // ==========================================
 
 .actions {

@@ -1,4 +1,13 @@
-<article class="card">
+<article class="card" [class.selected]="selected">
+  <!-- CHECKBOX - widoczny tylko w trybie select -->
+  <div *ngIf="selectable" class="select-checkbox" (click)="$event.stopPropagation()">
+    <input
+      type="checkbox"
+      [checked]="selected"
+      (change)="onToggleSelected($any($event.target).checked)"
+    />
+  </div>
+
   <div class="top">
     <h3>{{ task.title }}</h3>
 
