@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { TaskCard } from '@/features/tasks/components/task-card/task-card';
@@ -42,7 +42,7 @@ type ViewMode = 'list' | 'board';
   templateUrl: './task-list.html',
   styleUrl: './task-list.scss',
 })
-export class TaskList {
+export class TaskList implements OnInit, OnDestroy {
   private tasksService = inject(TasksService);
   private toast = inject(ToastService);
   private confirm = inject(ConfirmService);
@@ -60,13 +60,43 @@ export class TaskList {
 
   readonly isManualOrder = computed(() => this.sortBy() === 'manual');
 
+  // Dodane: Mobile detection
+  readonly isMobileView = signal(false);
+  readonly activeColumn = signal(0);
+
   private readonly router = inject(Router);
   readonly auth = inject(AuthService);
+
+  ngOnInit() {
+    this.checkMobile();
+    window.addEventListener('resize', this.onResize);
+  }
+
+  ngOnDestroy() {
+    window.removeEventListener('resize', this.onResize);
+  }
+
+  private checkMobile() {
+    if (typeof window !== 'undefined') {
+      this.isMobileView.set(window.innerWidth <= 768);
+    }
+  }
+
+  private onResize = () => {
+    this.checkMobile();
+  };
+
+  onBoardScroll(event: Event) {
+    const el = event.target as HTMLElement;
+    const columnWidth = el.offsetWidth * 0.85;
+    this.activeColumn.set(Math.round(el.scrollLeft / columnWidth));
+  }
 
   async logout() {
     await this.auth.logout();
     await this.router.navigateByUrl('/auth');
   }
+
   setViewMode(mode: ViewMode) {
     this.viewMode.set(mode);
   }

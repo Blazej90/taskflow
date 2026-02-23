@@ -69,24 +69,23 @@
 
 .top {
   display: flex;
-  flex-direction: row; // ZAWSZE w rzędzie, nawet na mobile
+  flex-direction: row;
   justify-content: space-between;
   align-items: flex-start;
   gap: 12px;
 
   @media (max-width: 480px) {
-    // Na bardzo małych ekranach - tytuł na górze, przyciski pod spodem
     flex-direction: column;
 
     .actions {
-      align-self: flex-end; // Przyciski w prawym rogu
+      align-self: flex-end;
     }
   }
 }
 
 h3 {
-  flex: 1; // Zajmuje całą dostępną przestrzeń
-  min-width: 0; // Pozwala na zawijanie tekstu
+  flex: 1;
+  min-width: 0;
   margin: 0;
   font-size: 15px;
   font-weight: 600;
@@ -105,7 +104,7 @@ h3 {
 .actions {
   display: flex;
   gap: 6px;
-  flex-shrink: 0; // NIE zmniejszaj przycisków
+  flex-shrink: 0;
   margin-top: 2px;
 }
 
@@ -119,14 +118,14 @@ h3 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 28px; // ZMNIEJSZONE z 36px
-  padding: 0 10px; // ZMNIEJSZONE z 16px
+  height: 28px;
+  padding: 0 10px;
   background: white;
   border: 1px solid #e2e8f0;
-  border-radius: 6px; // ZMNIEJSZONE z 8px
+  border-radius: 6px;
   color: #0f172a;
-  font-size: 11px; // ZMNIEJSZONE z 13px
-  font-weight: 500; // ZMNIEJSZONE z 600
+  font-size: 11px;
+  font-weight: 500;
   text-decoration: none;
   cursor: pointer;
   transition: all 0.2s ease;

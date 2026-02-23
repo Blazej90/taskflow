@@ -296,7 +296,14 @@
   </div>
 </section>
 <ng-template #boardView>
-  <div class="board">
+  <!-- Wskaźniki kolumn na mobile -->
+  <div class="board-indicators">
+    <span [class.active]="activeColumn() === 0"></span>
+    <span [class.active]="activeColumn() === 1"></span>
+    <span [class.active]="activeColumn() === 2"></span>
+  </div>
+
+  <div class="board" (scroll)="onBoardScroll($event)">
     <div class="col col-todo">
       <div class="col-header">
         <div class="col-title">
@@ -313,12 +320,14 @@
         [cdkDropListConnectedTo]="['doingList', 'doneList']"
         (cdkDropListDropped)="onBoardDrop('todo', $event)"
         id="todoList"
+        [cdkDropListDisabled]="isMobileView()"
       >
         <div
           *ngFor="let t of boardTodo()"
           cdkDrag
           class="draggable-row"
           [cdkDragStartDelay]="{ touch: 180, mouse: 0 }"
+          [cdkDragDisabled]="isMobileView()"
         >
           <app-task-card
             [task]="t"
@@ -363,12 +372,14 @@
         [cdkDropListConnectedTo]="['todoList', 'doneList']"
         (cdkDropListDropped)="onBoardDrop('doing', $event)"
         id="doingList"
+        [cdkDropListDisabled]="isMobileView()"
       >
         <div
           *ngFor="let t of boardDoing()"
           cdkDrag
           class="draggable-row"
           [cdkDragStartDelay]="{ touch: 180, mouse: 0 }"
+          [cdkDragDisabled]="isMobileView()"
         >
           <app-task-card
             [task]="t"
@@ -412,12 +423,14 @@
         [cdkDropListConnectedTo]="['todoList', 'doingList']"
         (cdkDropListDropped)="onBoardDrop('done', $event)"
         id="doneList"
+        [cdkDropListDisabled]="isMobileView()"
       >
         <div
           *ngFor="let t of boardDone()"
           cdkDrag
           class="draggable-row"
           [cdkDragStartDelay]="{ touch: 180, mouse: 0 }"
+          [cdkDragDisabled]="isMobileView()"
         >
           <app-task-card
             [task]="t"
