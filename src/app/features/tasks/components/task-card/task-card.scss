@@ -69,55 +69,68 @@
 
 .top {
   display: flex;
-  flex-direction: column;
+  flex-direction: row; // ZAWSZE w rzędzie, nawet na mobile
+  justify-content: space-between;
+  align-items: flex-start;
   gap: 12px;
 
-  @media (min-width: 640px) {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
+  @media (max-width: 480px) {
+    // Na bardzo małych ekranach - tytuł na górze, przyciski pod spodem
+    flex-direction: column;
+
+    .actions {
+      align-self: flex-end; // Przyciski w prawym rogu
+    }
   }
 }
 
 h3 {
+  flex: 1; // Zajmuje całą dostępną przestrzeń
+  min-width: 0; // Pozwala na zawijanie tekstu
   margin: 0;
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 15px;
+  font-weight: 600;
   color: #0f172a;
   line-height: 1.4;
+  word-wrap: break-word;
 
   @media (min-width: 768px) {
-    font-size: 18px;
+    font-size: 17px;
   }
 }
-
 // ==========================================
 // ACTIONS
 // ==========================================
 
 .actions {
   display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+  gap: 6px;
+  flex-shrink: 0; // NIE zmniejszaj przycisków
+  margin-top: 2px;
+}
+
+.btn.icon-only {
+  width: 28px;
+  padding: 0;
 }
 
 .btn {
+  flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 36px;
-  padding: 0 16px;
+  height: 28px; // ZMNIEJSZONE z 36px
+  padding: 0 10px; // ZMNIEJSZONE z 16px
   background: white;
   border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  border-radius: 6px; // ZMNIEJSZONE z 8px
   color: #0f172a;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 11px; // ZMNIEJSZONE z 13px
+  font-weight: 500; // ZMNIEJSZONE z 600
   text-decoration: none;
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
-
   &:hover:not(:disabled) {
     background: #f8fafc;
     border-color: #cbd5e1;

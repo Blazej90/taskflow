@@ -66,18 +66,18 @@
 .nav-link {
   display: flex;
   align-items: center;
-  gap: 8px; // Zwiększone z 6px dla lepszego balansu z ikoną SVG
-  height: 40px; // Stała wysokość jak inne przyciski
-  padding: 0 16px; // Poziomy padding
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px;
   border-radius: 10px;
-  font-size: 14px; // Zmniejszone z 15px - spójność z resztą
-  font-weight: 500; // Zmniejszone z 600 - mniej agresywne
+  font-size: 14px;
+  font-weight: 500;
   color: #64748b;
   text-decoration: none;
   transition: all 0.2s ease;
 
   svg {
-    width: 18px; // Stały rozmiar ikony
+    width: 18px;
     height: 18px;
     flex-shrink: 0;
   }
@@ -88,11 +88,10 @@
   }
 
   &.active {
-    color: #3b82f6; // Niebieski zamiast ciemnoniebieskiego
+    color: #3b82f6;
     background: #eff6ff;
   }
 
-  // Primary - niebieski zamiast czarnego (spójność z projektem)
   &.primary {
     background: #3b82f6;
     color: white;
@@ -105,16 +104,14 @@
     }
 
     &.active {
-      background: #1d4ed8; // Ciemniejszy niebieski
+      background: #1d4ed8;
     }
   }
 }
 
-// Usunięty .nav-link-icon - niepotrzebny przy SVG
-
 .app-main {
   flex: 1;
-  padding: 24px 0; // Zmniejszone z 32px
+  padding: 24px 0;
 }
 
 .app-main-container {
@@ -123,7 +120,7 @@
   padding: 0 24px;
 
   @media (max-width: 640px) {
-    padding: 0 16px; // Mniejszy padding na mobile
+    padding: 0 16px;
   }
 }
 
