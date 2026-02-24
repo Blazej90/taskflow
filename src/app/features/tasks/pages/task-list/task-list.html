@@ -479,7 +479,35 @@
   </svg>
 </button>
 <div *ngIf="isEmpty()" class="empty">
-  <h3>No tasks here 👀</h3>
+  <div class="empty-icon">
+    <svg
+      width="64"
+      height="64"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+    >
+      <path
+        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+      />
+      <path d="M12 11v6M9 14h6" />
+    </svg>
+  </div>
+  <h3>No tasks here</h3>
   <p>Create a new task or change the filter.</p>
-  <a class="btn" routerLink="/tasks/new"> New task</a>
+  <a class="btn btn-primary" routerLink="/tasks/new">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.5"
+    >
+      <line x1="12" y1="5" x2="12" y2="19"></line>
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+    </svg>
+    <span>Create task</span>
+  </a>
 </div>
