@@ -921,15 +921,14 @@ h1 {
     display: flex;
     gap: 16px;
     overflow-x: auto;
-    overflow-y: hidden; // WAŻNE: tylko poziomy scroll
+    overflow-y: hidden;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch; // Płynny scroll iOS
-    padding: 4px 4px 20px 4px; // Miejsce na scrollbar
-    margin: 0 -16px; // Na pełną szerokość ekranu
-    padding-left: 16px; // Odstęp od lewej
+    -webkit-overflow-scrolling: touch;
+    padding: 4px 4px 20px 4px;
+    margin: 0 -16px;
+    padding-left: 16px;
 
-    // Ukryj scrollbar ale zachowaj funkcjonalność
     scrollbar-width: none;
     -ms-overflow-style: none;
     &::-webkit-scrollbar {
@@ -944,12 +943,12 @@ h1 {
   background: #f8fafc;
   border-radius: 16px;
   border: 1px solid #e2e8f0;
-  height: 600px; // STAŁA wysokość zamiast min/max
+  height: 600px;
 
   @media (max-width: 768px) {
-    flex: 0 0 85vw; // Szerokość kolumny
-    scroll-snap-align: center; // Centruj kolumnę przy scrollu
-    height: 70vh; // Wysokość widoczna na ekranie
+    flex: 0 0 85vw;
+    scroll-snap-align: center;
+    height: 70vh;
     max-height: 600px;
   }
 }
@@ -960,11 +959,10 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  overflow-y: auto; // Scroll wewnątrz kolumny
+  overflow-y: auto;
   overflow-x: hidden;
-  -webkit-overflow-scrolling: touch; // Płynny scroll iOS
+  -webkit-overflow-scrolling: touch;
 
-  // WAŻNE: Pozwól na scroll nawet podczas drag
   touch-action: pan-y;
 
   @media (max-width: 768px) {
@@ -1263,6 +1261,65 @@ mat-form-field {
     .logout-btn {
       width: 100%;
       justify-content: center;
+    }
+  }
+}
+
+// ==========================================
+// FLOATING ACTION BUTTON - Scroll to top
+// ==========================================
+
+.fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  background: #3b82f6;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  transition: all 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px) scale(0.8);
+  pointer-events: none;
+  z-index: 100;
+
+  &.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+
+  &:hover {
+    background: #2563eb;
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.95);
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  @media (max-width: 768px) {
+    bottom: 16px;
+    right: 16px;
+    width: 48px;
+    height: 48px;
+
+    svg {
+      width: 20px;
+      height: 20px;
     }
   }
 }

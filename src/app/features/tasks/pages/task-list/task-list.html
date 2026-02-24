@@ -460,6 +460,24 @@
     </div>
   </div>
 </ng-template>
+<button
+  class="fab scroll-top"
+  type="button"
+  (click)="scrollToTop()"
+  [class.visible]="showScrollTop()"
+  aria-label="Scroll to top"
+>
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2.5"
+  >
+    <polyline points="18 15 12 9 6 15"></polyline>
+  </svg>
+</button>
 <div *ngIf="isEmpty()" class="empty">
   <h3>No tasks here 👀</h3>
   <p>Create a new task or change the filter.</p>

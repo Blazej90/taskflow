@@ -60,9 +60,10 @@ export class TaskList implements OnInit, OnDestroy {
 
   readonly isManualOrder = computed(() => this.sortBy() === 'manual');
 
-  // Dodane: Mobile detection
   readonly isMobileView = signal(false);
   readonly activeColumn = signal(0);
+
+  readonly showScrollTop = signal(false);
 
   private readonly router = inject(Router);
   readonly auth = inject(AuthService);
@@ -70,10 +71,12 @@ export class TaskList implements OnInit, OnDestroy {
   ngOnInit() {
     this.checkMobile();
     window.addEventListener('resize', this.onResize);
+    window.addEventListener('scroll', this.onWindowScroll);
   }
 
   ngOnDestroy() {
     window.removeEventListener('resize', this.onResize);
+    window.removeEventListener('scroll', this.onWindowScroll);
   }
 
   private checkMobile() {
@@ -90,6 +93,18 @@ export class TaskList implements OnInit, OnDestroy {
     const el = event.target as HTMLElement;
     const columnWidth = el.offsetWidth * 0.85;
     this.activeColumn.set(Math.round(el.scrollLeft / columnWidth));
+  }
+
+  onWindowScroll = () => {
+    if (typeof window !== 'undefined') {
+      this.showScrollTop.set(window.scrollY > 400);
+    }
+  };
+
+  scrollToTop() {
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 
   async logout() {
