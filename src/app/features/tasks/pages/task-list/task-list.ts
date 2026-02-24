@@ -241,6 +241,7 @@ export class TaskList implements OnInit, OnDestroy {
       await this.tasksService.update(id, {
         title: task.title,
         description: task.description ?? '',
+        priority: task.priority,
         status: 'done',
       });
     }
@@ -284,6 +285,7 @@ export class TaskList implements OnInit, OnDestroy {
     await this.tasksService.update(movedTask.id, {
       title: movedTask.title,
       description: movedTask.description ?? '',
+      priority: movedTask.priority,
       status: targetStatus,
     });
 

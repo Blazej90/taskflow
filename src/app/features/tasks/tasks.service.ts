@@ -71,17 +71,16 @@ export class TasksService {
     }
   }
 
-  async update(id: string, updated: Omit<Task, 'id'>) {
+  async update(id: string, patch: Partial<Omit<Task, 'id'>>) {
     this.addId(this._updatingIds, id);
 
     try {
       await this.simulate();
 
-      const current = this.tasks();
-      const task = current.find((t) => t.id === id);
+      const task = this.getById(id);
       if (!task) return;
 
-      const updatedTask: Task = { ...task, ...updated };
+      const updatedTask: Task = { ...task, ...patch };
 
       await this.repo.update(updatedTask);
     } finally {
@@ -112,6 +111,7 @@ export class TasksService {
     await this.update(id, {
       title: task.title,
       description: task.description ?? '',
+      priority: task.priority,
       status: nextStatus,
     });
   }

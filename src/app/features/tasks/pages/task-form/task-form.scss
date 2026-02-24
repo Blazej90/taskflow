@@ -221,3 +221,53 @@ button[type='submit'] {
     align-self: flex-start;
   }
 }
+
+// ==========================================
+// PRIORITY
+// ==========================================
+
+.priority-options {
+  display: flex;
+  gap: 12px;
+}
+
+.priority-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 2px solid #e2e8f0;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  input {
+    display: none;
+  }
+
+  &.low {
+    --priority-color: #10b981;
+  }
+  &.medium {
+    --priority-color: #f59e0b;
+  }
+  &.high {
+    --priority-color: #ef4444;
+  }
+
+  .priority-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--priority-color);
+  }
+
+  &:has(input:checked) {
+    border-color: var(--priority-color);
+    background: rgba(var(--priority-color), 0.05);
+  }
+
+  &:hover {
+    border-color: var(--priority-color);
+  }
+}

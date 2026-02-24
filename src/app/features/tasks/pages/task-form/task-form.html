@@ -28,6 +28,29 @@
       ></textarea>
     </label>
 
+    <div class="field">
+      <span>Priority</span>
+      <div class="priority-options">
+        <label class="priority-option low">
+          <input type="radio" formControlName="priority" value="low" [disabled]="loading()" />
+          <span class="priority-dot"></span>
+          <span>Low</span>
+        </label>
+
+        <label class="priority-option medium">
+          <input type="radio" formControlName="priority" value="medium" [disabled]="loading()" />
+          <span class="priority-dot"></span>
+          <span>Medium</span>
+        </label>
+
+        <label class="priority-option high">
+          <input type="radio" formControlName="priority" value="high" [disabled]="loading()" />
+          <span class="priority-dot"></span>
+          <span>High</span>
+        </label>
+      </div>
+    </div>
+
     <label class="field">
       <span>Status</span>
       <select formControlName="status" [disabled]="loading()">

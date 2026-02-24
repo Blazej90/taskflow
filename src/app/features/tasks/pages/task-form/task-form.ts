@@ -4,12 +4,13 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { TasksService } from '../../tasks.service';
-import { TaskStatus } from '../../task';
+import { TaskStatus, Priority } from '../../task';
 import { ToastService } from '@/shared/ui/toast/toast.service';
 
 type TaskFormValue = {
   title: string;
   description: string;
+  priority: Priority;
   status: TaskStatus;
 };
 
@@ -35,6 +36,7 @@ export class TaskForm {
   form: FormGroup = this.fb.group({
     title: ['', [Validators.required, Validators.minLength(2)]],
     description: [''],
+    priority: ['medium' as Priority],
     status: ['todo' as TaskStatus],
   });
 
@@ -49,6 +51,7 @@ export class TaskForm {
         this.form.patchValue({
           title: task.title,
           description: task.description ?? '',
+          priority: task.priority ?? 'medium', // DODAJ TO
           status: task.status,
         });
       } else {
@@ -64,14 +67,14 @@ export class TaskForm {
       return;
     }
 
-    const value = this.form.getRawValue() as TaskFormValue;
+    const { title, description, priority, status } = this.form.getRawValue();
 
     try {
       if (this.isEdit && this.taskId) {
-        await this.tasksService.update(this.taskId, value);
+        await this.tasksService.update(this.taskId, { title, description, priority, status });
         this.toast.success('Task updated');
       } else {
-        await this.tasksService.create(value);
+        await this.tasksService.create({ title, description, priority, status });
         this.toast.success('Task created');
       }
 

@@ -20,7 +20,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 import { db } from '@/firestore.client';
 import { AuthService } from '@/features/auth/auth.service';
-import type { Task, TaskStatus } from './task';
+import type { Priority, Task, TaskStatus } from './task';
 import type { TasksRepository } from './task.repository';
 
 type TaskDoc = {
@@ -28,6 +28,7 @@ type TaskDoc = {
   title: string;
   description?: string | null;
   status: TaskStatus;
+  priority: Priority;
   order: number;
   createdAt?: any;
   updatedAt?: any;
@@ -73,6 +74,7 @@ export class FirestoreTasksRepository implements TasksRepository {
             title: data.title,
             description: data.description ?? '',
             status: data.status,
+            priority: data.priority ?? 'medium',
             order: data.order,
           } satisfies Task;
         });
@@ -122,6 +124,7 @@ export class FirestoreTasksRepository implements TasksRepository {
       title: task.title,
       description: task.description ?? '',
       status: task.status,
+      priority: task.priority,
       order: typeof task.order === 'number' ? task.order : Date.now(),
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
@@ -140,6 +143,7 @@ export class FirestoreTasksRepository implements TasksRepository {
       title: task.title,
       description: task.description ?? '',
       status: task.status,
+      priority: task.priority,
       updatedAt: serverTimestamp(),
     };
 
@@ -198,6 +202,7 @@ export class FirestoreTasksRepository implements TasksRepository {
           title: task.title,
           description: task.description ?? '',
           status: task.status,
+          priority: task.priority,
           order: typeof task.order === 'number' ? task.order : 0,
           updatedAt: serverTimestamp(),
         };
@@ -208,6 +213,7 @@ export class FirestoreTasksRepository implements TasksRepository {
           title: task.title,
           description: task.description ?? '',
           status: task.status,
+          priority: task.priority,
           order: typeof task.order === 'number' ? task.order : Date.now(),
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp(),

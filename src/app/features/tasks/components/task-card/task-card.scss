@@ -279,3 +279,69 @@ p {
   margin: 0;
   cursor: pointer;
 }
+
+// ==========================================
+// PRIORITY BADGE
+// ==========================================
+
+.priority-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+  position: relative;
+
+  .priority-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+  }
+
+  // LOW - spokojny zielony
+  &.priority-low {
+    .priority-dot {
+      background: #86efac;
+      box-shadow: 0 0 0 2px rgba(134, 239, 172, 0.3);
+    }
+  }
+
+  // MEDIUM - ciepły żółty
+  &.priority-medium {
+    .priority-dot {
+      background: #fcd34d;
+      box-shadow: 0 0 0 2px rgba(252, 211, 77, 0.3);
+    }
+  }
+
+  // HIGH - koralowy z pulsowaniem
+  &.priority-high {
+    .priority-dot {
+      background: #fca5a5;
+      box-shadow: 0 0 0 2px rgba(252, 165, 165, 0.4);
+    }
+
+    &.pulsing {
+      animation: priority-pulse 1.5s ease-in-out infinite;
+    }
+  }
+}
+
+@keyframes priority-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 0 2px rgba(252, 165, 165, 0.4);
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 0.6;
+    box-shadow: 0 0 0 8px rgba(252, 165, 165, 0);
+  }
+}
