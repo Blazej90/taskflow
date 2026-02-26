@@ -23,7 +23,7 @@ import { ConfirmService } from '@/shared/ui/confirm-dialog/confirm.service';
 import { AuthService } from '@/features/auth/auth.service';
 
 type Filter = 'all' | TaskStatus;
-type SortOption = 'manual' | 'newest' | 'oldest' | 'status';
+type SortOption = 'manual' | 'newest' | 'oldest' | 'status' | 'priority';
 type ViewMode = 'list' | 'board';
 
 @Component({
@@ -159,6 +159,11 @@ export class TaskList implements OnInit, OnDestroy {
     if (sort === 'status') {
       const order = ['todo', 'doing', 'done'];
       return sorted.sort((a, b) => order.indexOf(a.status) - order.indexOf(b.status));
+    }
+
+    if (sort === 'priority') {
+      const order = ['high', 'medium', 'low']; // High first
+      return sorted.sort((a, b) => order.indexOf(a.priority) - order.indexOf(b.priority));
     }
 
     return sorted;

@@ -303,7 +303,6 @@ p {
     transition: all 0.3s ease;
   }
 
-  // LOW - spokojny zielony
   &.priority-low {
     .priority-dot {
       background: #86efac;
@@ -311,7 +310,6 @@ p {
     }
   }
 
-  // MEDIUM - ciepły żółty
   &.priority-medium {
     .priority-dot {
       background: #fcd34d;
@@ -319,7 +317,6 @@ p {
     }
   }
 
-  // HIGH - koralowy z pulsowaniem
   &.priority-high {
     .priority-dot {
       background: #fca5a5;
