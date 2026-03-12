@@ -3,12 +3,14 @@ import {
   collection,
   deleteDoc,
   doc,
+  FieldValue,
   getDocs,
   onSnapshot,
   orderBy,
   query,
   serverTimestamp,
   setDoc,
+  Timestamp,
   updateDoc,
   where,
   writeBatch,
@@ -30,8 +32,8 @@ type TaskDoc = {
   status: TaskStatus;
   priority: Priority;
   order: number;
-  createdAt?: any;
-  updatedAt?: any;
+  createdAt?: Timestamp | FieldValue;
+  updatedAt?: Timestamp | FieldValue;
 };
 
 @Injectable({ providedIn: 'root' })
@@ -139,7 +141,7 @@ export class FirestoreTasksRepository implements TasksRepository {
 
     const ref = doc(collection(db, 'tasks'), task.id);
 
-    const patch: any = {
+    const patch: Partial<TaskDoc> & { updatedAt: FieldValue } = {
       title: task.title,
       description: task.description ?? '',
       status: task.status,
@@ -198,7 +200,7 @@ export class FirestoreTasksRepository implements TasksRepository {
       const ref = doc(collection(db, 'tasks'), task.id);
 
       if (existingIds.has(task.id)) {
-        const patch: any = {
+        const patch: Partial<TaskDoc> & { updatedAt: FieldValue } = {
           title: task.title,
           description: task.description ?? '',
           status: task.status,

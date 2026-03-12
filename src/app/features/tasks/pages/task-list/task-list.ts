@@ -9,8 +9,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, computed, inject, signal, OnInit, OnDestroy, PLATFORM_ID, Renderer2 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { TaskCard } from '@/features/tasks/components/task-card/task-card';
@@ -46,6 +46,8 @@ export class TaskList implements OnInit, OnDestroy {
   private tasksService = inject(TasksService);
   private toast = inject(ToastService);
   private confirm = inject(ConfirmService);
+  private platformId = inject(PLATFORM_ID);
+  private renderer = inject(Renderer2);
 
   readonly tasks = this.tasksService.tasks;
 
@@ -68,26 +70,27 @@ export class TaskList implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   readonly auth = inject(AuthService);
 
+  private cleanupResize?: () => void;
+  private cleanupScroll?: () => void;
+
   ngOnInit() {
-    this.checkMobile();
-    window.addEventListener('resize', this.onResize);
-    window.addEventListener('scroll', this.onWindowScroll);
-  }
-
-  ngOnDestroy() {
-    window.removeEventListener('resize', this.onResize);
-    window.removeEventListener('scroll', this.onWindowScroll);
-  }
-
-  private checkMobile() {
-    if (typeof window !== 'undefined') {
-      this.isMobileView.set(window.innerWidth <= 768);
+    if (isPlatformBrowser(this.platformId)) {
+      this.checkMobile();
+      this.cleanupResize = this.renderer.listen('window', 'resize', () => this.checkMobile());
+      this.cleanupScroll = this.renderer.listen('window', 'scroll', () => this.onWindowScroll());
     }
   }
 
-  private onResize = () => {
-    this.checkMobile();
-  };
+  ngOnDestroy() {
+    this.cleanupResize?.();
+    this.cleanupScroll?.();
+  }
+
+  private checkMobile() {
+    if (isPlatformBrowser(this.platformId)) {
+      this.isMobileView.set(window.innerWidth <= 768);
+    }
+  }
 
   onBoardScroll(event: Event) {
     const el = event.target as HTMLElement;
@@ -95,14 +98,14 @@ export class TaskList implements OnInit, OnDestroy {
     this.activeColumn.set(Math.round(el.scrollLeft / columnWidth));
   }
 
-  onWindowScroll = () => {
-    if (typeof window !== 'undefined') {
+  private onWindowScroll() {
+    if (isPlatformBrowser(this.platformId)) {
       this.showScrollTop.set(window.scrollY > 400);
     }
-  };
+  }
 
   scrollToTop() {
-    if (typeof window !== 'undefined') {
+    if (isPlatformBrowser(this.platformId)) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
@@ -178,23 +181,31 @@ export class TaskList implements OnInit, OnDestroy {
   }
 
   async removeTask(id: string) {
-    const task = this.tasksService.getById(id);
+    try {
+      const task = this.tasksService.getById(id);
 
-    const confirmed = await this.confirm.open({
-      title: 'Delete task',
-      message: `Are you sure you want to delete "${task?.title ?? 'this task'}"?`,
-      confirmText: 'Delete',
-      cancelText: 'Cancel',
-    });
+      const confirmed = await this.confirm.open({
+        title: 'Delete task',
+        message: `Are you sure you want to delete "${task?.title ?? 'this task'}"?`,
+        confirmText: 'Delete',
+        cancelText: 'Cancel',
+      });
 
-    if (!confirmed) return;
+      if (!confirmed) return;
 
-    await this.tasksService.delete(id);
-    this.toast.success('Task deleted');
+      await this.tasksService.delete(id);
+      this.toast.success('Task deleted');
+    } catch {
+      this.toast.error('Failed to delete task');
+    }
   }
 
   async toggleTaskStatus(id: string) {
-    await this.tasksService.toggleStatus(id);
+    try {
+      await this.tasksService.toggleStatus(id);
+    } catch {
+      this.toast.error('Failed to update task');
+    }
   }
 
   readonly totalCount = computed(() => this.tasks().length);
@@ -206,54 +217,53 @@ export class TaskList implements OnInit, OnDestroy {
   readonly loading = this.tasksService.loading;
 
   async bulkDelete() {
-    const count = this.selectedCount();
-    if (count === 0) return;
+    try {
+      const count = this.selectedCount();
+      if (count === 0) return;
 
-    const confirmed = await this.confirm.open({
-      title: 'Delete tasks',
-      message: `Are you sure you want to delete ${count} selected tasks?`,
-      confirmText: 'Delete',
-      cancelText: 'Cancel',
-    });
+      const confirmed = await this.confirm.open({
+        title: 'Delete tasks',
+        message: `Are you sure you want to delete ${count} selected tasks?`,
+        confirmText: 'Delete',
+        cancelText: 'Cancel',
+      });
 
-    if (!confirmed) return;
+      if (!confirmed) return;
 
-    const ids = Array.from(this.selectedIds());
-    for (const id of ids) await this.tasksService.delete(id);
+      const ids = Array.from(this.selectedIds());
+      await this.tasksService.deleteMany(ids);
 
-    this.toast.success(`${ids.length} tasks deleted`);
-    this.selectedIds.set(new Set());
-    this.selectMode.set(false);
+      this.toast.success(`${ids.length} tasks deleted`);
+      this.selectedIds.set(new Set());
+      this.selectMode.set(false);
+    } catch {
+      this.toast.error('Failed to delete tasks');
+    }
   }
 
   async bulkMarkDone() {
-    const ids = Array.from(this.selectedIds());
-    if (ids.length === 0) return;
+    try {
+      const ids = Array.from(this.selectedIds());
+      if (ids.length === 0) return;
 
-    const confirmed = await this.confirm.open({
-      title: 'Update tasks',
-      message: `Mark ${ids.length} selected tasks as DONE?`,
-      confirmText: 'Update',
-      cancelText: 'Cancel',
-    });
-
-    if (!confirmed) return;
-
-    for (const id of ids) {
-      const task = this.tasksService.getById(id);
-      if (!task) continue;
-
-      await this.tasksService.update(id, {
-        title: task.title,
-        description: task.description ?? '',
-        priority: task.priority,
-        status: 'done',
+      const confirmed = await this.confirm.open({
+        title: 'Update tasks',
+        message: `Mark ${ids.length} selected tasks as DONE?`,
+        confirmText: 'Update',
+        cancelText: 'Cancel',
       });
-    }
 
-    this.toast.success(`${ids.length} tasks updated`);
-    this.selectedIds.set(new Set());
-    this.selectMode.set(false);
+      if (!confirmed) return;
+
+      const updates = ids.map((id) => ({ id, patch: { status: 'done' as const } }));
+      await this.tasksService.updateMany(updates);
+
+      this.toast.success(`${ids.length} tasks updated`);
+      this.selectedIds.set(new Set());
+      this.selectMode.set(false);
+    } catch {
+      this.toast.error('Failed to update tasks');
+    }
   }
 
   onDrop(event: CdkDragDrop<Task[]>) {
@@ -268,32 +278,31 @@ export class TaskList implements OnInit, OnDestroy {
   }
 
   async onBoardDrop(targetStatus: TaskStatus, event: CdkDragDrop<Task[]>) {
-    if (event.previousContainer === event.container && event.previousIndex === event.currentIndex)
-      return;
+    try {
+      if (event.previousContainer === event.container && event.previousIndex === event.currentIndex)
+        return;
 
-    if (event.previousContainer === event.container) {
-      const next = [...event.container.data];
-      moveItemInArray(next, event.previousIndex, event.currentIndex);
-      return;
+      if (event.previousContainer === event.container) {
+        const next = [...event.container.data];
+        moveItemInArray(next, event.previousIndex, event.currentIndex);
+        return;
+      }
+
+      const movedTask = event.previousContainer.data[event.previousIndex];
+      if (!movedTask) return;
+
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+
+      await this.tasksService.update(movedTask.id, { status: targetStatus });
+
+      this.toast.success(`Moved to ${targetStatus.toUpperCase()}`);
+    } catch {
+      this.toast.error('Failed to move task');
     }
-
-    const movedTask = event.previousContainer.data[event.previousIndex];
-    if (!movedTask) return;
-
-    transferArrayItem(
-      event.previousContainer.data,
-      event.container.data,
-      event.previousIndex,
-      event.currentIndex,
-    );
-
-    await this.tasksService.update(movedTask.id, {
-      title: movedTask.title,
-      description: movedTask.description ?? '',
-      priority: movedTask.priority,
-      status: targetStatus,
-    });
-
-    this.toast.success(`Moved to ${targetStatus.toUpperCase()}`);
   }
 }
