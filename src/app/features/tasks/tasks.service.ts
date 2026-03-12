@@ -8,7 +8,6 @@ export class TasksService {
   private _tasks = signal<Task[]>([]);
   readonly tasks = this._tasks.asReadonly();
 
-  // Loading states
   readonly creating = signal(false);
   readonly creatingMany = signal(false);
   private _updatingIds = signal<Set<string>>(new Set());
@@ -68,8 +67,6 @@ export class TasksService {
     return this._deletingIds().has(id) || this._deletingMany();
   }
 
-  // ========== SINGLE OPERATIONS ==========
-
   async create(task: Omit<Task, 'id'>) {
     this.creating.set(true);
 
@@ -112,8 +109,6 @@ export class TasksService {
       this.removeId(this._deletingIds, id);
     }
   }
-
-  // ========== BULK OPERATIONS ==========
 
   async createMany(tasks: Omit<Task, 'id'>[]) {
     if (tasks.length === 0) return;
@@ -170,8 +165,6 @@ export class TasksService {
     }
   }
 
-  // ========== OTHER OPERATIONS ==========
-
   async toggleStatus(id: string) {
     const task = this.getById(id);
     if (!task) return;
@@ -180,12 +173,7 @@ export class TasksService {
     const idx = order.indexOf(task.status);
     const nextStatus = order[(idx + 1) % order.length];
 
-    await this.update(id, {
-      title: task.title,
-      description: task.description ?? '',
-      priority: task.priority,
-      status: nextStatus,
-    });
+    await this.update(id, { status: nextStatus });
   }
 
   async toggleStatusMany(ids: string[]) {
@@ -203,12 +191,7 @@ export class TasksService {
 
         return {
           id,
-          patch: {
-            title: task.title,
-            description: task.description ?? '',
-            priority: task.priority,
-            status: nextStatus,
-          },
+          patch: { status: nextStatus },
         };
       })
       .filter((u): u is NonNullable<typeof u> => u !== null);
@@ -236,8 +219,6 @@ export class TasksService {
 
     await this.repo.reorder(withOrder);
   }
-
-  // ========== HELPERS ==========
 
   private addId(store: typeof this._updatingIds, id: string) {
     store.update((set) => {
