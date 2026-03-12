@@ -162,7 +162,7 @@ export class TaskList implements OnInit, OnDestroy {
     }
 
     if (sort === 'priority') {
-      const order = ['high', 'medium', 'low']; // High first
+      const order = ['high', 'medium', 'low'];
       return sorted.sort((a, b) => order.indexOf(a.priority) - order.indexOf(b.priority));
     }
 
