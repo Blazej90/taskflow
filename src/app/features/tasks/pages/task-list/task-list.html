@@ -305,160 +305,69 @@
   </div>
 
   <div class="board" (scroll)="onBoardScroll($event)">
-    <div class="col col-todo">
-      <div class="col-header">
-        <div class="col-title">
-          <span class="col-dot"></span>
-          <span>Todo</span>
-          <span class="col-count">{{ boardTodo().length }}</span>
+    @for (col of columns(); track col.listId) {
+      <div class="col col-{{ col.status }}">
+        <div class="col-header">
+          <div class="col-title">
+            <span class="col-dot {{ col.dotClass }}"></span>
+            <span>{{ col.label }}</span>
+            <span class="col-count">{{ col.tasks.length }}</span>
+          </div>
         </div>
-      </div>
 
-      <div
-        class="col-list"
-        cdkDropList
-        [cdkDropListData]="boardTodo()"
-        [cdkDropListConnectedTo]="['doingList', 'doneList']"
-        (cdkDropListDropped)="onBoardDrop('todo', $event)"
-        id="todoList"
-        [cdkDropListDisabled]="isMobileView()"
-      >
         <div
-          *ngFor="let t of boardTodo()"
-          cdkDrag
-          class="draggable-row"
-          [cdkDragStartDelay]="{ touch: 180, mouse: 0 }"
-          [cdkDragDisabled]="isMobileView()"
+          class="col-list"
+          cdkDropList
+          [cdkDropListData]="col.tasks"
+          [cdkDropListConnectedTo]="col.connectedTo"
+          (cdkDropListDropped)="onBoardDrop(col.status, $event)"
+          [id]="col.listId"
+          [cdkDropListDisabled]="isMobileView()"
         >
-          <app-task-card
-            [task]="t"
-            [selectable]="selectMode()"
-            [selected]="isSelected(t.id)"
-            (selectedChange)="onSelectedChange($event)"
-            (remove)="removeTask($event)"
-            (toggle)="toggleTaskStatus($event)"
-          ></app-task-card>
-        </div>
+          @for (t of col.tasks; track t.id) {
+            <div
+              cdkDrag
+              class="draggable-row"
+              [cdkDragStartDelay]="{ touch: 180, mouse: 0 }"
+              [cdkDragDisabled]="isMobileView()"
+            >
+              <app-task-card
+                [task]="t"
+                [selectable]="selectMode()"
+                [selected]="isSelected(t.id)"
+                (selectedChange)="onSelectedChange($event)"
+                (remove)="removeTask($event)"
+                (toggle)="toggleTaskStatus($event)"
+              ></app-task-card>
+            </div>
+          }
 
-        <div *ngIf="boardTodo().length === 0" class="col-empty">
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-          >
-            <circle cx="12" cy="12" r="10" stroke-dasharray="4 2" />
-            <path d="M12 8v8M8 12h8" />
-          </svg>
-          <span>No tasks</span>
+          @if (col.tasks.length === 0) {
+            <div class="col-empty">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+              >
+                <circle cx="12" cy="12" r="10" stroke-dasharray="4 2" />
+                @switch (col.emptyIcon) {
+                  @case ('plus') {
+                    <path d="M12 8v8M8 12h8" />
+                  }
+                  @case ('check') {
+                    <path d="M8 12l3 3 5-6" />
+                  }
+                }
+              </svg>
+              <span>No tasks</span>
+            </div>
+          }
         </div>
       </div>
-    </div>
-
-    <div class="col col-doing">
-      <div class="col-header">
-        <div class="col-title">
-          <span class="col-dot"></span>
-          <span>Doing</span>
-          <span class="col-count">{{ boardDoing().length }}</span>
-        </div>
-      </div>
-
-      <div
-        class="col-list"
-        cdkDropList
-        [cdkDropListData]="boardDoing()"
-        [cdkDropListConnectedTo]="['todoList', 'doneList']"
-        (cdkDropListDropped)="onBoardDrop('doing', $event)"
-        id="doingList"
-        [cdkDropListDisabled]="isMobileView()"
-      >
-        <div
-          *ngFor="let t of boardDoing()"
-          cdkDrag
-          class="draggable-row"
-          [cdkDragStartDelay]="{ touch: 180, mouse: 0 }"
-          [cdkDragDisabled]="isMobileView()"
-        >
-          <app-task-card
-            [task]="t"
-            [selectable]="selectMode()"
-            [selected]="isSelected(t.id)"
-            (selectedChange)="onSelectedChange($event)"
-            (remove)="removeTask($event)"
-            (toggle)="toggleTaskStatus($event)"
-          ></app-task-card>
-        </div>
-
-        <div *ngIf="boardDoing().length === 0" class="col-empty">
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-          >
-            <circle cx="12" cy="12" r="10" stroke-dasharray="4 2" />
-          </svg>
-          <span>No tasks</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="col col-done">
-      <div class="col-header">
-        <div class="col-title">
-          <span class="col-dot"></span>
-          <span>Done</span>
-          <span class="col-count">{{ boardDone().length }}</span>
-        </div>
-      </div>
-
-      <div
-        class="col-list"
-        cdkDropList
-        [cdkDropListData]="boardDone()"
-        [cdkDropListConnectedTo]="['todoList', 'doingList']"
-        (cdkDropListDropped)="onBoardDrop('done', $event)"
-        id="doneList"
-        [cdkDropListDisabled]="isMobileView()"
-      >
-        <div
-          *ngFor="let t of boardDone()"
-          cdkDrag
-          class="draggable-row"
-          [cdkDragStartDelay]="{ touch: 180, mouse: 0 }"
-          [cdkDragDisabled]="isMobileView()"
-        >
-          <app-task-card
-            [task]="t"
-            [selectable]="selectMode()"
-            [selected]="isSelected(t.id)"
-            (selectedChange)="onSelectedChange($event)"
-            (remove)="removeTask($event)"
-            (toggle)="toggleTaskStatus($event)"
-          ></app-task-card>
-        </div>
-
-        <div *ngIf="boardDone().length === 0" class="col-empty">
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-          >
-            <circle cx="12" cy="12" r="10" stroke-dasharray="4 2" />
-            <path d="M8 12l3 3 5-6" />
-          </svg>
-          <span>No tasks</span>
-        </div>
-      </div>
-    </div>
+    }
   </div>
 </ng-template>
 <button

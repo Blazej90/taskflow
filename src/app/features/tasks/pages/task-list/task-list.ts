@@ -176,6 +176,36 @@ export class TaskList implements OnInit, OnDestroy {
   readonly boardDoing = computed(() => this.filteredTasks().filter((t) => t.status === 'doing'));
   readonly boardDone = computed(() => this.filteredTasks().filter((t) => t.status === 'done'));
 
+  readonly columns = computed(() => [
+    {
+      status: 'todo' as const,
+      label: 'Todo',
+      tasks: this.boardTodo(),
+      listId: 'todoList',
+      connectedTo: ['doingList', 'doneList'],
+      dotClass: 'dot-todo',
+      emptyIcon: 'plus',
+    },
+    {
+      status: 'doing' as const,
+      label: 'Doing',
+      tasks: this.boardDoing(),
+      listId: 'doingList',
+      connectedTo: ['todoList', 'doneList'],
+      dotClass: 'dot-doing',
+      emptyIcon: 'circle',
+    },
+    {
+      status: 'done' as const,
+      label: 'Done',
+      tasks: this.boardDone(),
+      listId: 'doneList',
+      connectedTo: ['todoList', 'doingList'],
+      dotClass: 'dot-done',
+      emptyIcon: 'check',
+    },
+  ]);
+
   setFilter(next: Filter) {
     this.statusFilter.set(next);
   }
