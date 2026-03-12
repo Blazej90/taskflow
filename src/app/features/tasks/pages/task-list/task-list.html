@@ -1,9 +1,11 @@
 <div class="topbar">
   <div class="user">
-    <span *ngIf="auth.user() as u"
-      >Signed in as <b>{{ u.email }}</b></span
-    >
-    <span *ngIf="!auth.user()">Not signed in</span>
+    @if (auth.user(); as u) {
+      <span>Signed in as <b>{{ u.email }}</b></span>
+    }
+    @if (!auth.user()) {
+      <span>Not signed in</span>
+    }
   </div>
 
   <button class="btn logout-btn" (click)="logout()" [disabled]="auth.loading() || !auth.user()">
@@ -23,8 +25,9 @@
   </button>
 </div>
 
-<header class="header" *ngIf="!selectMode(); else selectionToolbar">
-  <div class="view-toggle">
+@if (!selectMode()) {
+  <header class="header">
+    <div class="view-toggle">
     <button
       type="button"
       class="view-btn"
@@ -113,9 +116,8 @@
       </svg>
     </a>
   </div>
-</header>
-
-<ng-template #selectionToolbar>
+  </header>
+} @else {
   <header class="selection-toolbar">
     <div class="left">
       <button
@@ -154,7 +156,7 @@
       </button>
     </div>
   </header>
-</ng-template>
+}
 
 <div class="filters">
   <button
@@ -269,35 +271,37 @@
     Board
   </button>
 </div>
-<p *ngIf="!isManualOrder()" class="hint">
-  Reordering is available only in <strong>Oldest first</strong> mode.
-</p>
-<section
-  *ngIf="viewMode() === 'list'; else boardView"
-  class="list"
-  cdkDropList
-  [cdkDropListDisabled]="!isManualOrder()"
-  (cdkDropListDropped)="onDrop($event)"
->
-  <div
-    *ngFor="let t of filteredTasks(); let i = index"
-    class="draggable-row"
-    cdkDrag
-    [cdkDragDisabled]="!isManualOrder()"
-    [cdkDragStartDelay]="{ touch: 180, mouse: 0 }"
+@if (!isManualOrder()) {
+  <p class="hint">
+    Reordering is available only in <strong>Oldest first</strong> mode.
+  </p>
+}
+@if (viewMode() === 'list') {
+  <section
+    class="list"
+    cdkDropList
+    [cdkDropListDisabled]="!isManualOrder()"
+    (cdkDropListDropped)="onDrop($event)"
   >
-    <app-task-card
-      [task]="t"
-      [selectable]="selectMode()"
-      [selected]="isSelected(t.id)"
-      (selectedChange)="onSelectedChange($event)"
-      (remove)="removeTask($event)"
-      (toggle)="toggleTaskStatus($event)"
-    ></app-task-card>
-  </div>
-</section>
-<ng-template #boardView>
-  <!-- Wskaźniki kolumn na mobile -->
+    @for (t of filteredTasks(); track t.id) {
+      <div
+        class="draggable-row"
+        cdkDrag
+        [cdkDragDisabled]="!isManualOrder()"
+        [cdkDragStartDelay]="{ touch: 180, mouse: 0 }"
+      >
+        <app-task-card
+          [task]="t"
+          [selectable]="selectMode()"
+          [selected]="isSelected(t.id)"
+          (selectedChange)="onSelectedChange($event)"
+          (remove)="removeTask($event)"
+          (toggle)="toggleTaskStatus($event)"
+        ></app-task-card>
+      </div>
+    }
+  </section>
+} @else {
   <div class="board-indicators">
     <span [class.active]="activeColumn() === 0"></span>
     <span [class.active]="activeColumn() === 1"></span>
@@ -369,7 +373,7 @@
       </div>
     }
   </div>
-</ng-template>
+}
 <button
   class="fab scroll-top"
   type="button"
@@ -388,7 +392,8 @@
     <polyline points="18 15 12 9 6 15"></polyline>
   </svg>
 </button>
-<div *ngIf="isEmpty()" class="empty">
+@if (isEmpty()) {
+  <div class="empty">
   <div class="empty-icon">
     <svg
       width="64"
@@ -420,4 +425,5 @@
     </svg>
     <span>New</span>
   </a>
-</div>
+  </div>
+}
