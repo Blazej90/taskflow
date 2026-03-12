@@ -1,21 +1,53 @@
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Tasks collection - users can only access their own tasks
     match /tasks/{taskId} {
-      // Allow read only if task belongs to authenticated user
-      allow read: if request.auth != null && request.auth.uid == resource.data.userId;
-      
-      // Allow create only if setting userId to current user
-      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
-      
-      // Allow update only if task belongs to current user AND userId is not changed
-      allow update: if request.auth != null 
-        && request.auth.uid == resource.data.userId 
-        && request.auth.uid == request.resource.data.userId;
-      
-      // Allow delete only if task belongs to current user
-      allow delete: if request.auth != null && request.auth.uid == resource.data.userId;
+
+      allow get, list: if signedIn() 
+        && resource.data.userId == request.auth.uid;
+
+      allow create: if signedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.title is string
+        && request.resource.data.title.size() > 0
+        && request.resource.data.status in ['todo', 'doing', 'done']
+        && request.resource.data.order is number;
+
+      allow update: if signedIn()
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.userId == resource.data.userId
+        && isValidOptionalString(request.resource.data, 'title', 1, 200)
+        && isValidOptionalStatus(request.resource.data, 'status')
+        && isValidOptionalNumber(request.resource.data, 'order')
+        && isValidOptionalString(request.resource.data, 'description', 0, 2000);
+
+      allow delete: if signedIn()
+        && resource.data.userId == request.auth.uid;
+
     }
+
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isValidOptionalString(data, field, minLen, maxLen) {
+      return !data.keys().hasAny([field]) 
+        || (data[field] is string 
+            && data[field].size() >= minLen 
+            && data[field].size() <= maxLen);
+    }
+
+    function isValidOptionalStatus(data, field) {
+      return !data.keys().hasAny([field]) 
+        || data[field] in ['todo', 'doing', 'done'];
+    }
+
+    function isValidOptionalNumber(data, field) {
+      return !data.keys().hasAny([field]) 
+        || data[field] is number;
+    }
+
   }
 }
