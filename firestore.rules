@@ -12,6 +12,7 @@ service cloud.firestore {
         && request.resource.data.title is string
         && request.resource.data.title.size() > 0
         && request.resource.data.status in ['todo', 'doing', 'done']
+        && request.resource.data.priority in ['low', 'medium', 'high']
         && request.resource.data.order is number;
 
       allow update: if signedIn()
@@ -19,6 +20,7 @@ service cloud.firestore {
         && request.resource.data.userId == resource.data.userId
         && isValidOptionalString(request.resource.data, 'title', 1, 200)
         && isValidOptionalStatus(request.resource.data, 'status')
+        && isValidOptionalPriority(request.resource.data, 'priority')
         && isValidOptionalNumber(request.resource.data, 'order')
         && isValidOptionalString(request.resource.data, 'description', 0, 2000);
 
@@ -42,6 +44,11 @@ service cloud.firestore {
     function isValidOptionalStatus(data, field) {
       return !data.keys().hasAny([field]) 
         || data[field] in ['todo', 'doing', 'done'];
+    }
+
+    function isValidOptionalPriority(data, field) {
+      return !data.keys().hasAny([field]) 
+        || data[field] in ['low', 'medium', 'high'];
     }
 
     function isValidOptionalNumber(data, field) {
