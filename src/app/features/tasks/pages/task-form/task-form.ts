@@ -7,6 +7,7 @@ import { TasksService } from '../../tasks.service';
 import { TaskStatus, Priority } from '../../task';
 import { ToastService } from '@/shared/ui/toast/toast.service';
 
+/** Shape of the task form values */
 type TaskFormValue = {
   title: string;
   description: string;
@@ -14,6 +15,20 @@ type TaskFormValue = {
   status: TaskStatus;
 };
 
+/**
+ * Form for creating or editing a task.
+ *
+ * Supports two modes:
+ * - Create mode: empty form for new task
+ * - Edit mode: pre-filled form for existing task (based on route :id param)
+ *
+ * On successful submit, navigates back to task list.
+ *
+ * @example
+ * // Routes configuration
+ * { path: 'tasks/new', component: TaskForm }, // create mode
+ * { path: 'tasks/:id/edit', component: TaskForm } // edit mode
+ */
 @Component({
   selector: 'app-task-form',
   standalone: true,
@@ -28,11 +43,16 @@ export class TaskForm {
   private router = inject(Router);
   private toast = inject(ToastService);
 
+  /** True when editing existing task, false when creating new */
   isEdit = false;
+
+  /** ID of task being edited, null when creating */
   taskId: string | null = null;
 
+  /** Loading state from tasks service */
   readonly loading = this.tasksService.loading;
 
+  /** Reactive form definition with validation */
   form: FormGroup = this.fb.group({
     title: ['', [Validators.required, Validators.minLength(2)]],
     description: [''],
@@ -51,7 +71,7 @@ export class TaskForm {
         this.form.patchValue({
           title: task.title,
           description: task.description ?? '',
-          priority: task.priority ?? 'medium', // DODAJ TO
+          priority: task.priority ?? 'medium',
           status: task.status,
         });
       } else {
@@ -61,6 +81,12 @@ export class TaskForm {
     }
   }
 
+  /**
+   * Handles form submission.
+   *
+   * Validates form, creates or updates task based on mode,
+   * shows success/error toast, and navigates to task list.
+   */
   async submit() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();

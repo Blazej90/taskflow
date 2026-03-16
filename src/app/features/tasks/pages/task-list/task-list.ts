@@ -22,10 +22,30 @@ import { ConfirmService } from '@/shared/ui/confirm-dialog/confirm.service';
 
 import { AuthService } from '@/features/auth/auth.service';
 
+/** Filter option for task status */
 type Filter = 'all' | TaskStatus;
+
+/** Task sorting options */
 type SortOption = 'manual' | 'newest' | 'oldest' | 'status' | 'priority';
+
+/** Display mode for task list */
 type ViewMode = 'list' | 'board';
 
+/**
+ * Main task list page with multiple views and bulk actions.
+ *
+ * Features:
+ * - List view (sortable table/list) and Board view (Kanban columns)
+ * - Filtering by status and text search
+ * - Sorting by date, priority, status, or manual order
+ * - Bulk selection and actions (delete, mark done)
+ * - Drag & drop for reordering and status changes
+ * - Mobile-responsive with swipeable board columns
+ *
+ * @example
+ * // Routes configuration
+ * { path: 'tasks', component: TaskList, canActivate: [authGuard] }
+ */
 @Component({
   selector: 'app-task-list',
   standalone: true,
@@ -49,25 +69,42 @@ export class TaskList implements OnInit, OnDestroy {
   private platformId = inject(PLATFORM_ID);
   private renderer = inject(Renderer2);
 
+  /** All tasks from the service */
   readonly tasks = this.tasksService.tasks;
 
+  /** Current status filter ('all' or specific status) */
   readonly statusFilter = signal<Filter>('all');
+
+  /** Current search text for filtering by title */
   readonly searchTerm = signal('');
+
+  /** Current sort option */
   readonly sortBy = signal<SortOption>('manual');
 
+  /** Current view mode (list or board) */
   readonly viewMode = signal<ViewMode>('list');
 
+  /** Whether bulk selection mode is active */
   readonly selectMode = signal(false);
+
+  /** Set of selected task IDs for bulk actions */
   readonly selectedIds = signal<Set<string>>(new Set());
 
+  /** True when sorting by manual order (enables drag & drop) */
   readonly isManualOrder = computed(() => this.sortBy() === 'manual');
 
+  /** True when viewport is mobile width (≤768px) */
   readonly isMobileView = signal(false);
+
+  /** Currently visible board column index (for mobile swipe) */
   readonly activeColumn = signal(0);
 
+  /** True when page is scrolled down (shows scroll-to-top button) */
   readonly showScrollTop = signal(false);
 
   private readonly router = inject(Router);
+
+  /** Auth service exposed for user info and logout */
   readonly auth = inject(AuthService);
 
   private cleanupResize?: () => void;
@@ -92,6 +129,7 @@ export class TaskList implements OnInit, OnDestroy {
     }
   }
 
+  /** Handles horizontal scroll on board to update active column indicator */
   onBoardScroll(event: Event) {
     const el = event.target as HTMLElement;
     const columnWidth = el.offsetWidth * 0.85;
@@ -104,21 +142,25 @@ export class TaskList implements OnInit, OnDestroy {
     }
   }
 
+  /** Scrolls window to top smoothly */
   scrollToTop() {
     if (isPlatformBrowser(this.platformId)) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
 
+  /** Logs out user and redirects to auth page */
   async logout() {
     await this.auth.logout();
     await this.router.navigateByUrl('/auth');
   }
 
+  /** Changes view mode between list and board */
   setViewMode(mode: ViewMode) {
     this.viewMode.set(mode);
   }
 
+  /** Toggles bulk selection mode and clears selection when exiting */
   toggleSelectMode() {
     const next = !this.selectMode();
     this.selectMode.set(next);
@@ -128,6 +170,7 @@ export class TaskList implements OnInit, OnDestroy {
     }
   }
 
+  /** Updates selection state for a task */
   onSelectedChange(e: { id: string; selected: boolean }) {
     this.selectedIds.update((set) => {
       const next = new Set(set);
@@ -137,12 +180,15 @@ export class TaskList implements OnInit, OnDestroy {
     });
   }
 
+  /** Checks if a task is currently selected */
   isSelected(id: string): boolean {
     return this.selectedIds().has(id);
   }
 
+  /** Number of currently selected tasks */
   readonly selectedCount = computed(() => this.selectedIds().size);
 
+  /** Filtered and sorted tasks based on current filter/sort settings */
   readonly filteredTasks = computed(() => {
     const f = this.statusFilter();
     const q = this.searchTerm().trim().toLowerCase();
@@ -172,10 +218,12 @@ export class TaskList implements OnInit, OnDestroy {
     return sorted;
   });
 
+  // Board column computed signals
   readonly boardTodo = computed(() => this.filteredTasks().filter((t) => t.status === 'todo'));
   readonly boardDoing = computed(() => this.filteredTasks().filter((t) => t.status === 'doing'));
   readonly boardDone = computed(() => this.filteredTasks().filter((t) => t.status === 'done'));
 
+  /** Board column configuration for template rendering */
   readonly columns = computed(() => [
     {
       status: 'todo' as const,
@@ -206,10 +254,15 @@ export class TaskList implements OnInit, OnDestroy {
     },
   ]);
 
+  /** Sets status filter value */
   setFilter(next: Filter) {
     this.statusFilter.set(next);
   }
 
+  /**
+   * Deletes a task after confirmation.
+   * Shows toast notification on success/failure.
+   */
   async removeTask(id: string) {
     try {
       const task = this.tasksService.getById(id);
@@ -230,6 +283,7 @@ export class TaskList implements OnInit, OnDestroy {
     }
   }
 
+  /** Toggles task status (todo → doing → done → todo) */
   async toggleTaskStatus(id: string) {
     try {
       await this.tasksService.toggleStatus(id);
@@ -238,6 +292,7 @@ export class TaskList implements OnInit, OnDestroy {
     }
   }
 
+  // Task count computed signals
   readonly totalCount = computed(() => this.tasks().length);
   readonly todoCount = computed(() => this.tasks().filter((t) => t.status === 'todo').length);
   readonly doingCount = computed(() => this.tasks().filter((t) => t.status === 'doing').length);
@@ -246,6 +301,10 @@ export class TaskList implements OnInit, OnDestroy {
   readonly isEmpty = computed(() => this.filteredTasks().length === 0);
   readonly loading = this.tasksService.loading;
 
+  /**
+   * Deletes all selected tasks after confirmation.
+   * Exits select mode on completion.
+   */
   async bulkDelete() {
     try {
       const count = this.selectedCount();
@@ -271,6 +330,10 @@ export class TaskList implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Marks all selected tasks as done after confirmation.
+   * Exits select mode on completion.
+   */
   async bulkMarkDone() {
     try {
       const ids = Array.from(this.selectedIds());
@@ -296,6 +359,10 @@ export class TaskList implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Handles drag & drop reordering in list view.
+   * Only works in manual sort mode.
+   */
   onDrop(event: CdkDragDrop<Task[]>) {
     if (!this.isManualOrder()) return;
     if (event.previousIndex === event.currentIndex) return;
@@ -307,6 +374,10 @@ export class TaskList implements OnInit, OnDestroy {
     this.toast.success('Order saved');
   }
 
+  /**
+   * Handles drag & drop between board columns.
+   * Updates task status when moved to different column.
+   */
   async onBoardDrop(targetStatus: TaskStatus, event: CdkDragDrop<Task[]>) {
     try {
       if (event.previousContainer === event.container && event.previousIndex === event.currentIndex)
