@@ -156,10 +156,7 @@ export class TasksService {
     this.creating.set(true);
 
     try {
-      await this.simulate();
-
       const newTask: Task = { ...task, id: crypto.randomUUID() };
-
       await this.repo.create(newTask);
     } finally {
       this.creating.set(false);
@@ -190,13 +187,10 @@ export class TasksService {
     this.addId(this._updatingIds, id);
 
     try {
-      await this.simulate();
-
       const task = this.getById(id);
       if (!task) return;
 
       const updatedTask: Task = { ...task, ...patch };
-
       await this.repo.update(updatedTask);
     } finally {
       this.removeId(this._updatingIds, id);
@@ -214,8 +208,6 @@ export class TasksService {
     this.addId(this._deletingIds, id);
 
     try {
-      await this.simulate();
-
       await this.repo.delete(id);
     } finally {
       this.removeId(this._deletingIds, id);
@@ -236,13 +228,10 @@ export class TasksService {
     this.creatingMany.set(true);
 
     try {
-      await this.simulate();
-
       const newTasks: Task[] = tasks.map((task) => ({
         ...task,
         id: crypto.randomUUID(),
       }));
-
       await Promise.all(newTasks.map((t) => this.repo.create(t)));
     } finally {
       this.creatingMany.set(false);
@@ -269,8 +258,6 @@ export class TasksService {
     this._updatingMany.set(true);
 
     try {
-      await this.simulate();
-
       const updatePromises = updates.map(({ id, patch }) => {
         const task = this.getById(id);
         if (!task) return Promise.resolve();
@@ -298,8 +285,6 @@ export class TasksService {
     this._deletingMany.set(true);
 
     try {
-      await this.simulate();
-
       await Promise.all(ids.map((id) => this.repo.delete(id)));
     } finally {
       this._deletingMany.set(false);
@@ -409,12 +394,6 @@ export class TasksService {
       const next = new Set(set);
       next.delete(id);
       return next;
-    });
-  }
-
-  private simulate(delayMs = 400): Promise<void> {
-    return new Promise((resolve) => {
-      setTimeout(() => resolve(), delayMs);
     });
   }
 }

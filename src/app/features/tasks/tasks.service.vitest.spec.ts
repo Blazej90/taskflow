@@ -56,13 +56,8 @@ class InMemoryTasksRepository implements TasksRepository {
 
 function makeService(repo?: TasksRepository) {
   const r = repo ?? new InMemoryTasksRepository();
-
   const destroyRef = new FakeDestroyRef();
-
   const service = new TasksService(r as any, destroyRef as any);
-
-  vi.spyOn(service as any, 'simulate').mockResolvedValue(undefined);
-
   return { service, repo: r, destroyRef };
 }
 
@@ -155,20 +150,25 @@ describe('TasksService', () => {
     const repo = new InMemoryTasksRepository();
     repo.save([{ id: '1', title: 'A', description: '', status: 'todo' }]);
 
-    const { service } = makeService(repo);
+    // Make delete async to test loading state
+    const originalDelete = repo.delete.bind(repo);
+    let resolveDelete!: () => void;
+    repo.delete = vi.fn(() => new Promise<void>((resolve) => (resolveDelete = resolve)));
 
-    let resolveSim!: () => void;
-    (service as any).simulate = vi.fn(() => new Promise<void>((resolve) => (resolveSim = resolve)));
+    const { service } = makeService(repo);
 
     const promise = service.delete('1');
 
     expect(service.isDeleting('1')).toBe(true);
     expect(service.loading()).toBe(true);
 
-    resolveSim();
+    resolveDelete();
     await promise;
 
     expect(service.isDeleting('1')).toBe(false);
     expect(service.loading()).toBe(false);
+
+    // Restore original
+    repo.delete = originalDelete;
   });
 });
