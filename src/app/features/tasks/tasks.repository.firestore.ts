@@ -47,7 +47,6 @@ export class FirestoreTasksRepository implements TasksRepository {
 
   load(): void {
     const user = this.auth.user();
-    console.log('LOAD - user:', user?.uid);
 
     if (!user) {
       this.tasksSubject.next([]);
@@ -62,15 +61,11 @@ export class FirestoreTasksRepository implements TasksRepository {
       orderBy('order', 'asc'),
     );
 
-    console.log('LOAD - starting onSnapshot');
-
     this.unsubscribe = onSnapshot(
       q,
       (snapshot) => {
-        console.log('LOAD - snapshot received, docs count:', snapshot.docs.length);
         const tasks = snapshot.docs.map((d: QueryDocumentSnapshot<DocumentData>) => {
           const data = d.data() as TaskDoc;
-          console.log('LOAD - task:', d.id, data.title);
           return {
             id: d.id,
             title: data.title,
@@ -84,7 +79,7 @@ export class FirestoreTasksRepository implements TasksRepository {
         this.tasksSubject.next(tasks);
       },
       (error) => {
-        console.error('LOAD - error:', error.message, error.code);
+        console.error('Failed to load tasks:', error.message, error.code);
         this.tasksSubject.next([]);
       },
     );
@@ -102,17 +97,11 @@ export class FirestoreTasksRepository implements TasksRepository {
     const user = this.auth.user();
 
     if (!user) {
-      console.warn('Cannot save: no user');
+      console.warn('Cannot save: no user authenticated');
       return;
     }
 
-    try {
-      await this.saveToFirestore(user.uid, tasks);
-      console.log('✅ Saved successfully');
-    } catch (error) {
-      console.error('❌ Save failed:', error);
-      throw error;
-    }
+    await this.saveToFirestore(user.uid, tasks);
   }
 
   async create(task: Task): Promise<void> {

@@ -4,8 +4,6 @@ import type { FirebaseApp } from 'firebase/app';
 function getFirebaseConfig() {
   const cfg = (window as any).__FIREBASE_CONFIG__;
 
-  console.log('WINDOW CONFIG AT INIT:', cfg);
-
   if (!cfg?.apiKey) {
     throw new Error('Brak Firebase config. Sprawdź czy /firebase-config.js się ładuje.');
   }
