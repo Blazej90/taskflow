@@ -31,30 +31,33 @@ TaskFlow to nie tylko kolejna aplikacja TODO - to **pokaz moich umiejętności**
 
 ## ✨ Funkcjonalności
 
-| Feature | Opis | Technologia |
-|---------|------|-------------|
-| **🎯 Kanban Board** | Przeciągnij i upuść zadania między kolumnami todo/doing/done | Angular CDK Drag & Drop |
-| **📦 Bulk Actions** | Zaznacz wiele zadań i usuń/oznacz jako done na raz | Signals + Checkbox selection |
-| **🔍 Smart Filtering** | Filtruj po statusie, szukaj po tytule, sortuj po dacie/priorytecie | Computed Signals |
-| **📱 Mobile First** | Swipeable kanban na mobile, responsywny layout | CSS Grid + Flexbox |
-| **⚡ Real-time** | Instant sync między urządzeniami dzięki Firestore | Firebase onSnapshot |
-| **🔐 Auth** | Logowanie Google OAuth lub Magic Link (bez hasła) | Firebase Auth |
+| Feature                | Opis                                                               | Technologia                  |
+| ---------------------- | ------------------------------------------------------------------ | ---------------------------- |
+| **🎯 Kanban Board**    | Przeciągnij i upuść zadania między kolumnami todo/doing/done       | Angular CDK Drag & Drop      |
+| **📦 Bulk Actions**    | Zaznacz wiele zadań i usuń/oznacz jako done na raz                 | Signals + Checkbox selection |
+| **🔍 Smart Filtering** | Filtruj po statusie, szukaj po tytule, sortuj po dacie/priorytecie | Computed Signals             |
+| **📱 Mobile First**    | Swipeable kanban na mobile, responsywny layout                     | CSS Grid + Flexbox           |
+| **⚡ Real-time**       | Instant sync między urządzeniami dzięki Firestore                  | Firebase onSnapshot          |
+| **🔐 Auth**            | Logowanie Google OAuth lub Magic Link (bez hasła)                  | Firebase Auth                |
 
 ---
 
 ## 🛠 Tech Stack
 
 ### Frontend
+
 ![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 ![RxJS](https://img.shields.io/badge/RxJS-B7178C?style=for-the-badge&logo=reactivex&logoColor=white)
 ![SCSS](https://img.shields.io/badge/SCSS-CC6699?style=for-the-badge&logo=sass&logoColor=white)
 
 ### Backend / Cloud
+
 ![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
 ![Firestore](https://img.shields.io/badge/Firestore-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
 
 ### Dev Tools
+
 ![pnpm](https://img.shields.io/badge/pnpm-F69220?style=for-the-badge&logo=pnpm&logoColor=white)
 ![Vitest](https://img.shields.io/badge/Vitest-6E9F18?style=for-the-badge&logo=vitest&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
@@ -64,6 +67,7 @@ TaskFlow to nie tylko kolejna aplikacja TODO - to **pokaz moich umiejętności**
 ## 🏗 Architektura
 
 ### Repository Pattern
+
 Aplikacja używa **abstrakcji warstwy danych**, co pozwala łatwo zmieniać implementację (localStorage ↔ Firestore) bez zmiany logiki biznesowej:
 
 ```
@@ -80,7 +84,9 @@ Aplikacja używa **abstrakcji warstwy danych**, co pozwala łatwo zmieniać impl
 ```
 
 ### State Management bez NgRx
+
 Zamiast NgRx użyłem **Angular Signals**:
+
 - Prostszy mental model
 - Mniej boilerplate'u
 - Lepsza wydajność (fine-grained reactivity)
@@ -101,11 +107,12 @@ readonly filteredTasks = computed(() => {
 
 ![TaskFlow Kanban Board](./public/images/screen.jpg)
 
-Powyższy screen pokazuje **główny widok aplikacji** z kanban board. 
+Powyższy screen pokazuje **główny widok aplikacji** z kanban board.
 
 Aplikacja oferuje również:
+
 - 📱 **Mobile view** - swipeable kolumny na telefonie
-- ✏️ **Formularz edycji** - tworzenie i edycja zadań z walidacją  
+- ✏️ **Formularz edycji** - tworzenie i edycja zadań z walidacją
 - 🔐 **Ekran logowania** - Google Sign-In i Magic Link
 - 📦 **Bulk actions** - zaznaczanie wielu zadań naraz
 
@@ -134,6 +141,7 @@ pnpm test:unit
 ```
 
 ### Wymagania
+
 - Node.js 20+
 - pnpm 10+
 - Konto Firebase (dla full functionality)
@@ -153,6 +161,7 @@ pnpm test:watch
 ```
 
 **Pokrycie testami:**
+
 - ✅ `TasksService` - operacje CRUD, bulk actions, state management
 - ✅ `AuthService` - logowanie, obsługa błędów
 - ✅ Mocki repozytorium dla izolowanych testów
@@ -162,6 +171,7 @@ pnpm test:watch
 ## 🎯 Kluczowe implementacje
 
 ### 1. Per-task loading states
+
 Zamiast jednego globalnego loadera, każde zadanie ma własny stan ładowania:
 
 ```typescript
@@ -170,12 +180,15 @@ readonly updatingIds = signal<Set<string>>(new Set());
 ```
 
 ### 2. Optimistic UI z rollbackiem
+
 Operacje wykonują się natychmiast w UI, z możliwością cofnięcia przy błędzie.
 
 ### 3. SSR-safe code
+
 Wszystkie operacje na window/document są opakowane w `isPlatformBrowser()`.
 
 ### 4. Dependency Injection bez konstruktorów
+
 Nowoczesna składnia Angulara:
 
 ```typescript
@@ -230,7 +243,7 @@ pnpm preview
 
 [![Portfolio](https://img.shields.io/badge/Portfolio-FF5722?style=flat-square&logo=google-chrome&logoColor=white)](https://blazej-portfolio-sand.vercel.app)
 [![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/Blazej90)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/b%C5%82a%C5%BCe-bartoszewski)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/błażej-bartoszewski-36b7162b7)
 
 ---
 
