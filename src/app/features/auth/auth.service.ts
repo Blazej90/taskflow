@@ -12,15 +12,54 @@ import {
   User,
 } from 'firebase/auth';
 
+/**
+ * Authentication service handling user sign-in and sign-out.
+ *
+ * Supports two authentication methods:
+ * - Google Sign-In (popup-based OAuth)
+ * - Magic Link (email-based passwordless authentication)
+ *
+ * Uses Firebase Auth and exposes reactive signals for UI binding.
+ *
+ * @example
+ * // Template usage
+ * @if (auth.user()) {
+ *   <p>Welcome {{ auth.user()?.displayName }}</p>
+ *   <button (click)="auth.logout()">Logout</button>
+ * } @else {
+ *   <button (click)="auth.loginWithGoogle()">Login with Google</button>
+ * }
+ *
+ * @example
+ * // Component usage
+ * export class MyComponent {
+ *   auth = inject(AuthService);
+ *
+ *   async handleLogin() {
+ *     await this.auth.loginWithGoogle();
+ *     if (this.auth.error()) {
+ *       console.error('Login failed:', this.auth.error());
+ *     }
+ *   }
+ * }
+ */
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private auth = getAuth(firebaseApp);
 
+  /** Currently authenticated user, null if not logged in */
   user = signal<User | null>(null);
+
+  /** Loading state for ongoing authentication operations */
   loading = signal(false);
+
+  /** Error message from last failed operation, null if no error */
   error = signal<string | null>(null);
 
+  /** Whether magic link has been sent successfully */
   magicLinkSent = signal(false);
+
+  /** Email address used for magic link (stored for confirmation UI) */
   magicLinkEmail = signal<string | null>(null);
 
   constructor() {
@@ -29,6 +68,13 @@ export class AuthService {
     });
   }
 
+  /**
+   * Converts Firebase error codes to user-friendly Polish messages.
+   *
+   * @param err - Firebase error object
+   * @returns Localized error message for display in UI
+   * @internal
+   */
   private toUserMessage(err: any): string {
     const code = (err?.code || '').toString();
 
@@ -70,6 +116,14 @@ export class AuthService {
     }
   }
 
+  /**
+   * Initiates Google Sign-In using popup-based OAuth flow.
+   *
+   * Opens a Google authentication popup. On success, user signal is updated.
+   * On failure, error signal contains localized error message.
+   *
+   * @returns Promise that resolves when popup closes (success or failure)
+   */
   async loginWithGoogle() {
     try {
       this.loading.set(true);
@@ -84,6 +138,21 @@ export class AuthService {
     }
   }
 
+  /**
+   * Sends a magic link (passwordless sign-in link) to the provided email.
+   *
+   * The user will receive an email with a link. Clicking it opens the app
+   * and completes authentication via completeMagicLinkLogin().
+   *
+   * @param email - The email address to send the magic link to
+   * @returns Promise that resolves when email is sent (or fails)
+   *
+   * @example
+   * await auth.sendMagicLink('user@example.com');
+   * if (auth.magicLinkSent()) {
+   *   // Show "Check your email" message
+   * }
+   */
   async sendMagicLink(email: string) {
     try {
       this.loading.set(true);
@@ -106,6 +175,21 @@ export class AuthService {
     }
   }
 
+  /**
+   * Completes the magic link authentication flow.
+   *
+   * Call this on app initialization or auth page load to handle
+   * incoming magic link URLs. Retrieves email from localStorage
+   * or prompts user if not found.
+   *
+   * @returns Promise that resolves when authentication completes
+   *
+   * @example
+   * // In auth page component
+   * ngOnInit() {
+   *   this.auth.completeMagicLinkLogin();
+   * }
+   */
   async completeMagicLinkLogin() {
     if (!isSignInWithEmailLink(this.auth, window.location.href)) return;
 
@@ -133,11 +217,24 @@ export class AuthService {
     }
   }
 
+  /**
+   * Resets magic link state signals.
+   *
+   * Call this when navigating away from magic link UI
+   * to clear success/error states.
+   */
   resetMagicLinkState() {
     this.magicLinkSent.set(false);
     this.magicLinkEmail.set(null);
   }
 
+  /**
+   * Signs out the current user.
+   *
+   * Clears authentication state and redirects to login page if needed.
+   *
+   * @returns Promise that resolves when sign-out completes
+   */
   async logout() {
     await signOut(this.auth);
   }

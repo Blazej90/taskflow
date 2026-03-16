@@ -3,24 +3,70 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Task } from './task';
 import { TASKS_REPOSITORY, TasksRepository } from './task.repository';
 
+/**
+ * Service for managing tasks state and operations.
+ *
+ * Acts as a facade between UI components and the repository layer.
+ * Uses Angular Signals for reactive state management and provides
+ * optimistic updates with loading indicators.
+ *
+ * @example
+ * // Basic usage in component
+ * export class TaskList {
+ *   private tasksService = inject(TasksService);
+ *
+ *   // Read tasks reactively
+ *   tasks = this.tasksService.tasks;
+ *   loading = this.tasksService.loading;
+ *
+ *   async handleCreate() {
+ *     await this.tasksService.create({
+ *       title: 'New Task',
+ *       status: 'todo',
+ *       priority: 'medium'
+ *     });
+ *   }
+ * }
+ */
 @Injectable({ providedIn: 'root' })
 export class TasksService {
   private _tasks = signal<Task[]>([]);
+
+  /** Read-only signal of all tasks, sorted by order */
   readonly tasks = this._tasks.asReadonly();
 
+  /** Loading state for single create operation */
   readonly creating = signal(false);
+
+  /** Loading state for bulk create operation */
   readonly creatingMany = signal(false);
+
   private _updatingIds = signal<Set<string>>(new Set());
   private _updatingMany = signal(false);
   private _deletingIds = signal<Set<string>>(new Set());
   private _deletingMany = signal(false);
 
+  /**
+   * Set of task IDs currently being updated.
+   * Use isUpdating(id) for checking individual tasks.
+   */
   readonly updatingIds = this._updatingIds.asReadonly();
+
+  /**
+   * Set of task IDs currently being deleted.
+   * Use isDeleting(id) for checking individual tasks.
+   */
   readonly deletingIds = this._deletingIds.asReadonly();
 
   private hasLoaded = signal(false);
+
+  /** True during initial data load from repository */
   readonly bootLoading = computed(() => !this.hasLoaded());
 
+  /**
+   * Aggregate loading state for any operation.
+   * True if any create/update/delete operation is in progress.
+   */
   readonly loading = computed(() => {
     return (
       this.creating() ||
@@ -51,22 +97,61 @@ export class TasksService {
     this.repo.load();
   }
 
+  /**
+   * Returns all tasks as a plain array (non-reactive).
+   *
+   * @returns Array of all tasks
+   */
   getAll(): Task[] {
     return this.tasks();
   }
 
+  /**
+   * Finds a task by its ID.
+   *
+   * @param id - The task identifier
+   * @returns The task object or undefined if not found
+   */
   getById(id: string): Task | undefined {
     return this.tasks().find((t) => t.id === id);
   }
 
+  /**
+   * Checks if a specific task is currently being updated.
+   *
+   * @param id - The task identifier
+   * @returns true if update operation is in progress for this task
+   */
   isUpdating(id: string): boolean {
     return this._updatingIds().has(id) || this._updatingMany();
   }
 
+  /**
+   * Checks if a specific task is currently being deleted.
+   *
+   * @param id - The task identifier
+   * @returns true if delete operation is in progress for this task
+   */
   isDeleting(id: string): boolean {
     return this._deletingIds().has(id) || this._deletingMany();
   }
 
+  /**
+   * Creates a new task.
+   *
+   * Generates a UUID for the task and saves it to the repository.
+   * Sets creating() signal during operation.
+   *
+   * @param task - Task data without id (will be generated)
+   *
+   * @example
+   * await tasksService.create({
+   *   title: 'Implement feature',
+   *   description: 'Add new functionality',
+   *   status: 'todo',
+   *   priority: 'high'
+   * });
+   */
   async create(task: Omit<Task, 'id'>) {
     this.creating.set(true);
 
@@ -81,6 +166,26 @@ export class TasksService {
     }
   }
 
+  /**
+   * Updates a single task.
+   *
+   * Merges the patch with existing task data.
+   * Sets per-task loading state accessible via isUpdating(id).
+   *
+   * @param id - The task identifier to update
+   * @param patch - Partial task data with fields to change
+   *
+   * @example
+   * // Update status only
+   * await tasksService.update('task-id', { status: 'done' });
+   *
+   * @example
+   * // Update multiple fields
+   * await tasksService.update('task-id', {
+   *   title: 'New title',
+   *   priority: 'high'
+   * });
+   */
   async update(id: string, patch: Partial<Omit<Task, 'id'>>) {
     this.addId(this._updatingIds, id);
 
@@ -98,6 +203,13 @@ export class TasksService {
     }
   }
 
+  /**
+   * Deletes a single task.
+   *
+   * Sets per-task loading state accessible via isDeleting(id).
+   *
+   * @param id - The task identifier to delete
+   */
   async delete(id: string) {
     this.addId(this._deletingIds, id);
 
@@ -110,6 +222,14 @@ export class TasksService {
     }
   }
 
+  /**
+   * Creates multiple tasks in parallel.
+   *
+   * More efficient than calling create() in a loop.
+   * Sets creatingMany() signal during operation.
+   *
+   * @param tasks - Array of task data without ids
+   */
   async createMany(tasks: Omit<Task, 'id'>[]) {
     if (tasks.length === 0) return;
 
@@ -129,6 +249,20 @@ export class TasksService {
     }
   }
 
+  /**
+   * Updates multiple tasks in parallel.
+   *
+   * Each task can have different fields updated.
+   * Sets updatingMany() signal during operation.
+   *
+   * @param updates - Array of update objects with id and patch
+   *
+   * @example
+   * await tasksService.updateMany([
+   *   { id: '1', patch: { status: 'done' } },
+   *   { id: '2', patch: { priority: 'high' } }
+   * ]);
+   */
   async updateMany(updates: { id: string; patch: Partial<Omit<Task, 'id'>> }[]) {
     if (updates.length === 0) return;
 
@@ -151,6 +285,13 @@ export class TasksService {
     }
   }
 
+  /**
+   * Deletes multiple tasks in parallel.
+   *
+   * Sets deletingMany() signal during operation.
+   *
+   * @param ids - Array of task identifiers to delete
+   */
   async deleteMany(ids: string[]) {
     if (ids.length === 0) return;
 
@@ -165,6 +306,19 @@ export class TasksService {
     }
   }
 
+  /**
+   * Cycles task status through: todo → doing → done → todo.
+   *
+   * Convenience method for quick status updates.
+   *
+   * @param id - The task identifier
+   *
+   * @example
+   * // Click handler to advance task status
+   * <button (click)="tasksService.toggleStatus(task.id)">
+   *   Advance Status
+   * </button>
+   */
   async toggleStatus(id: string) {
     const task = this.getById(id);
     if (!task) return;
@@ -176,6 +330,13 @@ export class TasksService {
     await this.update(id, { status: nextStatus });
   }
 
+  /**
+   * Cycles status for multiple tasks simultaneously.
+   *
+   * Each task advances to its next status independently.
+   *
+   * @param ids - Array of task identifiers
+   */
   async toggleStatusMany(ids: string[]) {
     if (ids.length === 0) return;
 
@@ -199,6 +360,21 @@ export class TasksService {
     await this.updateMany(updates);
   }
 
+  /**
+   * Reorders tasks based on new order of IDs.
+   *
+   * Updates the order field of tasks to match provided sequence.
+   * Used after drag-and-drop reordering.
+   *
+   * @param orderedIds - Array of task IDs in desired order
+   *
+   * @example
+   * // After drag and drop
+   * onDrop(event: CdkDragDrop<Task[]>) {
+   *   const newOrder = this.tasks.map(t => t.id);
+   *   this.tasksService.reorder(newOrder);
+   * }
+   */
   async reorder(orderedIds: string[]) {
     const current = this.tasks();
 
