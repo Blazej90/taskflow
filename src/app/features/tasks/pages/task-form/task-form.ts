@@ -101,6 +101,17 @@ export class TaskForm {
 
     const { title, description, priority, status, dueDate } = this.form.getRawValue();
 
+    if (dueDate && !this.isEdit) {
+      const selected = new Date(dueDate);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      if (selected < today) {
+        this.toast.error('Due date cannot be in the past');
+        return;
+      }
+    }
+
     try {
       if (this.isEdit && this.taskId) {
         await this.tasksService.update(this.taskId, { title, description, priority, status, dueDate });
