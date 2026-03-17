@@ -237,7 +237,9 @@ button[type='submit'] {
   gap: 8px;
   padding: 10px 16px;
   border-radius: 8px;
-  border: 2px solid #e2e8f0;
+  border: 2px solid var(--border-color, #e2e8f0);
+  background: var(--bg-surface, white);
+  color: var(--text-primary, #0f172a);
   cursor: pointer;
   transition: all 0.2s;
 
@@ -264,10 +266,105 @@ button[type='submit'] {
 
   &:has(input:checked) {
     border-color: var(--priority-color);
-    background: rgba(var(--priority-color), 0.05);
+    background: rgba(var(--priority-color), 0.1);
   }
 
   &:hover {
     border-color: var(--priority-color);
+  }
+}
+
+// ==========================================
+// DARK MODE
+// ==========================================
+
+:host-context(.dark) {
+  .header {
+    h1 {
+      color: var(--text-primary, #f8fafc);
+    }
+
+    a {
+      color: var(--text-muted, #94a3b8);
+
+      &:hover {
+        color: var(--text-primary, #f8fafc);
+        background: var(--gray-800, #1e293b);
+      }
+    }
+  }
+
+  .loading {
+    background: rgba(251, 191, 36, 0.15);
+    border-color: rgba(251, 191, 36, 0.3);
+    color: #fbbf24;
+  }
+
+  .field {
+    span {
+      color: var(--text-primary, #f8fafc);
+    }
+
+    small {
+      background: rgba(239, 68, 68, 0.15);
+      border-left-color: #ef4444;
+      color: #f87171;
+    }
+  }
+
+  input[type='text'],
+  textarea,
+  select {
+    background: var(--gray-800, #1e293b);
+    border-color: var(--gray-700, #334155);
+    color: var(--text-primary, #f8fafc);
+
+    &:hover:not(:disabled) {
+      border-color: var(--gray-600, #475569);
+    }
+
+    &:focus {
+      border-color: #60a5fa;
+      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+    }
+
+    &:disabled {
+      background: var(--gray-900, #0f172a);
+    }
+
+    &::placeholder {
+      color: var(--text-muted, #64748b);
+    }
+  }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px 16px;
+    padding-right: 40px;
+  }
+
+  button[type='submit'] {
+    background: var(--primary-500, #3b82f6);
+    color: white;
+
+    &:hover:not(:disabled) {
+      background: var(--primary-600, #2563eb);
+    }
+
+    &:disabled {
+      background: var(--gray-700, #334155);
+    }
+  }
+
+  .priority-option {
+    background: var(--gray-800, #1e293b);
+    border-color: var(--gray-700, #334155);
+    color: var(--text-primary, #f8fafc);
+
+    &:has(input:checked) {
+      background: rgba(var(--priority-color), 0.2);
+    }
   }
 }
