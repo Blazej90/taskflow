@@ -993,6 +993,22 @@ h1 {
   border-radius: 16px 16px 0 0;
 }
 
+// Kolory tła dla nagłówków kolumn w board view
+.col-todo .col-header {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border-bottom-color: #f59e0b;
+}
+
+.col-doing .col-header {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  border-bottom-color: #3b82f6;
+}
+
+.col-done .col-header {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  border-bottom-color: #10b981;
+}
+
 .col-title {
   display: flex;
   align-items: center;
