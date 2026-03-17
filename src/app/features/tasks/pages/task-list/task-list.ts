@@ -1,26 +1,20 @@
-import { Router } from '@angular/router';
-import {
-  DragDropModule,
-  CdkDragDrop,
-  moveItemInArray,
-  transferArrayItem,
-} from '@angular/cdk/drag-drop';
-import { MatSelectModule } from '@angular/material/select';
+import { Component, computed, inject, signal, OnInit, OnDestroy, PLATFORM_ID, Renderer2 } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+
+import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, computed, inject, signal, OnInit, OnDestroy, PLATFORM_ID, Renderer2 } from '@angular/core';
-import { RouterLink } from '@angular/router';
-
-import { TaskCard } from '@/features/tasks/components/task-card/task-card';
-import { Task, TaskStatus } from '../../task';
-import { TasksService } from '../../tasks.service';
-
-import { ToastService } from '@/shared/ui/toast/toast.service';
-import { ConfirmService } from '@/shared/ui/confirm-dialog/confirm.service';
+import { MatSelectModule } from '@angular/material/select';
 
 import { AuthService } from '@/features/auth/auth.service';
+import { TaskCard } from '@/features/tasks/components/task-card/task-card';
+import { ConfirmService } from '@/shared/ui/confirm-dialog/confirm.service';
+import { ToastService } from '@/shared/ui/toast/toast.service';
+
+import { Task, TaskStatus } from '../../task';
+import { TasksService } from '../../tasks.service';
 
 /** Filter option for task status */
 type Filter = 'all' | TaskStatus;
