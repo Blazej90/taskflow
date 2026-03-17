@@ -3,9 +3,11 @@ import { BehaviorSubject } from 'rxjs';
 import { DestroyRef, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 
-// Mock takeUntilDestroyed to just pass through the observable
 vi.mock('@angular/core/rxjs-interop', () => ({
-  takeUntilDestroyed: () => <T>(source: Observable<T>) => source
+  takeUntilDestroyed:
+    () =>
+    <T>(source: Observable<T>) =>
+      source,
 }));
 
 import { TasksService } from './tasks.service';
@@ -80,8 +82,20 @@ describe('TasksService', () => {
   it('seeds tasks on init when repo is empty', async () => {
     const repo = new InMemoryTasksRepository();
     repo.save([
-      { id: 'seed-1', title: 'Welcome task', description: 'Hello', status: 'todo', priority: 'medium' },
-      { id: 'seed-2', title: 'Another task', description: 'World', status: 'doing', priority: 'high' },
+      {
+        id: 'seed-1',
+        title: 'Welcome task',
+        description: 'Hello',
+        status: 'todo',
+        priority: 'medium',
+      },
+      {
+        id: 'seed-2',
+        title: 'Another task',
+        description: 'World',
+        status: 'doing',
+        priority: 'high',
+      },
     ]);
 
     const { service } = makeService(repo);
@@ -162,7 +176,6 @@ describe('TasksService', () => {
     const repo = new InMemoryTasksRepository();
     repo.save([{ id: '1', title: 'A', description: '', status: 'todo', priority: 'medium' }]);
 
-    // Make delete async to test loading state
     const originalDelete = repo.delete.bind(repo);
     let resolveDelete!: () => void;
     repo.delete = vi.fn(() => new Promise<void>((resolve) => (resolveDelete = resolve)));
@@ -180,7 +193,6 @@ describe('TasksService', () => {
     expect(service.isDeleting('1')).toBe(false);
     expect(service.loading()).toBe(false);
 
-    // Restore original
     repo.delete = originalDelete;
   });
 });
