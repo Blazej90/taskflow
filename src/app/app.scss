@@ -1,32 +1,12 @@
-// Theme variables
-:root {
-  --app-bg: #f8fafc;
-  --app-surface: #ffffff;
-  --app-border: #e2e8f0;
-  --app-text: #0f172a;
-  --app-text-muted: #64748b;
-  --app-text-light: #94a3b8;
-  --app-primary: #3b82f6;
-  --app-primary-hover: #2563eb;
-}
-
-.dark {
-  --app-bg: #0f172a;
-  --app-surface: #1e293b;
-  --app-border: #334155;
-  --app-text: #f8fafc;
-  --app-text-muted: #94a3b8;
-  --app-text-light: #64748b;
-  --app-primary: #60a5fa;
-  --app-primary-hover: #3b82f6;
-}
+// Note: CSS variables are defined in global styles.scss
+// Using: --bg-primary, --bg-surface, --border-color, --text-primary, etc.
 
 .app {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: var(--app-bg);
-  color: var(--app-text);
+  background: var(--bg-primary);
+  color: var(--text-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -34,9 +14,9 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(var(--app-surface), 0.9);
+  background: rgba(var(--bg-surface), 0.9);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--app-border);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .app-header-container {
@@ -54,7 +34,7 @@
   align-items: center;
   gap: 12px;
   text-decoration: none;
-  color: var(--app-text);
+  color: var(--text-primary);
   font-weight: 700;
   font-size: 1.25rem;
   transition: opacity 0.2s;
@@ -74,7 +54,7 @@
   }
 
   &-name {
-    background: linear-gradient(135deg, var(--app-text) 0%, var(--app-primary) 100%);
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary-500) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -97,7 +77,7 @@
   border-radius: 10px;
   font-size: 14px;
   font-weight: 500;
-  color: var(--app-text-muted);
+  color: var(--text-muted);
   text-decoration: none;
   transition: all 0.2s ease;
 
@@ -108,22 +88,22 @@
   }
 
   &:hover {
-    color: var(--app-text);
-    background: var(--app-bg);
+    color: var(--text-primary);
+    background: var(--bg-primary);
   }
 
   &.active {
-    color: var(--app-primary);
+    color: var(--primary-500);
     background: rgba(59, 130, 246, 0.1);
   }
 
   &.primary {
-    background: var(--app-primary);
+    background: var(--primary-500);
     color: white;
     box-shadow: 0 1px 3px rgba(59, 130, 246, 0.3);
 
     &:hover {
-      background: var(--app-primary-hover);
+      background: var(--primary-600);
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
     }
@@ -156,8 +136,8 @@
 .app-footer {
   margin-top: auto;
   padding: 20px 16px;
-  background: var(--app-bg);
-  border-top: 1px solid var(--app-border);
+  background: var(--bg-primary);
+  border-top: 1px solid var(--border-color);
 
   @media (min-width: 768px) {
     padding: 24px;
@@ -183,7 +163,7 @@
 .app-footer-tagline {
   font-size: 14px;
   font-weight: 700;
-  color: var(--app-text);
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -195,12 +175,12 @@
 
   a {
     font-size: 14px;
-    color: var(--app-text-muted);
+    color: var(--text-muted);
     text-decoration: none;
     transition: color 0.2s ease;
 
     &:hover {
-      color: var(--app-text);
+      color: var(--text-primary);
       text-decoration: underline;
     }
   }
@@ -212,6 +192,6 @@
 
 .app-footer-copyright {
   font-size: 13px;
-  color: var(--app-text-light);
+  color: var(--text-muted);
   margin: 0;
 }

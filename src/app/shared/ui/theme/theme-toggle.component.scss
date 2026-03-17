@@ -1,0 +1,55 @@
+.theme-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 10px;
+  border: 1px solid var(--border-color, #e2e8f0);
+  background: var(--surface-color, white);
+  color: var(--text-muted, #64748b);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: var(--text-color, #0f172a);
+    background: var(--bg-color, #f8fafc);
+    border-color: var(--border-hover, #cbd5e1);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover svg {
+    transform: rotate(15deg);
+  }
+
+  .sun-icon {
+    color: #f59e0b;
+  }
+
+  .moon-icon {
+    color: #3b82f6;
+  }
+}
+
+:host-context(.dark) .theme-toggle-btn {
+  background: var(--surface-color, #1e293b);
+  border-color: var(--border-color, #334155);
+  color: var(--text-muted, #94a3b8);
+
+  &:hover {
+    background: var(--bg-color, #0f172a);
+    border-color: var(--border-hover, #475569);
+    color: var(--text-color, #f8fafc);
+  }
+}

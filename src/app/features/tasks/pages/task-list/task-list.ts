@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 
 import { AuthService } from '@/features/auth/auth.service';
-import { ThemeService } from '@/shared/ui/theme/theme.service';
+import { ThemeToggleComponent } from '@/shared/ui/theme/theme-toggle.component';
 import { TaskCard } from '@/features/tasks/components/task-card/task-card';
 import { ConfirmService } from '@/shared/ui/confirm-dialog/confirm.service';
 import { ToastService } from '@/shared/ui/toast/toast.service';
@@ -53,6 +53,7 @@ type ViewMode = 'list' | 'board';
     MatInputModule,
     MatSelectModule,
     DragDropModule,
+    ThemeToggleComponent,
   ],
   templateUrl: './task-list.html',
   styleUrl: './task-list.scss',
@@ -101,9 +102,6 @@ export class TaskList implements OnInit, OnDestroy {
 
   /** Auth service exposed for user info and logout */
   readonly auth = inject(AuthService);
-
-  /** Theme service for dark mode toggle */
-  readonly theme = inject(ThemeService);
 
   private cleanupResize?: () => void;
   private cleanupScroll?: () => void;
