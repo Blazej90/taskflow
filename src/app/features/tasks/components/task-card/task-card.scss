@@ -344,7 +344,7 @@ p {
 // DARK MODE
 // ==========================================
 
-.dark {
+:host-context(.dark) {
   .card {
     background: #1e293b;
     border-color: #334155;
