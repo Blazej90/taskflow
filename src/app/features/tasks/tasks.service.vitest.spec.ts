@@ -1,20 +1,31 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { BehaviorSubject } from 'rxjs';
-import { DestroyRef } from '@angular/core';
+import { DestroyRef, signal } from '@angular/core';
+import { Observable } from 'rxjs';
+
+// Mock takeUntilDestroyed to just pass through the observable
+vi.mock('@angular/core/rxjs-interop', () => ({
+  takeUntilDestroyed: () => <T>(source: Observable<T>) => source
+}));
 
 import { TasksService } from './tasks.service';
 import { TasksRepository } from './task.repository';
 import { Task } from './task';
 
-class FakeDestroyRef implements DestroyRef {
-  private callbacks: Array<() => void> = [];
-  onDestroy(callback: () => void): void {
-    this.callbacks.push(callback);
-  }
-  destroy() {
-    for (const cb of this.callbacks) cb();
-    this.callbacks = [];
-  }
+function createFakeDestroyRef(): DestroyRef {
+  const callbacks: Array<() => void> = [];
+  const destroyed = signal(false);
+
+  return {
+    destroyed: destroyed.asReadonly(),
+    onDestroy(callback: () => void): () => void {
+      callbacks.push(callback);
+      return () => {
+        const index = callbacks.indexOf(callback);
+        if (index > -1) callbacks.splice(index, 1);
+      };
+    },
+  } as unknown as DestroyRef;
 }
 
 class InMemoryTasksRepository implements TasksRepository {
@@ -56,8 +67,8 @@ class InMemoryTasksRepository implements TasksRepository {
 
 function makeService(repo?: TasksRepository) {
   const r = repo ?? new InMemoryTasksRepository();
-  const destroyRef = new FakeDestroyRef();
-  const service = new TasksService(r as any, destroyRef as any);
+  const destroyRef = createFakeDestroyRef();
+  const service = new TasksService(r as any, destroyRef);
   return { service, repo: r, destroyRef };
 }
 
@@ -69,8 +80,8 @@ describe('TasksService', () => {
   it('seeds tasks on init when repo is empty', async () => {
     const repo = new InMemoryTasksRepository();
     repo.save([
-      { id: 'seed-1', title: 'Welcome task', description: 'Hello', status: 'todo' },
-      { id: 'seed-2', title: 'Another task', description: 'World', status: 'doing' },
+      { id: 'seed-1', title: 'Welcome task', description: 'Hello', status: 'todo', priority: 'medium' },
+      { id: 'seed-2', title: 'Another task', description: 'World', status: 'doing', priority: 'high' },
     ]);
 
     const { service } = makeService(repo);
@@ -91,6 +102,7 @@ describe('TasksService', () => {
       title: 'Test task',
       description: '',
       status: 'todo',
+      priority: 'medium',
     });
 
     const tasks = service.getAll();
@@ -100,7 +112,7 @@ describe('TasksService', () => {
 
   it('update() edits task', async () => {
     const repo = new InMemoryTasksRepository();
-    repo.save([{ id: '1', title: 'Old', description: '', status: 'todo' }]);
+    repo.save([{ id: '1', title: 'Old', description: '', status: 'todo', priority: 'low' }]);
 
     const { service } = makeService(repo);
 
@@ -118,8 +130,8 @@ describe('TasksService', () => {
   it('delete() removes task', async () => {
     const repo = new InMemoryTasksRepository();
     repo.save([
-      { id: '1', title: 'A', description: '', status: 'todo' },
-      { id: '2', title: 'B', description: '', status: 'todo' },
+      { id: '1', title: 'A', description: '', status: 'todo', priority: 'medium' },
+      { id: '2', title: 'B', description: '', status: 'todo', priority: 'low' },
     ]);
 
     const { service } = makeService(repo);
@@ -132,7 +144,7 @@ describe('TasksService', () => {
 
   it('toggleStatus cycles todo → doing → done → todo', async () => {
     const repo = new InMemoryTasksRepository();
-    repo.save([{ id: '1', title: 'A', description: '', status: 'todo' }]);
+    repo.save([{ id: '1', title: 'A', description: '', status: 'todo', priority: 'medium' }]);
 
     const { service } = makeService(repo);
 
@@ -148,7 +160,7 @@ describe('TasksService', () => {
 
   it('sets per-task loading flags during delete()', async () => {
     const repo = new InMemoryTasksRepository();
-    repo.save([{ id: '1', title: 'A', description: '', status: 'todo' }]);
+    repo.save([{ id: '1', title: 'A', description: '', status: 'todo', priority: 'medium' }]);
 
     // Make delete async to test loading state
     const originalDelete = repo.delete.bind(repo);
