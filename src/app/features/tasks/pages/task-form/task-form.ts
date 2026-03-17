@@ -13,6 +13,7 @@ type TaskFormValue = {
   description: string;
   priority: Priority;
   status: TaskStatus;
+  dueDate: string;
 };
 
 /**
@@ -58,6 +59,7 @@ export class TaskForm {
     description: [''],
     priority: ['medium' as Priority],
     status: ['todo' as TaskStatus],
+    dueDate: [''],
   });
 
   constructor() {
@@ -73,6 +75,7 @@ export class TaskForm {
           description: task.description ?? '',
           priority: task.priority ?? 'medium',
           status: task.status,
+          dueDate: task.dueDate ?? '',
         });
       } else {
         this.toast.error('Task not found');
@@ -93,14 +96,14 @@ export class TaskForm {
       return;
     }
 
-    const { title, description, priority, status } = this.form.getRawValue();
+    const { title, description, priority, status, dueDate } = this.form.getRawValue();
 
     try {
       if (this.isEdit && this.taskId) {
-        await this.tasksService.update(this.taskId, { title, description, priority, status });
+        await this.tasksService.update(this.taskId, { title, description, priority, status, dueDate });
         this.toast.success('Task updated');
       } else {
-        await this.tasksService.create({ title, description, priority, status });
+        await this.tasksService.create({ title, description, priority, status, dueDate });
         this.toast.success('Task created');
       }
 

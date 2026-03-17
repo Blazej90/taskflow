@@ -49,4 +49,10 @@ export interface Task {
    * When undefined, tasks are sorted by creation date.
    */
   order?: number;
+
+  /**
+   * Optional due date for the task (ISO 8601 format: YYYY-MM-DD).
+   * When set, indicates when the task should be completed.
+   */
+  dueDate?: string;
 }

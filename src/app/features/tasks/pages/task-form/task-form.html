@@ -60,6 +60,16 @@
       </select>
     </label>
 
+    <label class="field">
+      <span class="optional">Due date</span>
+      <input 
+        type="date" 
+        formControlName="dueDate" 
+        [disabled]="loading()"
+        placeholder="YYYY-MM-DD"
+      />
+    </label>
+
     <button type="submit" [disabled]="form.invalid || loading()">
       {{ loading() ? 'Saving...' : isEdit ? 'Save changes' : 'Create task' }}
     </button>
