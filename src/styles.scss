@@ -63,6 +63,59 @@ html {
   --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+// Dark mode overrides
+.dark {
+  --bg-primary: var(--gray-900);
+  --bg-surface: var(--gray-800);
+  --text-primary: var(--gray-50);
+  --text-secondary: var(--gray-300);
+  --text-muted: var(--gray-500);
+  --border-color: var(--gray-700);
+
+  // Board column headers - global styles
+  .col-todo .col-header {
+    background: #451a03 !important;
+    border-bottom-color: #b45309 !important;
+    
+    .col-title {
+      color: #fbbf24 !important;
+      
+      .col-count {
+        background: rgba(251, 191, 36, 0.2) !important;
+        color: #fbbf24 !important;
+      }
+    }
+  }
+
+  .col-doing .col-header {
+    background: #1e3a8a !important;
+    border-bottom-color: #2563eb !important;
+    
+    .col-title {
+      color: #60a5fa !important;
+      
+      .col-count {
+        background: rgba(96, 165, 250, 0.2) !important;
+        color: #60a5fa !important;
+      }
+    }
+  }
+
+  .col-done .col-header {
+    background: #064e3b !important;
+    border-bottom-color: #059669 !important;
+    
+    .col-title {
+      color: #34d399 !important;
+      
+      .col-count {
+        background: rgba(52, 211, 153, 0.2) !important;
+        color: #34d399 !important;
+      }
+    }
+  }
+}
+
 body {
   margin: 0;
   height: 100%;

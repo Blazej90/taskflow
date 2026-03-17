@@ -14,14 +14,12 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease;
 
-  // Zaznaczony stan
   &.selected {
     border-color: #3b82f6;
     background: #eff6ff;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
   }
 
-  // Gdy checkbox jest widoczny - przesuń zawartość
   &:has(.select-checkbox) {
     padding-left: 52px;
 
@@ -36,7 +34,6 @@
   }
 }
 
-// Checkbox
 .select-checkbox {
   position: absolute;
   top: 50%;
@@ -340,5 +337,116 @@ p {
     transform: scale(1.4);
     opacity: 0.6;
     box-shadow: 0 0 0 8px rgba(252, 165, 165, 0);
+  }
+}
+
+// ==========================================
+// DARK MODE
+// ==========================================
+
+.dark {
+  .card {
+    background: #1e293b;
+    border-color: #334155;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+
+    &.selected {
+      border-color: #3b82f6;
+      background: #1e3a5f;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+  }
+
+  h3 {
+    color: #f1f5f9;
+  }
+
+  p {
+    color: #94a3b8;
+  }
+
+  .btn {
+    background: #334155;
+    border-color: #475569;
+    color: #f1f5f9;
+
+    &:hover:not(:disabled) {
+      background: #475569;
+      border-color: #64748b;
+    }
+
+    &:first-child {
+      background: #334155;
+      border-color: #475569;
+
+      &:hover:not(:disabled) {
+        background: #475569;
+      }
+    }
+
+    &.next-todo {
+      background: #92400e;
+      border-color: #b45309;
+      color: #fef3c7;
+
+      &:hover:not(:disabled) {
+        background: #b45309;
+      }
+    }
+
+    &.next-doing {
+      background: #1e40af;
+      border-color: #2563eb;
+      color: #dbeafe;
+
+      &:hover:not(:disabled) {
+        background: #2563eb;
+      }
+    }
+
+    &.next-done {
+      background: #065f46;
+      border-color: #059669;
+      color: #d1fae5;
+
+      &:hover:not(:disabled) {
+        background: #059669;
+      }
+    }
+
+    &.danger {
+      background: #7f1d1d;
+      border-color: #b91c1c;
+      color: #fee2e2;
+
+      &:hover:not(:disabled) {
+        background: #b91c1c;
+        border-color: #dc2626;
+      }
+    }
+  }
+
+  .footer {
+    border-top-color: #334155;
+  }
+
+  .badge-todo {
+    background: #78350f;
+    color: #fef3c7;
+  }
+
+  .badge-doing {
+    background: #1e3a8a;
+    color: #dbeafe;
+  }
+
+  .badge-done {
+    background: #064e3b;
+    color: #d1fae5;
+  }
+
+  .priority-indicator {
+    background: rgba(30, 41, 59, 0.9);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   }
 }
