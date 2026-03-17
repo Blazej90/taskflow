@@ -62,6 +62,9 @@ export class TaskForm {
     dueDate: [''],
   });
 
+  /** Minimum date for due date picker (today) */
+  readonly minDate = new Date().toISOString().split('T')[0];
+
   constructor() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {

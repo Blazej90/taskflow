@@ -66,6 +66,7 @@
         type="date" 
         formControlName="dueDate" 
         [disabled]="loading()"
+        [min]="minDate"
         placeholder="YYYY-MM-DD"
       />
     </label>
