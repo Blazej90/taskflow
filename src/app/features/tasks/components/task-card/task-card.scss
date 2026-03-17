@@ -215,6 +215,12 @@ p {
   border-top: 1px solid #e2e8f0;
 }
 
+.due-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .due-date {
   font-size: 12px;
   font-weight: 500;
@@ -223,6 +229,38 @@ p {
   background: #f1f5f9;
   border-radius: 6px;
   border: 1px solid #e2e8f0;
+}
+
+.countdown {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #86efac;
+
+  &.urgent {
+    background: #fef3c7;
+    color: #92400e;
+    border-color: #fcd34d;
+  }
+
+  &.overdue {
+    background: #fee2e2;
+    color: #dc2626;
+    border-color: #fca5a5;
+    animation: pulse-alert 2s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse-alert {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 
 .badge {
@@ -445,6 +483,24 @@ p {
     color: #94a3b8;
     background: #334155;
     border-color: #475569;
+  }
+
+  .countdown {
+    background: #14532d;
+    color: #86efac;
+    border-color: #22c55e;
+
+    &.urgent {
+      background: #78350f;
+      color: #fcd34d;
+      border-color: #f59e0b;
+    }
+
+    &.overdue {
+      background: #7f1d1d;
+      color: #fca5a5;
+      border-color: #dc2626;
+    }
   }
 
   .badge-todo {

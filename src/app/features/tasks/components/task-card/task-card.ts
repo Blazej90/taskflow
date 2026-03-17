@@ -1,10 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { DateFormatPipe } from '@/shared/pipes/date-format.pipe';
 import { Task } from '../../task';
 import { TasksService } from '../../tasks.service';
+
+interface DaysRemaining {
+  days: number;
+  label: string;
+  urgent: boolean;
+  overdue: boolean;
+}
 
 /**
  * Displays a single task with actions and optional selection.
@@ -39,8 +46,35 @@ import { TasksService } from '../../tasks.service';
   templateUrl: './task-card.html',
   styleUrl: './task-card.scss',
 })
-export class TaskCard {
+export class TaskCard implements OnInit, OnDestroy {
   private tasksService = inject(TasksService);
+
+  private currentDate = signal(new Date());
+  private intervalId?: ReturnType<typeof setInterval>;
+
+  daysRemaining = computed<DaysRemaining | null>(() => {
+    if (!this.task.dueDate || this.task.status === 'done') return null;
+
+    const due = new Date(this.task.dueDate);
+    due.setHours(0, 0, 0, 0);
+    
+    const today = this.currentDate();
+    today.setHours(0, 0, 0, 0);
+
+    const diffTime = due.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays < 0) {
+      return { days: Math.abs(diffDays), label: 'days overdue', urgent: true, overdue: true };
+    }
+    if (diffDays === 0) {
+      return { days: 0, label: 'Due today', urgent: true, overdue: false };
+    }
+    if (diffDays === 1) {
+      return { days: 1, label: 'day left', urgent: true, overdue: false };
+    }
+    return { days: diffDays, label: 'days left', urgent: diffDays <= 3, overdue: false };
+  });
 
   /** The task data to display (required) */
   @Input({ required: true }) task!: Task;
@@ -81,5 +115,17 @@ export class TaskCard {
   /** Handles checkbox toggle, emits selection change event */
   onToggleSelected(next: boolean) {
     this.selectedChange.emit({ id: this.task.id, selected: next });
+  }
+
+  ngOnInit(): void {
+    this.intervalId = setInterval(() => {
+      this.currentDate.set(new Date());
+    }, 60000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
   }
 }

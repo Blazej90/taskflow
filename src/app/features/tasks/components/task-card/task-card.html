@@ -93,10 +93,19 @@
       {{ task.status }}
     </span>
     
-    @if (task.dueDate) {
-      <span class="due-date">
-        {{ task.dueDate | dateFormat }}
-      </span>
+    @if (task.dueDate; as due) {
+      <div class="due-info">
+        <span class="due-date">{{ due | dateFormat }}</span>
+        @if (daysRemaining(); as countdown) {
+          <span class="countdown" [class.urgent]="countdown.urgent" [class.overdue]="countdown.overdue">
+            @if (countdown.days === 0) {
+              {{ countdown.label }}
+            } @else {
+              {{ countdown.days }} {{ countdown.label }}
+            }
+          </span>
+        }
+      </div>
     }
   </div>
 </article>
