@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import { DateFormatPipe } from '@/shared/pipes/date-format.pipe';
 import { Task } from '../../task';
 import { TasksService } from '../../tasks.service';
 
@@ -34,7 +35,7 @@ import { TasksService } from '../../tasks.service';
 @Component({
   selector: 'app-task-card',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, DateFormatPipe],
   templateUrl: './task-card.html',
   styleUrl: './task-card.scss',
 })

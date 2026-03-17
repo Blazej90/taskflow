@@ -92,5 +92,11 @@
     <span class="badge" [ngClass]="'badge-' + task.status">
       {{ task.status }}
     </span>
+    
+    @if (task.dueDate) {
+      <span class="due-date">
+        {{ task.dueDate | dateFormat }}
+      </span>
+    }
   </div>
 </article>

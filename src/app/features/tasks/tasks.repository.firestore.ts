@@ -32,6 +32,7 @@ type TaskDoc = {
   status: TaskStatus;
   priority: Priority;
   order: number;
+  dueDate?: string;
   createdAt?: Timestamp | FieldValue;
   updatedAt?: Timestamp | FieldValue;
 };
@@ -73,6 +74,7 @@ export class FirestoreTasksRepository implements TasksRepository {
             status: data.status,
             priority: data.priority ?? 'medium',
             order: data.order,
+            dueDate: data.dueDate,
           } satisfies Task;
         });
 
@@ -117,6 +119,7 @@ export class FirestoreTasksRepository implements TasksRepository {
       status: task.status,
       priority: task.priority,
       order: typeof task.order === 'number' ? task.order : Date.now(),
+      dueDate: task.dueDate,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     };
@@ -140,6 +143,10 @@ export class FirestoreTasksRepository implements TasksRepository {
 
     if (typeof task.order === 'number') {
       patch.order = task.order;
+    }
+
+    if (task.dueDate) {
+      patch.dueDate = task.dueDate;
     }
 
     await updateDoc(ref, patch);
@@ -197,6 +204,9 @@ export class FirestoreTasksRepository implements TasksRepository {
           order: typeof task.order === 'number' ? task.order : 0,
           updatedAt: serverTimestamp(),
         };
+        if (task.dueDate) {
+          patch.dueDate = task.dueDate;
+        }
         batch.update(ref, patch);
       } else {
         const payload: TaskDoc = {
@@ -206,6 +216,7 @@ export class FirestoreTasksRepository implements TasksRepository {
           status: task.status,
           priority: task.priority,
           order: typeof task.order === 'number' ? task.order : Date.now(),
+          dueDate: task.dueDate,
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
         };
