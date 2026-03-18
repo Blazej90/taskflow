@@ -34,6 +34,29 @@
     animation: overdue-card-pulse 1.5s ease-in-out infinite;
   }
 
+  &.completing {
+    animation: task-complete 0.4s ease-out forwards;
+    pointer-events: none;
+  }
+
+  @keyframes task-complete {
+    0% {
+      transform: translateX(0) scale(1);
+      opacity: 1;
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border-color: #22c55e;
+    }
+    50% {
+      transform: translateX(20px) scale(1.02);
+      opacity: 0.8;
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.4);
+    }
+    100% {
+      transform: translateX(100px) scale(0.9);
+      opacity: 0;
+    }
+  }
+
   @keyframes highlight-pulse {
     0%, 100% {
       box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15), 0 4px 12px rgba(245, 158, 11, 0.1);
@@ -566,5 +589,25 @@ p {
     border-color: #dc2626;
     background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
     box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.3), 0 6px 16px rgba(0, 0, 0, 0.4);
+  }
+
+  .card.completing {
+    @keyframes task-complete {
+      0% {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+        background: linear-gradient(135deg, #14532d 0%, #166534 100%);
+        border-color: #22c55e;
+      }
+      50% {
+        transform: translateX(20px) scale(1.02);
+        opacity: 0.8;
+        box-shadow: 0 0 20px rgba(34, 197, 94, 0.5);
+      }
+      100% {
+        transform: translateX(100px) scale(0.9);
+        opacity: 0;
+      }
+    }
   }
 }

@@ -1,4 +1,8 @@
-<article class="card" [class.selected]="selected" [class.highlight]="highlight" [class.overdue]="overdue">
+<article class="card" 
+  [class.selected]="selected" 
+  [class.highlight]="highlight" 
+  [class.overdue]="overdue"
+  [class.completing]="isCompleting()">
   <div *ngIf="selectable" class="select-checkbox" (click)="$event.stopPropagation()">
     <input
       type="checkbox"
@@ -46,8 +50,8 @@
         [class.next-doing]="task.status === 'todo'"
         [class.next-done]="task.status === 'doing'"
         type="button"
-        (click)="$event.stopPropagation(); toggle.emit(task.id)"
-        [disabled]="isBusy"
+        (click)="$event.stopPropagation(); onComplete()"
+        [disabled]="isBusy || isCompleting()"
         title="Next status"
       >
         <svg

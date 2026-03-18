@@ -51,6 +51,9 @@ export class TaskCard implements OnInit, OnDestroy {
 
   private currentDate = signal(new Date());
   private intervalId?: ReturnType<typeof setInterval>;
+  
+  /** Tracks if task is being marked as done (for animation) */
+  readonly isCompleting = signal(false);
 
   daysRemaining = computed<DaysRemaining | null>(() => {
     if (!this.task.dueDate || this.task.status === 'done') return null;
@@ -91,6 +94,9 @@ export class TaskCard implements OnInit, OnDestroy {
   /** Whether the task is overdue (for visual warning) */
   @Input() overdue = false;
 
+  /** Current view mode - animation only works in board view */
+  @Input() viewMode: 'list' | 'board' = 'list';
+
   /**
    * Emitted when selection state changes.
    * Contains task id and new selected state.
@@ -121,6 +127,26 @@ export class TaskCard implements OnInit, OnDestroy {
   /** Handles checkbox toggle, emits selection change event */
   onToggleSelected(next: boolean) {
     this.selectedChange.emit({ id: this.task.id, selected: next });
+  }
+
+  /** Handles marking task as done with animation */
+  onComplete(): void {
+    if (this.task.status === 'done') {
+      // If already done, just toggle normally
+      this.toggle.emit(this.task.id);
+      return;
+    }
+    
+    // Animation only in board view
+    if (this.viewMode === 'board') {
+      this.isCompleting.set(true);
+      setTimeout(() => {
+        this.toggle.emit(this.task.id);
+      }, 800);
+    } else {
+      // List view - no animation, immediate toggle
+      this.toggle.emit(this.task.id);
+    }
   }
 
   ngOnInit(): void {
