@@ -406,6 +406,46 @@ h1 {
   }
 }
 // ==========================================
+// DUE TODAY BANNER
+// ==========================================
+
+.due-today-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 2px solid #f59e0b;
+  border-radius: 12px;
+  animation: banner-pulse 3s ease-in-out infinite;
+
+  .banner-icon {
+    font-size: 24px;
+  }
+
+  .banner-text {
+    font-size: 15px;
+    color: #92400e;
+    font-weight: 500;
+
+    strong {
+      font-weight: 700;
+      color: #78350f;
+    }
+  }
+}
+
+@keyframes banner-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(245, 158, 11, 0);
+  }
+}
+
+// ==========================================
 // FILTERS
 // ==========================================
 
@@ -1325,6 +1365,26 @@ mat-form-field {
     svg {
       width: 20px;
       height: 20px;
+    }
+  }
+}
+
+
+// ==========================================
+// DARK MODE
+// ==========================================
+
+:host-context(.dark) {
+  .due-today-banner {
+    background: linear-gradient(135deg, #92400e 0%, #b45309 100%);
+    border-color: #f59e0b;
+
+    .banner-text {
+      color: #fef3c7;
+
+      strong {
+        color: #fff;
+      }
     }
   }
 }

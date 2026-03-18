@@ -162,6 +162,16 @@
   </header>
 }
 
+@if (dueTodayCount() > 0) {
+  <div class="due-today-banner">
+    <span class="banner-icon">⏰</span>
+    <span class="banner-text">
+      <strong>{{ dueTodayCount() }}</strong> 
+      {{ dueTodayCount() === 1 ? 'task' : 'tasks' }} due today
+    </span>
+  </div>
+}
+
 <div class="filters">
   <button
     type="button"
@@ -298,6 +308,7 @@
           [task]="t"
           [selectable]="selectMode()"
           [selected]="isSelected(t.id)"
+          [highlight]="isDueToday(t.dueDate)"
           (selectedChange)="onSelectedChange($event)"
           (remove)="removeTask($event)"
           (toggle)="toggleTaskStatus($event)"
@@ -343,6 +354,7 @@
                 [task]="t"
                 [selectable]="selectMode()"
                 [selected]="isSelected(t.id)"
+                [highlight]="isDueToday(t.dueDate)"
                 (selectedChange)="onSelectedChange($event)"
                 (remove)="removeTask($event)"
                 (toggle)="toggleTaskStatus($event)"

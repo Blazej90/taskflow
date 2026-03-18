@@ -181,6 +181,13 @@ export class TaskList implements OnInit, OnDestroy {
     return this.selectedIds().has(id);
   }
 
+  /** Checks if a task is due today */
+  isDueToday(dueDate: string | undefined): boolean {
+    if (!dueDate) return false;
+    const today = new Date().toISOString().split('T')[0];
+    return dueDate === today;
+  }
+
   /** Number of currently selected tasks */
   readonly selectedCount = computed(() => this.selectedIds().size);
 
@@ -293,6 +300,12 @@ export class TaskList implements OnInit, OnDestroy {
   readonly todoCount = computed(() => this.tasks().filter((t) => t.status === 'todo').length);
   readonly doingCount = computed(() => this.tasks().filter((t) => t.status === 'doing').length);
   readonly doneCount = computed(() => this.tasks().filter((t) => t.status === 'done').length);
+
+  /** Tasks due today (not completed) */
+  readonly dueTodayCount = computed(() => {
+    const today = new Date().toISOString().split('T')[0];
+    return this.tasks().filter((t) => t.dueDate === today && t.status !== 'done').length;
+  });
 
   readonly isEmpty = computed(() => this.filteredTasks().length === 0);
   readonly loading = this.tasksService.loading;

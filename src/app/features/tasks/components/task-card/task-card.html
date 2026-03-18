@@ -1,4 +1,4 @@
-<article class="card" [class.selected]="selected">
+<article class="card" [class.selected]="selected" [class.highlight]="highlight">
   <div *ngIf="selectable" class="select-checkbox" (click)="$event.stopPropagation()">
     <input
       type="checkbox"

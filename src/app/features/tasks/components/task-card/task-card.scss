@@ -20,6 +20,22 @@
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
   }
 
+  &.highlight {
+    border-color: #f59e0b;
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15), 0 4px 12px rgba(245, 158, 11, 0.1);
+    animation: highlight-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes highlight-pulse {
+    0%, 100% {
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15), 0 4px 12px rgba(245, 158, 11, 0.1);
+    }
+    50% {
+      box-shadow: 0 0 0 5px rgba(245, 158, 11, 0.2), 0 6px 16px rgba(245, 158, 11, 0.15);
+    }
+  }
+
   &:has(.select-checkbox) {
     padding-left: 52px;
 
@@ -521,5 +537,11 @@ p {
   .priority-indicator {
     background: rgba(30, 41, 59, 0.9);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  .card.highlight {
+    border-color: #f59e0b;
+    background: linear-gradient(135deg, #78350f 0%, #92400e 100%);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2), 0 4px 12px rgba(0, 0, 0, 0.3);
   }
 }

@@ -85,6 +85,9 @@ export class TaskCard implements OnInit, OnDestroy {
   /** Whether the task is currently selected (checkbox state) */
   @Input() selected = false;
 
+  /** Whether to highlight the card (e.g., task due today) */
+  @Input() highlight = false;
+
   /**
    * Emitted when selection state changes.
    * Contains task id and new selected state.
