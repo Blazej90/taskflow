@@ -1,6 +1,7 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners, isDevMode } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideServiceWorker } from '@angular/service-worker';
 import { routes } from './app.routes';
 
 import { TASKS_REPOSITORY } from './features/tasks/task.repository';
@@ -11,6 +12,10 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideAnimations(),
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
 
     { provide: TASKS_REPOSITORY, useClass: FirestoreTasksRepository },
   ],
