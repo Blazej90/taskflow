@@ -229,6 +229,7 @@ p {
   font-size: 14px;
   line-height: 1.5;
   color: #64748b;
+  white-space: pre-wrap;
 
   &:empty {
     display: none;
