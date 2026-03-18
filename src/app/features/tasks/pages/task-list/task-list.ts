@@ -21,7 +21,7 @@ import { TasksService } from '../../tasks.service';
 type Filter = 'all' | TaskStatus;
 
 /** Task sorting options */
-type SortOption = 'manual' | 'newest' | 'oldest' | 'status' | 'priority';
+type SortOption = 'manual' | 'dueDate' | 'priority' | 'status' | 'newest' | 'oldest';
 
 /** Display mode for task list */
 type ViewMode = 'list' | 'board';
@@ -225,6 +225,26 @@ export class TaskList implements OnInit, OnDestroy {
     if (sort === 'priority') {
       const order = ['high', 'medium', 'low'];
       return sorted.sort((a, b) => order.indexOf(a.priority) - order.indexOf(b.priority));
+    }
+
+    if (sort === 'dueDate') {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      return sorted.sort((a, b) => {
+        const getUrgencyScore = (t: Task): number => {
+          if (!t.dueDate || t.status === 'done') return 999;
+          const due = new Date(t.dueDate);
+          const diff = due.getTime() - today.getTime();
+          const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+          
+          if (days < 0) return days; // Overdue (negative numbers first)
+          if (days === 0) return 0;  // Today
+          return days;               // Future (positive numbers)
+        };
+        
+        return getUrgencyScore(a) - getUrgencyScore(b);
+      });
     }
 
     return sorted;
