@@ -10,44 +10,14 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "icons/icon-72x72.ico",
-      "sizes": "72x72",
-      "type": "image/x-icon"
+      "src": "logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
     },
     {
-      "src": "icons/icon-96x96.ico",
-      "sizes": "96x96",
-      "type": "image/x-icon"
-    },
-    {
-      "src": "icons/icon-128x128.ico",
-      "sizes": "128x128",
-      "type": "image/x-icon"
-    },
-    {
-      "src": "icons/icon-144x144.ico",
-      "sizes": "144x144",
-      "type": "image/x-icon"
-    },
-    {
-      "src": "icons/icon-152x152.ico",
-      "sizes": "152x152",
-      "type": "image/x-icon"
-    },
-    {
-      "src": "icons/icon-192x192.ico",
-      "sizes": "192x192",
-      "type": "image/x-icon"
-    },
-    {
-      "src": "icons/icon-384x384.ico",
-      "sizes": "384x384",
-      "type": "image/x-icon"
-    },
-    {
-      "src": "icons/icon-512x512.ico",
-      "sizes": "512x512",
-      "type": "image/x-icon"
+      "src": "logo.svg",
+      "sizes": "72x72 96x96 128x128 144x144 152x152 192x192 384x384 512x512",
+      "type": "image/svg+xml"
     }
   ]
 }
