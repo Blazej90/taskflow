@@ -162,6 +162,16 @@
   </header>
 }
 
+@if (overdueCount() > 0) {
+  <div class="overdue-banner">
+    <span class="banner-icon">⚠️</span>
+    <span class="banner-text">
+      <strong>{{ overdueCount() }}</strong> 
+      {{ overdueCount() === 1 ? 'task' : 'tasks' }} overdue
+    </span>
+  </div>
+}
+
 @if (dueTodayCount() > 0) {
   <div class="due-today-banner">
     <span class="banner-icon">⏰</span>
@@ -309,6 +319,7 @@
           [selectable]="selectMode()"
           [selected]="isSelected(t.id)"
           [highlight]="isDueToday(t.dueDate)"
+          [overdue]="isOverdue(t.dueDate)"
           (selectedChange)="onSelectedChange($event)"
           (remove)="removeTask($event)"
           (toggle)="toggleTaskStatus($event)"
@@ -355,6 +366,7 @@
                 [selectable]="selectMode()"
                 [selected]="isSelected(t.id)"
                 [highlight]="isDueToday(t.dueDate)"
+                [overdue]="isOverdue(t.dueDate)"
                 (selectedChange)="onSelectedChange($event)"
                 (remove)="removeTask($event)"
                 (toggle)="toggleTaskStatus($event)"

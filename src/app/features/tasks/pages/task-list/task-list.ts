@@ -188,6 +188,15 @@ export class TaskList implements OnInit, OnDestroy {
     return dueDate === today;
   }
 
+  /** Checks if a task is overdue */
+  isOverdue(dueDate: string | undefined): boolean {
+    if (!dueDate) return false;
+    const due = new Date(dueDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return due < today;
+  }
+
   /** Number of currently selected tasks */
   readonly selectedCount = computed(() => this.selectedIds().size);
 
@@ -305,6 +314,17 @@ export class TaskList implements OnInit, OnDestroy {
   readonly dueTodayCount = computed(() => {
     const today = new Date().toISOString().split('T')[0];
     return this.tasks().filter((t) => t.dueDate === today && t.status !== 'done').length;
+  });
+
+  /** Overdue tasks (not completed) */
+  readonly overdueCount = computed(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return this.tasks().filter((t) => {
+      if (!t.dueDate || t.status === 'done') return false;
+      const due = new Date(t.dueDate);
+      return due < today;
+    }).length;
   });
 
   readonly isEmpty = computed(() => this.filteredTasks().length === 0);

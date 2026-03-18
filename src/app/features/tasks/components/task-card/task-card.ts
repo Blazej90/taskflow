@@ -88,6 +88,9 @@ export class TaskCard implements OnInit, OnDestroy {
   /** Whether to highlight the card (e.g., task due today) */
   @Input() highlight = false;
 
+  /** Whether the task is overdue (for visual warning) */
+  @Input() overdue = false;
+
   /**
    * Emitted when selection state changes.
    * Contains task id and new selected state.

@@ -27,12 +27,28 @@
     animation: highlight-pulse 2s ease-in-out infinite;
   }
 
+  &.overdue {
+    border-color: #dc2626;
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.2), 0 6px 16px rgba(220, 38, 38, 0.15);
+    animation: overdue-card-pulse 1.5s ease-in-out infinite;
+  }
+
   @keyframes highlight-pulse {
     0%, 100% {
       box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15), 0 4px 12px rgba(245, 158, 11, 0.1);
     }
     50% {
       box-shadow: 0 0 0 5px rgba(245, 158, 11, 0.2), 0 6px 16px rgba(245, 158, 11, 0.15);
+    }
+  }
+
+  @keyframes overdue-card-pulse {
+    0%, 100% {
+      box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.2), 0 6px 16px rgba(220, 38, 38, 0.15);
+    }
+    50% {
+      box-shadow: 0 0 0 7px rgba(220, 38, 38, 0.3), 0 8px 20px rgba(220, 38, 38, 0.2);
     }
   }
 
@@ -543,5 +559,11 @@ p {
     border-color: #f59e0b;
     background: linear-gradient(135deg, #78350f 0%, #92400e 100%);
     box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2), 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .card.overdue {
+    border-color: #dc2626;
+    background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.3), 0 6px 16px rgba(0, 0, 0, 0.4);
   }
 }
