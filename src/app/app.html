@@ -20,7 +20,8 @@
         <span class="brand-name">TaskFlow</span>
       </a>
 
-      <nav class="main-nav">
+      <!-- Desktop navigation -->
+      <nav class="main-nav desktop-nav">
         <a class="nav-link" routerLink="/shopping" routerLinkActive="active">
           <svg
             width="18"
@@ -42,8 +43,61 @@
 
         <app-theme-toggle></app-theme-toggle>
       </nav>
+
+      <!-- Mobile navigation -->
+      <div class="mobile-nav">
+        <app-theme-toggle></app-theme-toggle>
+        
+        <button 
+          class="hamburger-btn" 
+          (click)="toggleMobileMenu()"
+          [class.active]="mobileMenuOpen()"
+          aria-label="Menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
     </div>
   </header>
+
+  <!-- Mobile drawer -->
+  @if (mobileMenuOpen()) {
+    <div class="mobile-drawer-overlay" (click)="closeMobileMenu()"></div>
+    <nav class="mobile-drawer">
+      <div class="drawer-header">
+        <span class="brand-name">Menu</span>
+        <button class="close-btn" (click)="closeMobileMenu()" aria-label="Close">✕</button>
+      </div>
+      
+      <div class="drawer-content">
+        <a 
+          class="drawer-link" 
+          routerLink="/tasks/new" 
+          routerLinkActive="active"
+          (click)="closeMobileMenu()">
+          <span>✚ New task</span>
+        </a>
+        
+        <a 
+          class="drawer-link" 
+          routerLink="/shopping" 
+          routerLinkActive="active"
+          (click)="closeMobileMenu()">
+          <span>🛒 Shopping</span>
+        </a>
+        
+        <a 
+          class="drawer-link" 
+          routerLink="/tasks" 
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          (click)="closeMobileMenu()">
+          <span>📋 My tasks</span>
+        </a>
+      </div>
+    </nav>
+  }
 
   <main class="app-main">
     <div class="app-main-container">
