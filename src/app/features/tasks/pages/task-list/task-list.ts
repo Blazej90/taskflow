@@ -95,6 +95,7 @@ export class TaskList implements OnInit, OnDestroy {
 
   /** True when page is scrolled down (shows scroll-to-top button) */
   readonly showScrollTop = signal(false);
+  readonly showUserMenu = signal(false);
 
   private readonly router = inject(Router);
 
@@ -452,5 +453,10 @@ export class TaskList implements OnInit, OnDestroy {
     } catch {
       this.toast.error('Failed to move task');
     }
+  }
+
+  getInitials(email: string | null | undefined): string {
+    if (!email) return '?';
+    return email.charAt(0).toUpperCase();
   }
 }
