@@ -2,43 +2,92 @@
 
 # ✨ TaskFlow
 
-**Nowoczesna aplikacja do zarządzania zadaniami z kanban board i real-time synchronizacją**
+**Nowoczesna aplikacja PWA do zarządzania zadaniami z kanban board, listami zakupów i synchronizacją w chmurze**
 
 [![Angular](https://img.shields.io/badge/Angular-21+-DD0031?logo=angular&logoColor=white)](https://angular.io/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9+-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Firebase](https://img.shields.io/badge/Firebase-Cloud%20Firestore-FFCA28?logo=firebase&logoColor=black)](https://firebase.google.com/)
+[![PWA](https://img.shields.io/badge/PWA-Installable-5A0FC8?logo=pwa&logoColor=white)](https://web.dev/progressive-web-apps/)
 [![Tests](https://img.shields.io/badge/Tests-Vitest-6E9F18?logo=vitest&logoColor=white)](https://vitest.dev/)
 
-[🚀 **LIVE DEMO**](https://taskflow-two-ebon.vercel.app/) &nbsp;|&nbsp; [📸 Zrzuty ekranu](#-zrzuty-ekranu) &nbsp;|&nbsp; [🏗 Architektura](#-architektura)
+[🚀 **LIVE DEMO**](https://taskflow-two-ebon.vercel.app/) &nbsp;|&nbsp; [📱 Instalacja PWA](#-instalacja-jako-pwa) &nbsp;|&nbsp; [🏗 Architektura](#-architektura)
 
 ![TaskFlow Screenshot](./public/images/screen.jpg)
+*Dark Mode Kanban Board - główny widok aplikacji*
 
 </div>
 
 ---
 
-## 🎯 Dlaczego ten projekt?
+## 🎯 O projekcie
 
-TaskFlow to nie tylko kolejna aplikacja TODO - to **pokaz moich umiejętności** jako Angular Developera:
+TaskFlow to **full-featured aplikacja do organizacji zadań i zakupów** zaprojektowana jako PWA (Progressive Web App). Działa na każdym urządzeniu z przeglądarką - od telefonu po desktop.
 
-- **Angular 21+** z najnowszymi funkcjami (Standalone Components, Signals, `inject()`)
-- **Repository Pattern** dla czystej architektury i testowalności
-- **Real-time sync** z Firestore bez zbędnej złożoności
-- **UX-focused** - drag & drop, bulk actions, responsywność mobilna
-- **Testy jednostkowe** z Vitest zamiast Jasmine/Karma
+### Dla kogo?
+- 👨‍💻 **Freelancerzy** - śledzenie projektów i deadline'ów
+- 🏠 **Użytkownicy domowi** - lista zakupów i zadań domowych  
+- 👥 **Zespoły** - współdzielenie tasków (roadmap)
 
 ---
 
-## ✨ Funkcjonalności
+## ✨ Główne funkcje
 
-| Feature                | Opis                                                               | Technologia                  |
-| ---------------------- | ------------------------------------------------------------------ | ---------------------------- |
-| **🎯 Kanban Board**    | Przeciągnij i upuść zadania między kolumnami todo/doing/done       | Angular CDK Drag & Drop      |
-| **📦 Bulk Actions**    | Zaznacz wiele zadań i usuń/oznacz jako done na raz                 | Signals + Checkbox selection |
-| **🔍 Smart Filtering** | Filtruj po statusie, szukaj po tytule, sortuj po dacie/priorytecie | Computed Signals             |
-| **📱 Mobile First**    | Swipeable kanban na mobile, responsywny layout                     | CSS Grid + Flexbox           |
-| **⚡ Real-time**       | Instant sync między urządzeniami dzięki Firestore                  | Firebase onSnapshot          |
-| **🔐 Auth**            | Logowanie Google OAuth lub Magic Link (bez hasła)                  | Firebase Auth                |
+### 📋 Task Management
+
+| Funkcja | Opis | Technologia |
+|---------|------|-------------|
+| **🎯 Kanban Board** | Przeciągnij i upuść między todo/doing/done | Angular CDK Drag & Drop |
+| **📊 List View** | Sortowalna lista z filtrami i wyszukiwaniem | Signals + Computed |
+| **⚡ Bulk Actions** | Zaznacz wiele tasków i usuń/oznacz jako done | Checkbox selection |
+| **🔍 Smart Filtering** | Filtruj po statusie, szukaj po tytule, sortuj | Real-time computed |
+| **📅 Due Dates** | Terminy z walidacją (nie można wybrać przeszłości) | HTML5 date + TS validation |
+| **❗ Priority Badges** | Wykrzykniki zamiast kolorów (! / !! / !!!) | Intuicyjne UI |
+| **🏷️ Status Flow** | todo → doing → done z animacjami | CSS transitions |
+
+### 🛒 Shopping Lists
+
+Osobny moduł do zarządzania zakupami:
+- ✅ **Tworzenie list** - np. "Biedronka", "Castorama"
+- 📦 **Produkty z opcjonalną ilością** - "Mleko 2L" lub samo "Chleb"
+- ✓ **Checklist** - oznaczanie jako kupione
+- 📱 **Mobile optimized** - szybkie dodawanie na telefonie
+
+### 🎨 UI/UX
+
+| Feature | Opis |
+|---------|------|
+| **🌙 Dark Mode** | Automatyczny i manualny toggle |
+| **📱 Mobile First** | Swipeable kanban, responsywny layout |
+| **⌨️ Klawiatura** | Enter do zapisu, Escape do anulowania |
+| **🎬 Animacje** | Slide-out przy done, pulse dla high priority |
+| **🔄 Real-time** | Instant sync między urządzeniami |
+
+---
+
+## 📱 Instalacja jako PWA
+
+TaskFlow działa jako **natywna aplikacja** na Android i iOS!
+
+### Android (Chrome)
+
+1. Otwórz [taskflow-two-ebon.vercel.app](https://taskflow-two-ebon.vercel.app/) w Chrome
+2. Kliknij **⋮** (menu) → "Dodaj do ekranu głównego"
+3. Potwierdź "Zainstaluj"
+4. Gotowe! 📲 Ikona pojawi się na ekranie głównym
+
+### iOS (Safari)
+
+1. Otwórz [taskflow-two-ebon.vercel.app](https://taskflow-two-ebon.vercel.app/) w Safari
+2. Kliknij **Share** (kwadrat ze strzałką) → "Dodaj do ekranu początkowego"
+3. Kliknij "Dodaj" w prawym górnym rogu
+4. Gotowe! 🍎 Aplikacja działa jak natywna
+
+### Co działa offline?
+
+- ✅ Przeglądanie wcześniej załadowanych tasków
+- ✅ Dodawanie nowych tasków (sync gdy wróci internet)
+- ✅ Shopping lists
+- ✅ Dark mode preference
 
 ---
 
@@ -55,6 +104,7 @@ TaskFlow to nie tylko kolejna aplikacja TODO - to **pokaz moich umiejętności**
 
 ![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
 ![Firestore](https://img.shields.io/badge/Firestore-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
+![Auth](https://img.shields.io/badge/Auth-Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
 
 ### Dev Tools
 
@@ -68,75 +118,61 @@ TaskFlow to nie tylko kolejna aplikacja TODO - to **pokaz moich umiejętności**
 
 ### Repository Pattern
 
-Aplikacja używa **abstrakcji warstwy danych**, co pozwala łatwo zmieniać implementację (localStorage ↔ Firestore) bez zmiany logiki biznesowej:
-
 ```
 ┌─────────────────┐
-│   Components    │  ← UI (TaskList, TaskCard)
+│   Components    │  ← UI (TaskList, TaskCard, ShoppingList)
 ├─────────────────┤
-│  TasksService   │  ← State management (Signals)
+│  Services       │  ← State management (Signals)
 ├─────────────────┤
-│ TasksRepository │  ← Abstrakcja (interface)
+│  Repositories   │  ← Abstrakcja danych (interface)
 ├─────────────────┤
-│ Firestore /     │  ← Implementacja
-│ LocalStorage    │
+│ Firestore       │  ← Implementacja cloud
 └─────────────────┘
 ```
 
-### State Management bez NgRx
-
-Zamiast NgRx użyłem **Angular Signals**:
-
-- Prostszy mental model
-- Mniej boilerplate'u
-- Lepsza wydajność (fine-grained reactivity)
-- Łatwiejsze testowanie
+### State Management - Signals zamiast NgRx
 
 ```typescript
-// Przykład reaktywności
+// Reaktywny filtr bez boilerplate'u
 readonly filteredTasks = computed(() => {
   const tasks = this.tasks();
   const filter = this.statusFilter();
-  return filter === 'all' ? tasks : tasks.filter(t => t.status === filter);
+  const search = this.searchTerm().toLowerCase();
+  
+  return tasks
+    .filter(t => filter === 'all' || t.status === filter)
+    .filter(t => t.title.toLowerCase().includes(search));
 });
 ```
 
----
+### Kluczowe decyzje architektoniczne
 
-## 📸 Zrzut ekranu
-
-![TaskFlow Kanban Board](./public/images/screen.jpg)
-
-Powyższy screen pokazuje **główny widok aplikacji** z kanban board.
-
-Aplikacja oferuje również:
-
-- 📱 **Mobile view** - swipeable kolumny na telefonie
-- ✏️ **Formularz edycji** - tworzenie i edycja zadań z walidacją
-- 🔐 **Ekran logowania** - Google Sign-In i Magic Link
-- 📦 **Bulk actions** - zaznaczanie wielu zadań naraz
+1. **Standalone Components** - brak NgModules, prostsza struktura
+2. **Dependency Injection** - nowoczesna składnia `inject()`
+3. **Fine-grained Reactivity** - Signals dla stanu, RxJS dla async
+4. **PWA First** - Service Worker, manifest, ikony dla wszystkich platform
 
 ---
 
-## 📦 Instalacja i uruchomienie
+## 📦 Instalacja i rozwój
 
 ```bash
-# 1. Klonowanie repozytorium
+# 1. Klonowanie
 git clone https://github.com/Blazej90/taskflow.git
 cd taskflow
 
-# 2. Instalacja zależności (wymagany pnpm)
+# 2. Instalacja (wymagany pnpm)
 pnpm install
 
 # 3. Konfiguracja Firebase
 # Utwórz projekt w Firebase Console
 # Skopiuj config do src/app/firebase.config.ts
 
-# 4. Uruchomienie deweloperskie
+# 4. Dev server
 pnpm start
-# Aplikacja dostępna na http://localhost:4200
+# http://localhost:4200
 
-# 5. Testy jednostkowe
+# 5. Testy
 pnpm test:unit
 ```
 
@@ -144,96 +180,69 @@ pnpm test:unit
 
 - Node.js 20+
 - pnpm 10+
-- Konto Firebase (dla full functionality)
+- Konto Firebase (opcjonalnie dla offline dev)
 
 ---
 
 ## 🧪 Testy
-
-Projekt zawiera testy jednostkowe napisane w **Vitest**:
 
 ```bash
 # Uruchomienie testów
 pnpm test:unit
 
 # Watch mode
-pnpm test:watch
+pnpm test
 ```
 
-**Pokrycie testami:**
+**Obecne testy (16):**
 
-- ✅ `TasksService` - operacje CRUD, bulk actions, state management
-- ✅ `AuthService` - logowanie, obsługa błędów
-- ✅ Mocki repozytorium dla izolowanych testów
+- ✅ `DateFormatPipe` - formatowanie dat (8 testów)
+- ✅ `AuthService` - logowanie (2 testy)
+- ✅ `TasksService` - CRUD, state management (6 testów)
 
 ---
 
-## 🎯 Kluczowe implementacje
+## 🎯 Co zostało zaimplementowane
 
-### 1. Per-task loading states
+### ✅ Core Features
+- [x] **Kanban Board** - drag & drop między kolumnami
+- [x] **List View** - alternatywny widok z sortowaniem
+- [x] **Dark Mode** - toggle + automatyczny wykrywanie
+- [x] **Due Dates** - z walidacją (nie można przeszłości)
+- [x] **Priority System** - wykrzykniki (! / !! / !!!)
+- [x] **Bulk Actions** - zaznaczanie wielu tasków
+- [x] **Responsive** - mobile, tablet, desktop
 
-Zamiast jednego globalnego loadera, każde zadanie ma własny stan ładowania:
+### ✅ Shopping Module
+- [x] **Shopping Lists** - osobne listy zakupów
+- [x] **Optional Qty** - ilość opcjonalna (toggle #)
+- [x] **Checklist** - oznaczanie kupionych
+- [x] **Mobile optimized** - szybkie dodawanie
 
-```typescript
-// Użytkownik widzi, które konkretnie zadanie się aktualizuje
-readonly updatingIds = signal<Set<string>>(new Set());
-```
+### ✅ PWA & Performance
+- [x] **Service Worker** - działa offline
+- [x] **Installable** - "Dodaj do ekranu głównego"
+- [x] **iOS Support** - ikony, manifest, standalone
+- [x] **Web Manifest** - poprawne metadane
 
-### 2. Optimistic UI z rollbackiem
-
-Operacje wykonują się natychmiast w UI, z możliwością cofnięcia przy błędzie.
-
-### 3. SSR-safe code
-
-Wszystkie operacje na window/document są opakowane w `isPlatformBrowser()`.
-
-### 4. Dependency Injection bez konstruktorów
-
-Nowoczesna składnia Angulara:
-
-```typescript
-export class TaskCard {
-  private tasksService = inject(TasksService);
-  readonly task = input.required<Task>();
-}
-```
-
----
-
-## 🚀 Deployment
-
-Aplikacja jest automatycznie deployowana na **Vercel** przy każdym pushu do main.
-
-```bash
-# Manualny build produkcyjny
-pnpm build
-
-# Preview lokalny
-pnpm preview
-```
+### ✅ UX & Polish
+- [x] **Animations** - slide-out, pulse, fade
+- [x] **Toast Notifications** - success/error feedback
+- [x] **Confirm Dialogs** - potwierdzenie przy usuwaniu
+- [x] **Keyboard Shortcuts** - Enter, Escape
+- [x] **Accessibility** - ARIA labels, focus states
 
 ---
 
-## 📚 Czego się nauczyłem?
+## 🗺 Roadmap (przyszłość)
 
-1. **Signals vs RxJS** - kiedy które użyć? Signals dla synchronicznego stanu UI, RxJS dla async strumieni.
-
-2. **Repository Pattern w Angular** - jak zrobić clean architecture bez over-engineeringu.
-
-3. **Firebase Auth** - implementacja Magic Link wymagała zrozumienia deep links i localStorage.
-
-4. **CDK Drag & Drop** - obsługa między-kolumnowych dropów w kanban wymagała custom logiki.
-
----
-
-## 🗺 Roadmap
-
-- [ ] Dark mode toggle
-- [ ] Due dates dla zadań
-- [ ] Attachments (Firebase Storage)
-- [ ] Task labels/tags
-- [ ] Offline support (service worker)
-- [ ] PWA install
+- [ ] **Subtasks** - podzadania w tasku
+- [ ] **Tags/Labels** - #work #personal #shopping
+- [ ] **File Attachments** - Firebase Storage
+- [ ] **Shared Lists** - współdzielenie z innymi użytkownikami
+- [ ] **Time Tracking** - śledzenie czasu spędzonego na tasku
+- [ ] **Statistics** - wykresy produktywności
+- [ ] **Notifications** - Web Push dla deadline'ów
 
 ---
 
