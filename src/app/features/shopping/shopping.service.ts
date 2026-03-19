@@ -27,10 +27,14 @@ export class ShoppingService {
   }
 
   async createList(name: string): Promise<void> {
+    await this.createListWithId(crypto.randomUUID(), name);
+  }
+
+  async createListWithId(id: string, name: string): Promise<void> {
     this.loading.set(true);
     try {
       const newList: ShoppingList = {
-        id: crypto.randomUUID(),
+        id,
         name,
         items: [],
         createdAt: new Date().toISOString(),

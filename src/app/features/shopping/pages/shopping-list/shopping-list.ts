@@ -44,9 +44,11 @@ export class ShoppingListPage implements OnInit, OnDestroy {
     if (!name) return;
 
     try {
-      await this.shoppingService.createList(name);
+      const newListId = crypto.randomUUID();
+      await this.shoppingService.createListWithId(newListId, name);
       this.newListName.set('');
       this.showCreateDialog.set(false);
+      this.expandedList.set(newListId); // Auto-expand new list
       this.toast.success('Shopping list created');
     } catch {
       this.toast.error('Failed to create list');
