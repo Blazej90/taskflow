@@ -1,0 +1,124 @@
+<div class="page">
+  <header class="header">
+    <h1>Shopping Lists</h1>
+    <div class="header-actions">
+      <button 
+        class="btn primary" 
+        (click)="showCreateDialog.set(true)"
+        [disabled]="shoppingService.loading()">
+        + New List
+      </button>
+    </div>
+  </header>
+
+  @if (shoppingService.listCount() === 0 && !shoppingService.loading()) {
+    <div class="empty">
+      <div class="empty-icon">🛒</div>
+      <h3>No shopping lists</h3>
+      <p>Create your first shopping list</p>
+    </div>
+  }
+
+  <div class="lists-grid">
+    @for (list of shoppingService.lists(); track list.id) {
+      <article class="list-card" [class.expanded]="expandedList() === list.id">
+        <div class="list-header" (click)="toggleExpand(list.id)">
+          <div class="list-info">
+            <h3>{{ list.name }}</h3>
+            <span class="list-count">
+              {{ getDoneCount(list) }}/{{ list.items.length }} items
+            </span>
+          </div>
+          <div class="list-actions">
+            <button 
+              class="btn icon-only" 
+              (click)="$event.stopPropagation(); startEdit(list)"
+              title="Edit">
+              ✏️
+            </button>
+            <button 
+              class="btn icon-only danger" 
+              (click)="$event.stopPropagation(); deleteList(list.id)"
+              title="Delete">
+              🗑️
+            </button>
+            <span class="expand-icon">{{ expandedList() === list.id ? '▼' : '▶' }}</span>
+          </div>
+        </div>
+
+        @if (expandedList() === list.id) {
+          <div class="list-content">
+            <div class="add-item">
+              <input 
+                type="text" 
+                [(ngModel)]="newItemName"
+                placeholder="Add item..."
+                (keyup.enter)="addItem(list.id)"
+              />
+              <input 
+                type="text" 
+                [(ngModel)]="newItemQuantity"
+                placeholder="Qty"
+                class="quantity-input"
+                (keyup.enter)="addItem(list.id)"
+              />
+              <button 
+                class="btn primary" 
+                (click)="addItem(list.id)"
+                [disabled]="!newItemName().trim()">
+                Add
+              </button>
+            </div>
+
+            <ul class="items-list">
+              @for (item of list.items; track item.id) {
+                <li [class.done]="item.done">
+                  <label class="item-label">
+                    <input 
+                      type="checkbox" 
+                      [checked]="item.done"
+                      (change)="toggleItem(list.id, item.id)"
+                    />
+                    <span class="item-name">{{ item.name }}</span>
+                    @if (item.quantity) {
+                      <span class="item-quantity">({{ item.quantity }})</span>
+                    }
+                  </label>
+                  <button 
+                    class="btn icon-only small"
+                    (click)="removeItem(list.id, item.id)">
+                    ✕
+                  </button>
+                </li>
+              }
+            </ul>
+          </div>
+        }
+      </article>
+    }
+  </div>
+</div>
+
+@if (showCreateDialog()) {
+  <div class="dialog-overlay" (click)="showCreateDialog.set(false)">
+    <div class="dialog" (click)="$event.stopPropagation()">
+      <h3>New Shopping List</h3>
+      <input 
+        type="text" 
+        [(ngModel)]="newListName"
+        placeholder="List name..."
+        (keyup.enter)="createList()"
+        autofocus
+      />
+      <div class="dialog-actions">
+        <button class="btn" (click)="showCreateDialog.set(false)">Cancel</button>
+        <button 
+          class="btn primary" 
+          (click)="createList()"
+          [disabled]="!newListName().trim()">
+          Create
+        </button>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,104 @@
+import { Injectable, inject, signal, computed } from '@angular/core';
+import { ShoppingList, ShoppingItem } from './shopping';
+import { ShoppingRepository } from './shopping.repository';
+
+@Injectable({ providedIn: 'root' })
+export class ShoppingService {
+  private repository = inject(ShoppingRepository);
+
+  readonly lists = signal<ShoppingList[]>([]);
+  readonly loading = signal(false);
+
+  readonly listCount = computed(() => this.lists().length);
+
+  constructor() {
+    // Subscribe to repository
+    this.repository.lists$.subscribe((lists) => {
+      this.lists.set(lists);
+    });
+  }
+
+  load(): void {
+    this.repository.load();
+  }
+
+  unload(): void {
+    this.repository.unload();
+  }
+
+  async createList(name: string): Promise<void> {
+    this.loading.set(true);
+    try {
+      const newList: ShoppingList = {
+        id: crypto.randomUUID(),
+        name,
+        items: [],
+        createdAt: new Date().toISOString(),
+      };
+      await this.repository.create(newList);
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  async updateList(list: ShoppingList): Promise<void> {
+    this.loading.set(true);
+    try {
+      await this.repository.update(list);
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  async deleteList(id: string): Promise<void> {
+    this.loading.set(true);
+    try {
+      await this.repository.delete(id);
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  async addItem(listId: string, itemName: string, quantity?: string): Promise<void> {
+    const list = this.lists().find((l) => l.id === listId);
+    if (!list) return;
+
+    const newItem: ShoppingItem = {
+      id: crypto.randomUUID(),
+      name: itemName,
+      done: false,
+      quantity,
+    };
+
+    const updatedList = {
+      ...list,
+      items: [...list.items, newItem],
+    };
+
+    await this.updateList(updatedList);
+  }
+
+  async toggleItem(listId: string, itemId: string): Promise<void> {
+    const list = this.lists().find((l) => l.id === listId);
+    if (!list) return;
+
+    const updatedItems = list.items.map((item) =>
+      item.id === itemId ? { ...item, done: !item.done } : item,
+    );
+
+    await this.updateList({ ...list, items: updatedItems });
+  }
+
+  async removeItem(listId: string, itemId: string): Promise<void> {
+    const list = this.lists().find((l) => l.id === listId);
+    if (!list) return;
+
+    const updatedItems = list.items.filter((item) => item.id !== itemId);
+
+    await this.updateList({ ...list, items: updatedItems });
+  }
+
+  getListById(id: string): ShoppingList | undefined {
+    return this.lists().find((l) => l.id === id);
+  }
+}

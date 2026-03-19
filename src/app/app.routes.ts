@@ -30,6 +30,13 @@ export const routes: Routes = [
     ],
   },
 
+  {
+    path: 'shopping',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/shopping/pages/shopping-list/shopping-list').then((m) => m.ShoppingListPage),
+  },
+
   { path: '', redirectTo: 'auth', pathMatch: 'full' },
 
   { path: '**', redirectTo: 'auth' },
