@@ -52,7 +52,11 @@
   <div class="user-menu">
     @if (auth.user(); as u) {
       <button class="avatar-btn" (click)="showUserMenu.set(!showUserMenu())">
-        <span class="avatar">{{ getInitials(u.email) }}</span>
+        @if (u.photoURL) {
+          <img class="avatar-img" [src]="u.photoURL" alt="Profile" referrerpolicy="no-referrer">
+        } @else {
+          <span class="avatar">{{ getInitials(u.email) }}</span>
+        }
       </button>
       
       @if (showUserMenu()) {

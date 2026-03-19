@@ -32,6 +32,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       gap: 4px;
       padding: 8px 16px;
       border-radius: 10px;
@@ -43,10 +44,12 @@
       cursor: pointer;
       transition: all 0.2s ease;
       min-width: 64px;
+      line-height: 1;
 
       svg {
         width: 18px;
         height: 18px;
+        flex-shrink: 0;
       }
 
       &:hover:not(:disabled) {
@@ -81,13 +84,15 @@
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      border: 2px solid var(--border-color);
+      border: none;
       background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
       cursor: pointer;
       transition: all 0.2s ease;
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 0;
+      overflow: hidden;
 
       &:hover {
         transform: scale(1.05);
@@ -98,6 +103,14 @@
         font-size: 16px;
         font-weight: 700;
         color: white;
+      }
+
+      .avatar-img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--border-color);
       }
     }
 
@@ -223,22 +236,23 @@
 @media (max-width: 480px) {
   .topbar {
     padding: 8px 10px;
-    gap: 10px;
+    gap: 8px;
 
     .view-controls {
       gap: 4px;
 
       .view-btn {
-        min-width: 44px;
-        padding: 8px;
+        min-width: 40px;
+        height: 40px;
+        padding: 6px;
 
         span {
           display: none; // Hide text labels on small screens
         }
 
         svg {
-          width: 20px;
-          height: 20px;
+          width: 18px;
+          height: 18px;
         }
       }
     }
@@ -247,6 +261,49 @@
       .avatar-btn {
         width: 36px;
         height: 36px;
+
+        .avatar-img {
+          width: 36px;
+          height: 36px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 360px) {
+  .topbar {
+    padding: 6px 8px;
+    gap: 6px;
+
+    .view-controls {
+      gap: 3px;
+
+      .view-btn {
+        min-width: 36px;
+        height: 36px;
+        padding: 5px;
+
+        svg {
+          width: 16px;
+          height: 16px;
+        }
+      }
+    }
+
+    .user-menu {
+      .avatar-btn {
+        width: 32px;
+        height: 32px;
+
+        .avatar {
+          font-size: 12px;
+        }
+
+        .avatar-img {
+          width: 32px;
+          height: 32px;
+        }
       }
     }
   }
