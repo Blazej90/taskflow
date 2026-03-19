@@ -54,16 +54,27 @@
                 [(ngModel)]="newItemName"
                 placeholder="Add item..."
                 (keyup.enter)="addItem(list.id)"
+                class="item-input"
               />
-              <input 
-                type="text" 
-                [(ngModel)]="newItemQuantity"
-                placeholder="Qty"
-                class="quantity-input"
-                (keyup.enter)="addItem(list.id)"
-              />
+              @if (showQuantity()) {
+                <input 
+                  type="text" 
+                  [(ngModel)]="newItemQuantity"
+                  placeholder="Qty"
+                  class="quantity-input"
+                  (keyup.enter)="addItem(list.id)"
+                />
+              }
               <button 
-                class="btn primary" 
+                type="button"
+                class="btn icon-btn quantity-toggle"
+                [class.active]="showQuantity()"
+                (click)="toggleQuantity()"
+                title="Toggle quantity">
+                #
+              </button>
+              <button 
+                class="btn primary add-btn" 
                 (click)="addItem(list.id)"
                 [disabled]="!newItemName().trim()">
                 Add

@@ -23,6 +23,7 @@ export class ShoppingListPage implements OnInit, OnDestroy {
   newListName = signal('');
   newItemName = signal('');
   newItemQuantity = signal('');
+  showQuantity = signal(false);
 
   ngOnInit(): void {
     this.shoppingService.load();
@@ -37,6 +38,14 @@ export class ShoppingListPage implements OnInit, OnDestroy {
     // Clear inputs when switching lists
     this.newItemName.set('');
     this.newItemQuantity.set('');
+    this.showQuantity.set(false);
+  }
+
+  toggleQuantity(): void {
+    this.showQuantity.update((v) => !v);
+    if (!this.showQuantity()) {
+      this.newItemQuantity.set('');
+    }
   }
 
   async createList(): Promise<void> {

@@ -71,8 +71,11 @@ export class ShoppingService {
       id: crypto.randomUUID(),
       name: itemName,
       done: false,
-      quantity,
     };
+    
+    if (quantity?.trim()) {
+      newItem.quantity = quantity.trim();
+    }
 
     const updatedList = {
       ...list,
