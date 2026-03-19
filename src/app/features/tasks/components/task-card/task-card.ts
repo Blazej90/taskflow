@@ -149,6 +149,16 @@ export class TaskCard implements OnInit, OnDestroy {
     }
   }
 
+  /** Returns exclamation marks for priority level */
+  getPriorityMarks(priority: string): string {
+    const marks: Record<string, string> = {
+      low: '!',
+      medium: '!!',
+      high: '!!!'
+    };
+    return marks[priority] || '!';
+  }
+
   ngOnInit(): void {
     this.intervalId = setInterval(() => {
       this.currentDate.set(new Date());

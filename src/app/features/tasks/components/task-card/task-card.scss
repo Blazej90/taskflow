@@ -149,6 +149,23 @@ h3 {
     font-size: 17px;
   }
 }
+
+.title-with-priority {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+
+  @media (min-width: 768px) {
+    gap: 12px;
+  }
+
+  @media (max-width: 480px) {
+    gap: 8px;
+  }
+}
+
 // ==========================================
 // ACTIONS
 // ==========================================
@@ -383,47 +400,56 @@ p {
 }
 
 // ==========================================
-// PRIORITY BADGE
+// PRIORITY BADGE (Exclamation marks)
 // ==========================================
 
 .priority-indicator {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  width: 32px;
+  height: 22px;
+  border-radius: 11px;
+  font-size: 12px;
+  font-weight: 700;
   flex-shrink: 0;
-  position: relative;
+  transition: all 0.2s ease;
+  cursor: help;
 
-  .priority-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    transition: all 0.3s ease;
+  @media (min-width: 768px) {
+    width: 36px;
+    height: 24px;
+    font-size: 13px;
+    border-radius: 12px;
+  }
+
+  @media (max-width: 480px) {
+    width: 30px;
+    height: 20px;
+    font-size: 11px;
+  }
+
+  .priority-mark {
+    line-height: 1;
+    letter-spacing: -1px;
   }
 
   &.priority-low {
-    .priority-dot {
-      background: #86efac;
-      box-shadow: 0 0 0 2px rgba(134, 239, 172, 0.3);
-    }
+    background: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
   }
 
   &.priority-medium {
-    .priority-dot {
-      background: #fcd34d;
-      box-shadow: 0 0 0 2px rgba(252, 211, 77, 0.3);
-    }
+    background: #ede9fe;
+    color: #7c3aed;
+    border: 1px solid #ddd6fe;
   }
 
   &.priority-high {
-    .priority-dot {
-      background: #fca5a5;
-      box-shadow: 0 0 0 2px rgba(252, 165, 165, 0.4);
-    }
+    background: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
 
     &.pulsing {
       animation: priority-pulse 1.5s ease-in-out infinite;
@@ -436,12 +462,10 @@ p {
   100% {
     transform: scale(1);
     opacity: 1;
-    box-shadow: 0 0 0 2px rgba(252, 165, 165, 0.4);
   }
   50% {
-    transform: scale(1.4);
-    opacity: 0.6;
-    box-shadow: 0 0 0 8px rgba(252, 165, 165, 0);
+    transform: scale(1.05);
+    opacity: 0.8;
   }
 }
 
@@ -575,8 +599,23 @@ p {
   }
 
   .priority-indicator {
-    background: rgba(30, 41, 59, 0.9);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    &.priority-low {
+      background: #334155;
+      color: #94a3b8;
+      border-color: #475569;
+    }
+
+    &.priority-medium {
+      background: #4c1d95;
+      color: #c4b5fd;
+      border-color: #6d28d9;
+    }
+
+    &.priority-high {
+      background: #7f1d1d;
+      color: #fca5a5;
+      border-color: #991b1b;
+    }
   }
 
   .card.highlight {

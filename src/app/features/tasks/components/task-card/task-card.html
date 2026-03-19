@@ -17,8 +17,9 @@
         class="priority-indicator"
         [class]="'priority-' + task.priority"
         [class.pulsing]="task.priority === 'high'"
+        [attr.title]="'Priority: ' + task.priority"
       >
-        <span class="priority-dot"></span>
+        <span class="priority-mark">{{ getPriorityMarks(task.priority) }}</span>
       </div>
       <h3>{{ task.title }}</h3>
     </div>

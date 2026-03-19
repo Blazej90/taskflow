@@ -281,20 +281,34 @@ button[type='submit'] {
   }
 
   &.low {
-    --priority-color: #10b981;
+    --priority-color: #94a3b8;
   }
   &.medium {
-    --priority-color: #f59e0b;
+    --priority-color: #8b5cf6;
   }
   &.high {
-    --priority-color: #ef4444;
+    --priority-color: #dc2626;
   }
 
-  .priority-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
+  .priority-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 24px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
     background: var(--priority-color);
+    color: white;
+    flex-shrink: 0;
+
+    @media (max-width: 480px) {
+      width: 32px;
+      height: 22px;
+      font-size: 12px;
+    }
   }
 
   &:has(input:checked) {
