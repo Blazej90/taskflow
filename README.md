@@ -24,9 +24,10 @@
 TaskFlow to **full-featured aplikacja do organizacji zadań i zakupów** zaprojektowana jako PWA (Progressive Web App). Działa na każdym urządzeniu z przeglądarką - od telefonu po desktop.
 
 ### Dla kogo?
-- 👨‍💻 **Freelancerzy** - śledzenie projektów i deadline'ów
-- 🏠 **Użytkownicy domowi** - lista zakupów i zadań domowych  
-- 👥 **Zespoły** - współdzielenie tasków (roadmap)
+- 🧑 **Osoby prywatne** - organizacja życia codziennego i zadań domowych
+- 💼 **Freelancerzy** - śledzenie projektów i deadline'ów
+- 🛒 **Zapominalscy** - lista zakupów z check-off
+- 📅 **Zabiegani** - przypomnienia o terminach i priorytetach
 
 ---
 
