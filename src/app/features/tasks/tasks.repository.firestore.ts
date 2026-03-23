@@ -119,10 +119,14 @@ export class FirestoreTasksRepository implements TasksRepository {
       status: task.status,
       priority: task.priority,
       order: typeof task.order === 'number' ? task.order : Date.now(),
-      dueDate: task.dueDate,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     };
+
+    // Only add dueDate if it's defined (Firestore doesn't accept undefined)
+    if (task.dueDate) {
+      payload.dueDate = task.dueDate;
+    }
 
     await setDoc(ref, payload);
   }
