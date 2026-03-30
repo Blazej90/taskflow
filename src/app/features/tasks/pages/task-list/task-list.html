@@ -118,23 +118,25 @@
 }
 
 @if (overdueCount() > 0) {
-  <div class="overdue-banner">
+  <button type="button" class="overdue-banner" (click)="showOverdue()">
     <span class="banner-icon">⚠️</span>
     <span class="banner-text">
       <strong>{{ overdueCount() }}</strong> 
       {{ overdueCount() === 1 ? 'task' : 'tasks' }} overdue
     </span>
-  </div>
+    <span class="banner-action">Show →</span>
+  </button>
 }
 
 @if (dueTodayCount() > 0) {
-  <div class="due-today-banner">
+  <button type="button" class="due-today-banner" (click)="showDueToday()">
     <span class="banner-icon">⏰</span>
     <span class="banner-text">
       <strong>{{ dueTodayCount() }}</strong> 
       {{ dueTodayCount() === 1 ? 'task' : 'tasks' }} due today
     </span>
-  </div>
+    <span class="banner-action">Show →</span>
+  </button>
 }
 
 <div class="filters">
@@ -256,6 +258,17 @@
     Drag and drop is available only in <strong>Manual</strong> mode.
   </p>
 }
+@if (dateFilter() !== 'all') {
+  <div class="active-filter-pill">
+    <span class="pill-text">
+      {{ dateFilter() === 'overdue' ? '⚠️ Overdue' : '⏰ Due today' }}
+    </span>
+    <button type="button" class="pill-close" (click)="clearDateFilter()" aria-label="Show all tasks">
+      ✕
+    </button>
+  </div>
+}
+
 @if (viewMode() === 'list') {
   <section
     class="list"

@@ -596,26 +596,58 @@ h1 {
   display: flex;
   align-items: center;
   gap: 12px;
+  width: 100%;
   margin-bottom: 16px;
   padding: 14px 20px;
   background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
   border: 2px solid #dc2626;
   border-radius: 12px;
   animation: overdue-pulse 1.5s ease-in-out infinite;
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.35);
+
+    .banner-action {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
 
   .banner-icon {
     font-size: 24px;
+    flex-shrink: 0;
   }
 
   .banner-text {
     font-size: 15px;
     color: #991b1b;
     font-weight: 500;
+    flex: 1;
 
     strong {
       font-weight: 700;
       color: #7f1d1d;
     }
+  }
+
+  .banner-action {
+    font-size: 14px;
+    font-weight: 600;
+    color: #dc2626;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    white-space: nowrap;
   }
 }
 
@@ -636,26 +668,58 @@ h1 {
   display: flex;
   align-items: center;
   gap: 12px;
+  width: 100%;
   margin-bottom: 16px;
   padding: 14px 20px;
   background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
   border: 2px solid #f59e0b;
   border-radius: 12px;
   animation: banner-pulse 3s ease-in-out infinite;
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
+
+    .banner-action {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
 
   .banner-icon {
     font-size: 24px;
+    flex-shrink: 0;
   }
 
   .banner-text {
     font-size: 15px;
     color: #92400e;
     font-weight: 500;
+    flex: 1;
 
     strong {
       font-weight: 700;
       color: #78350f;
     }
+  }
+
+  .banner-action {
+    font-size: 14px;
+    font-weight: 600;
+    color: #f59e0b;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    white-space: nowrap;
   }
 }
 
@@ -665,6 +729,71 @@ h1 {
   }
   50% {
     box-shadow: 0 0 0 6px rgba(245, 158, 11, 0);
+  }
+}
+
+// ==========================================
+// ACTIVE FILTER PILL
+// ==========================================
+
+.active-filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-end;
+  margin-bottom: 12px;
+  margin-left: auto;
+  padding: 6px 12px;
+  background: var(--bg-surface, white);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 999px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary, #0f172a);
+
+  .pill-text {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .pill-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--text-muted, #64748b);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background: var(--bg-primary, #f1f5f9);
+      color: var(--text-primary, #0f172a);
+    }
+  }
+}
+
+:host-context(.dark) {
+  .active-filter-pill {
+    background: var(--bg-surface, #1e293b);
+    border-color: var(--border-color, #334155);
+    color: var(--text-primary, #f8fafc);
+
+    .pill-close {
+      color: var(--text-muted, #94a3b8);
+
+      &:hover {
+        background: var(--bg-primary, #334155);
+        color: var(--text-primary, #f8fafc);
+      }
+    }
   }
 }
 
@@ -1602,10 +1731,18 @@ mat-form-field {
     background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
     border-color: #dc2626;
 
+    &:hover {
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+    }
+
     .banner-text {
       color: #fee2e2;
 
       strong {
+        color: #fff;
+      }
+
+      .banner-action {
         color: #fff;
       }
     }
@@ -1615,12 +1752,20 @@ mat-form-field {
     background: linear-gradient(135deg, #92400e 0%, #b45309 100%);
     border-color: #f59e0b;
 
+    &:hover {
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+    }
+
     .banner-text {
       color: #fef3c7;
 
       strong {
         color: #fff;
       }
+    }
+
+    .banner-action {
+      color: #fff;
     }
   }
 }

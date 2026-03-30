@@ -19,6 +19,9 @@ import { TasksService } from '../../tasks.service';
 /** Filter option for task status */
 type Filter = 'all' | TaskStatus;
 
+/** Date filter options */
+type DateFilter = 'all' | 'overdue' | 'due-today';
+
 /** Task sorting options */
 type SortOption = 'manual' | 'dueDate' | 'priority' | 'status' | 'newest' | 'oldest';
 
@@ -68,6 +71,9 @@ export class TaskList implements OnInit, OnDestroy {
 
   /** Current status filter ('all' or specific status) */
   readonly statusFilter = signal<Filter>('all');
+
+  /** Current date filter ('all', 'overdue', or 'due-today') */
+  readonly dateFilter = signal<DateFilter>('all');
 
   /** Current search text for filtering by title */
   readonly searchTerm = signal('');
@@ -165,6 +171,27 @@ export class TaskList implements OnInit, OnDestroy {
     }
   }
 
+  /** Shows only overdue tasks */
+  showOverdue() {
+    this.statusFilter.set('all');
+    this.dateFilter.set('overdue');
+    this.sortBy.set('dueDate');
+    this.toast.info('Showing overdue tasks');
+  }
+
+  /** Shows only tasks due today */
+  showDueToday() {
+    this.statusFilter.set('all');
+    this.dateFilter.set('due-today');
+    this.sortBy.set('dueDate');
+    this.toast.info('Showing tasks due today');
+  }
+
+  /** Clears date filter */
+  clearDateFilter() {
+    this.dateFilter.set('all');
+  }
+
   /** Updates selection state for a task */
   onSelectedChange(e: { id: string; selected: boolean }) {
     this.selectedIds.update((set) => {
@@ -202,12 +229,38 @@ export class TaskList implements OnInit, OnDestroy {
   /** Filtered and sorted tasks based on current filter/sort settings */
   readonly filteredTasks = computed(() => {
     const f = this.statusFilter();
+    const d = this.dateFilter();
     const q = this.searchTerm().trim().toLowerCase();
     const sort = this.sortBy();
     const tasks = this.tasks();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-    const byStatus = f === 'all' ? tasks : tasks.filter((t) => t.status === f);
-    const bySearch = !q ? byStatus : byStatus.filter((t) => t.title.toLowerCase().includes(q));
+    // Filter by status
+    let filtered = f === 'all' ? tasks : tasks.filter((t) => t.status === f);
+
+    // Filter by date
+    if (d === 'overdue') {
+      filtered = filtered.filter((t) => {
+        if (!t.dueDate || t.status === 'done') return false;
+        const due = new Date(t.dueDate);
+        return due < today;
+      });
+    } else if (d === 'due-today') {
+      filtered = filtered.filter((t) => {
+        if (!t.dueDate) return false;
+        // Compare dates by year/month/day to avoid timezone issues
+        const due = new Date(t.dueDate);
+        return (
+          due.getFullYear() === today.getFullYear() &&
+          due.getMonth() === today.getMonth() &&
+          due.getDate() === today.getDate()
+        );
+      });
+    }
+
+    // Filter by search
+    const bySearch = !q ? filtered : filtered.filter((t) => t.title.toLowerCase().includes(q));
 
     if (sort === 'manual') return bySearch;
 
