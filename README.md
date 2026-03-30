@@ -13,7 +13,7 @@
 [🚀 **LIVE DEMO**](https://taskflow-two-ebon.vercel.app/) &nbsp;|&nbsp; [📱 Instalacja PWA](#-instalacja-jako-pwa) &nbsp;|&nbsp; [🏗 Architektura](#-architektura)
 
 ![TaskFlow Screenshot](./public/images/screen.jpg)
-*Dark Mode Kanban Board - główny widok aplikacji*
+_Dark Mode Kanban Board - główny widok aplikacji_
 
 </div>
 
@@ -24,6 +24,7 @@
 TaskFlow to **full-featured aplikacja do organizacji zadań i zakupów** zaprojektowana jako PWA (Progressive Web App). Działa na każdym urządzeniu z przeglądarką - od telefonu po desktop.
 
 ### Dla kogo?
+
 - 🧑 **Osoby prywatne** - organizacja życia codziennego i zadań domowych
 - 💼 **Freelancerzy** - śledzenie projektów i deadline'ów
 - 🛒 **Zapominalscy** - lista zakupów z check-off
@@ -35,33 +36,34 @@ TaskFlow to **full-featured aplikacja do organizacji zadań i zakupów** zaproje
 
 ### 📋 Task Management
 
-| Funkcja | Opis | Technologia |
-|---------|------|-------------|
-| **🎯 Kanban Board** | Przeciągnij i upuść między todo/doing/done | Angular CDK Drag & Drop |
-| **📊 List View** | Sortowalna lista z filtrami i wyszukiwaniem | Signals + Computed |
-| **⚡ Bulk Actions** | Zaznacz wiele tasków i usuń/oznacz jako done | Checkbox selection |
-| **🔍 Smart Filtering** | Filtruj po statusie, szukaj po tytule, sortuj | Real-time computed |
-| **📅 Due Dates** | Terminy z walidacją (nie można wybrać przeszłości) | HTML5 date + TS validation |
-| **❗ Priority Badges** | Wykrzykniki zamiast kolorów (! / !! / !!!) | Intuicyjne UI |
-| **🏷️ Status Flow** | todo → doing → done z animacjami | CSS transitions |
+| Funkcja                | Opis                                               | Technologia                |
+| ---------------------- | -------------------------------------------------- | -------------------------- |
+| **🎯 Kanban Board**    | Przeciągnij i upuść między todo/doing/done         | Angular CDK Drag & Drop    |
+| **📊 List View**       | Sortowalna lista z filtrami i wyszukiwaniem        | Signals + Computed         |
+| **⚡ Bulk Actions**    | Zaznacz wiele tasków i usuń/oznacz jako done       | Checkbox selection         |
+| **🔍 Smart Filtering** | Filtruj po statusie, szukaj po tytule, sortuj      | Real-time computed         |
+| **📅 Due Dates**       | Terminy z walidacją (nie można wybrać przeszłości) | HTML5 date + TS validation |
+| **❗ Priority Badges** | Wykrzykniki zamiast kolorów (! / !! / !!!)         | Intuicyjne UI              |
+| **🏷️ Status Flow**     | todo → doing → done z animacjami                   | CSS transitions            |
 
 ### 🛒 Shopping Lists
 
 Osobny moduł do zarządzania zakupami:
+
 - ✅ **Tworzenie list** - np. "Biedronka", "Castorama"
-- 📦 **Produkty z opcjonalną ilością** - "Mleko 2L" lub samo "Chleb"
+- 📦 **Produkty z opcjonalną ilością** - "Jabłka 1 kg" lub samo "Chleb"
 - ✓ **Checklist** - oznaczanie jako kupione
 - 📱 **Mobile optimized** - szybkie dodawanie na telefonie
 
 ### 🎨 UI/UX
 
-| Feature | Opis |
-|---------|------|
-| **🌙 Dark Mode** | Automatyczny i manualny toggle |
-| **📱 Mobile First** | Swipeable kanban, responsywny layout |
-| **⌨️ Klawiatura** | Enter do zapisu, Escape do anulowania |
-| **🎬 Animacje** | Slide-out przy done, pulse dla high priority |
-| **🔄 Real-time** | Instant sync między urządzeniami |
+| Feature             | Opis                                         |
+| ------------------- | -------------------------------------------- |
+| **🌙 Dark Mode**    | Automatyczny i manualny toggle               |
+| **📱 Mobile First** | Swipeable kanban, responsywny layout         |
+| **⌨️ Klawiatura**   | Enter do zapisu, Escape do anulowania        |
+| **🎬 Animacje**     | Slide-out przy done, pulse dla high priority |
+| **🔄 Real-time**    | Instant sync między urządzeniami             |
 
 ---
 
@@ -139,7 +141,7 @@ readonly filteredTasks = computed(() => {
   const tasks = this.tasks();
   const filter = this.statusFilter();
   const search = this.searchTerm().toLowerCase();
-  
+
   return tasks
     .filter(t => filter === 'all' || t.status === filter)
     .filter(t => t.title.toLowerCase().includes(search));
@@ -206,6 +208,7 @@ pnpm test
 ## 🎯 Co zostało zaimplementowane
 
 ### ✅ Core Features
+
 - [x] **Kanban Board** - drag & drop między kolumnami
 - [x] **List View** - alternatywny widok z sortowaniem
 - [x] **Dark Mode** - toggle + automatyczny wykrywanie
@@ -215,18 +218,21 @@ pnpm test
 - [x] **Responsive** - mobile, tablet, desktop
 
 ### ✅ Shopping Module
+
 - [x] **Shopping Lists** - osobne listy zakupów
 - [x] **Optional Qty** - ilość opcjonalna (toggle #)
 - [x] **Checklist** - oznaczanie kupionych
 - [x] **Mobile optimized** - szybkie dodawanie
 
 ### ✅ PWA & Performance
+
 - [x] **Service Worker** - działa offline
 - [x] **Installable** - "Dodaj do ekranu głównego"
 - [x] **iOS Support** - ikony, manifest, standalone
 - [x] **Web Manifest** - poprawne metadane
 
 ### ✅ UX & Polish
+
 - [x] **Animations** - slide-out, pulse, fade
 - [x] **Toast Notifications** - success/error feedback
 - [x] **Confirm Dialogs** - potwierdzenie przy usuwaniu
