@@ -61,7 +61,7 @@ export class ToastService {
   private open(message: string, type: ToastType) {
     const config: MatSnackBarConfig = {
       duration: type === 'error' ? 4500 : 2500,
-      horizontalPosition: 'right',
+      horizontalPosition: 'center',
       verticalPosition: 'top',
       panelClass: ['toast', `toast--${type}`],
     };
