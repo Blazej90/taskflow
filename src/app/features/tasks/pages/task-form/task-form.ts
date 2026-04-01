@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -37,7 +37,7 @@ type TaskFormValue = {
   templateUrl: './task-form.html',
   styleUrl: './task-form.scss',
 })
-export class TaskForm {
+export class TaskForm implements OnInit {
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private tasksService = inject(TasksService);
@@ -65,25 +65,36 @@ export class TaskForm {
   /** Minimum date for due date picker (today) */
   readonly minDate = new Date().toISOString().split('T')[0];
 
-  constructor() {
+  ngOnInit(): void {
+    this.tasksService.load();
+    
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEdit = true;
       this.taskId = id;
 
-      const task = this.tasksService.getById(id);
-      if (task) {
-        this.form.patchValue({
-          title: task.title,
-          description: task.description ?? '',
-          priority: task.priority ?? 'medium',
-          status: task.status,
-          dueDate: task.dueDate ?? '',
-        });
-      } else {
-        this.toast.error('Task not found');
-        this.router.navigateByUrl('/tasks');
-      }
+      // Wait for data to load before trying to get task
+      const checkTask = () => {
+        const task = this.tasksService.getById(id);
+        if (task) {
+          this.form.patchValue({
+            title: task.title,
+            description: task.description ?? '',
+            priority: task.priority ?? 'medium',
+            status: task.status,
+            dueDate: task.dueDate ?? '',
+          });
+        } else if (this.tasksService.bootLoading()) {
+          // Still loading, check again
+          setTimeout(checkTask, 50);
+        } else {
+          // Finished loading but task not found
+          this.toast.error('Task not found');
+          this.router.navigateByUrl('/tasks');
+        }
+      };
+      
+      checkTask();
     }
   }
 
