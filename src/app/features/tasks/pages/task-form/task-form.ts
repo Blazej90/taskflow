@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -37,7 +37,7 @@ type TaskFormValue = {
   templateUrl: './task-form.html',
   styleUrl: './task-form.scss',
 })
-export class TaskForm implements OnInit {
+export class TaskForm implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private tasksService = inject(TasksService);
@@ -65,6 +65,9 @@ export class TaskForm implements OnInit {
   /** Minimum date for due date picker (today) */
   readonly minDate = new Date().toISOString().split('T')[0];
 
+  private formPopulated = false;
+  private checkInterval?: ReturnType<typeof setInterval>;
+
   ngOnInit(): void {
     this.tasksService.load();
     
@@ -73,8 +76,10 @@ export class TaskForm implements OnInit {
       this.isEdit = true;
       this.taskId = id;
 
-      // Wait for data to load before trying to get task
-      const checkTask = () => {
+      // Check for task availability periodically until loaded or failed
+      this.checkInterval = setInterval(() => {
+        if (this.formPopulated) return;
+
         const task = this.tasksService.getById(id);
         if (task) {
           this.form.patchValue({
@@ -84,17 +89,22 @@ export class TaskForm implements OnInit {
             status: task.status,
             dueDate: task.dueDate ?? '',
           });
-        } else if (this.tasksService.bootLoading()) {
-          // Still loading, check again
-          setTimeout(checkTask, 50);
-        } else {
+          this.formPopulated = true;
+          clearInterval(this.checkInterval);
+        } else if (!this.tasksService.bootLoading()) {
           // Finished loading but task not found
+          this.formPopulated = true;
+          clearInterval(this.checkInterval);
           this.toast.error('Task not found');
           this.router.navigateByUrl('/tasks');
         }
-      };
-      
-      checkTask();
+      }, 50);
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.checkInterval) {
+      clearInterval(this.checkInterval);
     }
   }
 
