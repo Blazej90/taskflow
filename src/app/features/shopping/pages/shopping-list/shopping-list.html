@@ -90,16 +90,39 @@
                       [checked]="item.done"
                       (change)="toggleItem(list.id, item.id)"
                     />
-                    <span class="item-name">{{ item.name }}</span>
+                    @if (editingItemId() === item.id) {
+                      <input
+                        type="text"
+                        [(ngModel)]="editItemName"
+                        (blur)="saveItemName(list.id, item.id)"
+                        (keyup.enter)="saveItemName(list.id, item.id)"
+                        (keyup.escape)="cancelEditItem()"
+                        class="item-edit-input"
+                        autofocus
+                      />
+                    } @else {
+                      <span class="item-name">{{ item.name }}</span>
+                    }
                     @if (item.quantity) {
                       <span class="item-quantity">({{ item.quantity }})</span>
                     }
                   </label>
-                  <button 
-                    class="btn icon-only small"
-                    (click)="removeItem(list.id, item.id)">
-                    ✕
-                  </button>
+                  <div class="item-actions">
+                    @if (editingItemId() !== item.id) {
+                      <button 
+                        class="btn icon-only small"
+                        (click)="startEditItem(item.id, item.name)"
+                        title="Edit item">
+                        ✏️
+                      </button>
+                    }
+                    <button 
+                      class="btn icon-only small danger"
+                      (click)="removeItem(list.id, item.id)"
+                      title="Remove item">
+                      ✕
+                    </button>
+                  </div>
                 </li>
               }
             </ul>

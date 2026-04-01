@@ -266,6 +266,29 @@
   color: var(--text-primary, #0f172a);
 }
 
+.item-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.item-edit-input {
+  flex: 1;
+  min-width: 0;
+  padding: 4px 8px;
+  border: 1px solid #3b82f6;
+  border-radius: 4px;
+  font-size: 15px;
+  background: var(--bg-primary, white);
+  color: var(--text-primary, #0f172a);
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  }
+}
+
 .item-quantity {
   font-size: 13px;
   color: var(--text-muted, #64748b);

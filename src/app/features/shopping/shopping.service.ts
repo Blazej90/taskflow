@@ -109,6 +109,20 @@ export class ShoppingService {
     await this.updateList({ ...list, items: updatedItems });
   }
 
+  async updateItemName(listId: string, itemId: string, newName: string): Promise<void> {
+    const list = this.lists().find((l) => l.id === listId);
+    if (!list) return;
+
+    const trimmedName = newName.trim();
+    if (!trimmedName) return;
+
+    const updatedItems = list.items.map((item) =>
+      item.id === itemId ? { ...item, name: trimmedName } : item,
+    );
+
+    await this.updateList({ ...list, items: updatedItems });
+  }
+
   getListById(id: string): ShoppingList | undefined {
     return this.lists().find((l) => l.id === id);
   }

@@ -25,6 +25,10 @@ export class ShoppingListPage implements OnInit, OnDestroy {
   newItemQuantity = signal('');
   showQuantity = signal(false);
 
+  // Item editing state
+  editingItemId = signal<string | null>(null);
+  editItemName = signal('');
+
   ngOnInit(): void {
     this.shoppingService.load();
   }
@@ -88,6 +92,31 @@ export class ShoppingListPage implements OnInit, OnDestroy {
   startEdit(list: ShoppingList): void {
     // For simplicity, just expand the list. Edit could be added later.
     this.toggleExpand(list.id);
+  }
+
+  startEditItem(itemId: string, currentName: string): void {
+    this.editingItemId.set(itemId);
+    this.editItemName.set(currentName);
+  }
+
+  async saveItemName(listId: string, itemId: string): Promise<void> {
+    const newName = this.editItemName().trim();
+    if (!newName) {
+      this.cancelEditItem();
+      return;
+    }
+
+    try {
+      await this.shoppingService.updateItemName(listId, itemId, newName);
+      this.cancelEditItem();
+    } catch {
+      this.toast.error('Failed to update item');
+    }
+  }
+
+  cancelEditItem(): void {
+    this.editingItemId.set(null);
+    this.editItemName.set('');
   }
 
   async addItem(listId: string): Promise<void> {
