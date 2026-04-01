@@ -82,6 +82,7 @@ export class TasksService {
     @Inject(TASKS_REPOSITORY) private repo: TasksRepository,
     private destroyRef: DestroyRef,
   ) {
+    // Subscribe to repository with auto-cleanup
     this.repo.tasks$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (tasks) => {
         this._tasks.set(tasks);
@@ -93,8 +94,16 @@ export class TasksService {
         this._tasks.set([]);
       },
     });
+  }
 
+  /** Loads tasks from repository. Call in component ngOnInit. */
+  load(): void {
     this.repo.load();
+  }
+
+  /** Unloads/cleans up repository subscription. Call in component ngOnDestroy. */
+  unload(): void {
+    this.repo.unload();
   }
 
   /**

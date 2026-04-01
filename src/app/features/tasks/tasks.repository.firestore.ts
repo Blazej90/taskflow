@@ -5,6 +5,7 @@ import {
   doc,
   FieldValue,
   getDocs,
+  limit,
   onSnapshot,
   orderBy,
   query,
@@ -60,6 +61,7 @@ export class FirestoreTasksRepository implements TasksRepository {
       collection(db, 'tasks'),
       where('userId', '==', user.uid),
       orderBy('order', 'asc'),
+      limit(200),
     );
 
     this.unsubscribe = onSnapshot(
@@ -123,7 +125,6 @@ export class FirestoreTasksRepository implements TasksRepository {
       updatedAt: serverTimestamp(),
     };
 
-    // Only add dueDate if it's defined (Firestore doesn't accept undefined)
     if (task.dueDate) {
       payload.dueDate = task.dueDate;
     }

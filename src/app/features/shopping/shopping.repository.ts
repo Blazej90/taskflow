@@ -4,6 +4,7 @@ import {
   deleteDoc,
   doc,
   FieldValue,
+  limit,
   onSnapshot,
   orderBy,
   query,
@@ -45,6 +46,7 @@ export class ShoppingRepository {
       collection(db, 'shopping-lists'),
       where('userId', '==', user.uid),
       orderBy('updatedAt', 'desc'),
+      limit(50),
     );
 
     this.unsubscribe = onSnapshot(

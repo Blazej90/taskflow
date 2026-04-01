@@ -1,9 +1,23 @@
-import { Component, computed, inject, signal, OnInit, OnDestroy, PLATFORM_ID, Renderer2 } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  signal,
+  OnInit,
+  OnDestroy,
+  PLATFORM_ID,
+  Renderer2,
+} from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
-import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import {
+  DragDropModule,
+  CdkDragDrop,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -112,6 +126,8 @@ export class TaskList implements OnInit, OnDestroy {
   private cleanupScroll?: () => void;
 
   ngOnInit() {
+    this.tasksService.load();
+
     if (isPlatformBrowser(this.platformId)) {
       this.checkMobile();
       this.cleanupResize = this.renderer.listen('window', 'resize', () => this.checkMobile());
@@ -122,6 +138,7 @@ export class TaskList implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.cleanupResize?.();
     this.cleanupScroll?.();
+    this.tasksService.unload();
   }
 
   private checkMobile() {
@@ -249,7 +266,6 @@ export class TaskList implements OnInit, OnDestroy {
     } else if (d === 'due-today') {
       filtered = filtered.filter((t) => {
         if (!t.dueDate) return false;
-        // Compare dates by year/month/day to avoid timezone issues
         const due = new Date(t.dueDate);
         return (
           due.getFullYear() === today.getFullYear() &&
@@ -282,19 +298,19 @@ export class TaskList implements OnInit, OnDestroy {
     if (sort === 'dueDate') {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      
+
       return sorted.sort((a, b) => {
         const getUrgencyScore = (t: Task): number => {
           if (!t.dueDate || t.status === 'done') return 999;
           const due = new Date(t.dueDate);
           const diff = due.getTime() - today.getTime();
           const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-          
-          if (days < 0) return days; // Overdue (negative numbers first)
-          if (days === 0) return 0;  // Today
-          return days;               // Future (positive numbers)
+
+          if (days < 0) return days;
+          if (days === 0) return 0;
+          return days;
         };
-        
+
         return getUrgencyScore(a) - getUrgencyScore(b);
       });
     }
@@ -302,7 +318,6 @@ export class TaskList implements OnInit, OnDestroy {
     return sorted;
   });
 
-  // Board column computed signals
   readonly boardTodo = computed(() => this.filteredTasks().filter((t) => t.status === 'todo'));
   readonly boardDoing = computed(() => this.filteredTasks().filter((t) => t.status === 'doing'));
   readonly boardDone = computed(() => this.filteredTasks().filter((t) => t.status === 'done'));
@@ -376,7 +391,6 @@ export class TaskList implements OnInit, OnDestroy {
     }
   }
 
-  // Task count computed signals
   readonly totalCount = computed(() => this.tasks().length);
   readonly todoCount = computed(() => this.tasks().filter((t) => t.status === 'todo').length);
   readonly doingCount = computed(() => this.tasks().filter((t) => t.status === 'doing').length);

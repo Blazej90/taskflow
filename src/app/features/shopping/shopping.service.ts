@@ -1,4 +1,5 @@
-import { Injectable, inject, signal, computed } from '@angular/core';
+import { Injectable, inject, signal, computed, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ShoppingList, ShoppingItem } from './shopping';
 import { ShoppingRepository } from './shopping.repository';
 
@@ -11,10 +12,13 @@ export class ShoppingService {
 
   readonly listCount = computed(() => this.lists().length);
 
-  constructor() {
-    // Subscribe to repository
-    this.repository.lists$.subscribe((lists) => {
-      this.lists.set(lists);
+  constructor(private destroyRef: DestroyRef) {
+    this.repository.lists$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (lists) => this.lists.set(lists),
+      error: (err) => {
+        console.error('Failed to load shopping lists:', err);
+        this.lists.set([]);
+      },
     });
   }
 
@@ -72,7 +76,7 @@ export class ShoppingService {
       name: itemName,
       done: false,
     };
-    
+
     if (quantity?.trim()) {
       newItem.quantity = quantity.trim();
     }
