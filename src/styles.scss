@@ -72,6 +72,36 @@ html {
   --text-muted: var(--gray-500);
   --border-color: var(--gray-700);
 
+  // Angular Material Dialog dark mode
+  .mat-mdc-dialog-container {
+    --mdc-dialog-container-color: var(--gray-800);
+    --mdc-dialog-supporting-text-color: var(--gray-50);
+    --mdc-dialog-subhead-color: var(--gray-50);
+  }
+
+  .mat-mdc-dialog-title {
+    color: var(--gray-50) !important;
+  }
+
+  .mat-mdc-dialog-content {
+    color: var(--gray-300) !important;
+  }
+
+  .mat-mdc-dialog-surface {
+    background-color: var(--gray-800) !important;
+    color: var(--gray-50) !important;
+  }
+
+  // Toast/Snackbar dark mode
+  .mat-mdc-snack-bar-container {
+    --mdc-snackbar-container-color: var(--gray-800);
+    --mdc-snackbar-supporting-text-color: var(--gray-50);
+  }
+
+  .mat-mdc-snack-bar-action {
+    color: var(--primary-500) !important;
+  }
+
   // Board column headers - global styles
   .col-todo .col-header {
     background: #451a03 !important;

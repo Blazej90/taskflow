@@ -291,3 +291,117 @@ h1 {
   transform: translateY(0);
   filter: brightness(0.98);
 }
+
+// ==========================================
+// DARK MODE
+// ==========================================
+
+:host-context(.dark) {
+  .auth {
+    @media (min-width: 640px) {
+      background: var(--bg-surface);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  h1 {
+    color: var(--text-primary);
+  }
+
+  .subtitle {
+    color: var(--text-secondary);
+  }
+
+  .btn-google,
+  .btn-secondary {
+    background: var(--bg-surface);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+
+    &:hover:not(:disabled) {
+      background: var(--bg-primary);
+      border-color: var(--text-secondary);
+    }
+  }
+
+  .btn-primary {
+    background: var(--text-primary);
+    color: var(--bg-surface);
+    border-color: var(--text-primary);
+
+    &:hover:not(:disabled) {
+      background: var(--text-secondary);
+      border-color: var(--text-secondary);
+    }
+  }
+
+  .divider {
+    color: var(--text-muted);
+
+    &::before,
+    &::after {
+      background: var(--border-color);
+    }
+  }
+
+  .field {
+    label {
+      color: var(--text-primary);
+    }
+
+    input {
+      background: var(--bg-surface);
+      border-color: var(--border-color);
+      color: var(--text-primary);
+
+      &::placeholder {
+        color: var(--text-muted);
+      }
+
+      &:focus {
+        border-color: var(--primary-500);
+      }
+
+      &:disabled {
+        background: var(--bg-primary);
+      }
+    }
+  }
+
+  .hint {
+    color: var(--text-secondary);
+
+    &::before {
+      border-color: var(--border-color);
+      border-top-color: var(--primary-500);
+    }
+  }
+
+  .error {
+    color: #f87171;
+    background: rgba(220, 38, 38, 0.2);
+  }
+
+  .sent {
+    border-color: var(--border-color);
+    background: var(--bg-surface);
+
+    h2 {
+      color: var(--text-primary);
+    }
+
+    .sent-line {
+      color: var(--text-secondary);
+    }
+
+    .spam-tip {
+      background: rgba(245, 158, 11, 0.2);
+      border-color: rgba(245, 158, 11, 0.5);
+      color: var(--text-primary);
+    }
+
+    .sent-small {
+      color: var(--text-muted);
+    }
+  }
+}
