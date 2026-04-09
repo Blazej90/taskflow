@@ -289,10 +289,36 @@
   }
 }
 
+.quantity-edit-input {
+  width: 60px;
+  padding: 4px 8px;
+  border: 1px solid #3b82f6;
+  border-radius: 4px;
+  font-size: 14px;
+  background: var(--bg-primary, white);
+  color: var(--text-primary, #0f172a);
+  text-align: center;
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  }
+}
+
+.quantity-btn {
+  font-weight: 700;
+  font-size: 14px;
+}
+
 .item-quantity {
   font-size: 13px;
   color: var(--text-muted, #64748b);
   margin-left: 4px;
+  cursor: pointer;
+
+  &:hover {
+    color: #3b82f6;
+  }
 }
 
 // Empty state

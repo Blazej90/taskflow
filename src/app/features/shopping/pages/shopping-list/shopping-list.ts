@@ -28,6 +28,8 @@ export class ShoppingListPage implements OnInit, OnDestroy {
   // Item editing state
   editingItemId = signal<string | null>(null);
   editItemName = signal('');
+  editingQuantityId = signal<string | null>(null);
+  editQuantity = signal('');
 
   ngOnInit(): void {
     this.shoppingService.load();
@@ -117,6 +119,32 @@ export class ShoppingListPage implements OnInit, OnDestroy {
   cancelEditItem(): void {
     this.editingItemId.set(null);
     this.editItemName.set('');
+  }
+
+  startEditQuantity(itemId: string, currentQuantity: string | undefined): void {
+    this.editingQuantityId.set(itemId);
+    this.editQuantity.set(currentQuantity ?? '');
+  }
+
+  async saveItemQuantity(listId: string, itemId: string): Promise<void> {
+    const newQuantity = this.editQuantity().trim();
+
+    try {
+      // If empty, remove quantity; otherwise update it
+      if (newQuantity === '') {
+        await this.shoppingService.updateItemQuantity(listId, itemId, '');
+      } else {
+        await this.shoppingService.updateItemQuantity(listId, itemId, newQuantity);
+      }
+      this.cancelEditQuantity();
+    } catch {
+      this.toast.error('Failed to update quantity');
+    }
+  }
+
+  cancelEditQuantity(): void {
+    this.editingQuantityId.set(null);
+    this.editQuantity.set('');
   }
 
   async addItem(listId: string): Promise<void> {

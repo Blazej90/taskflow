@@ -103,17 +103,34 @@
                     } @else {
                       <span class="item-name">{{ item.name }}</span>
                     }
-                    @if (item.quantity) {
-                      <span class="item-quantity">({{ item.quantity }})</span>
+                    @if (editingQuantityId() === item.id) {
+                      <input
+                        type="text"
+                        [(ngModel)]="editQuantity"
+                        (blur)="saveItemQuantity(list.id, item.id)"
+                        (keyup.enter)="saveItemQuantity(list.id, item.id)"
+                        (keyup.escape)="cancelEditQuantity()"
+                        class="quantity-edit-input"
+                        placeholder="2 kg, 3 pcs..."
+                        autofocus
+                      />
+                    } @else if (item.quantity) {
+                      <span class="item-quantity" (click)="startEditQuantity(item.id, item.quantity)">({{ item.quantity }})</span>
                     }
                   </label>
                   <div class="item-actions">
-                    @if (editingItemId() !== item.id) {
+                    @if (editingItemId() !== item.id && editingQuantityId() !== item.id) {
                       <button 
                         class="btn icon-only small"
                         (click)="startEditItem(item.id, item.name)"
                         title="Edit item">
                         ✏️
+                      </button>
+                      <button 
+                        class="btn icon-only small quantity-btn"
+                        (click)="startEditQuantity(item.id, item.quantity)"
+                        title="Edit quantity">
+                        #
                       </button>
                     }
                     <button 
