@@ -1,18 +1,19 @@
-import { Injectable, inject, signal, computed, DestroyRef } from '@angular/core';
+import { Injectable, signal, computed, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ShoppingList, ShoppingItem } from './shopping';
 import { ShoppingRepository } from './shopping.repository';
 
 @Injectable({ providedIn: 'root' })
 export class ShoppingService {
-  private repository = inject(ShoppingRepository);
-
   readonly lists = signal<ShoppingList[]>([]);
   readonly loading = signal(false);
 
   readonly listCount = computed(() => this.lists().length);
 
-  constructor(private destroyRef: DestroyRef) {
+  constructor(
+    private repository: ShoppingRepository,
+    private destroyRef: DestroyRef,
+  ) {
     this.repository.lists$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (lists) => this.lists.set(lists),
       error: (err) => {
