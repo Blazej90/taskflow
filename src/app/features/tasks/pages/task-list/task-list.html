@@ -4,7 +4,7 @@
       type="button"
       class="view-btn"
       [class.active]="viewMode() === 'list'"
-      (click)="setViewMode('list')"
+      (click)="viewMode.set('list')"
       [disabled]="loading()"
     >
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -17,12 +17,12 @@
       </svg>
       <span>List</span>
     </button>
-    
+
     <button
       type="button"
       class="view-btn"
       [class.active]="viewMode() === 'board'"
-      (click)="setViewMode('board')"
+      (click)="viewMode.set('board')"
       [disabled]="loading()"
     >
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -76,6 +76,25 @@
   </div>
 </div>
 
+<app-task-toolbar
+  [statusFilter]="statusFilter()"
+  [totalCount]="totalCount()"
+  [todoCount]="todoCount()"
+  [doingCount]="doingCount()"
+  [doneCount]="doneCount()"
+  [overdueCount]="overdueCount()"
+  [dueTodayCount]="dueTodayCount()"
+  [searchTerm]="searchTerm()"
+  [sortBy]="sortBy()"
+  [dateFilter]="dateFilter()"
+  (filterChange)="statusFilter.set($event)"
+  (showOverdue)="showOverdue()"
+  (showDueToday)="showDueToday()"
+  (searchChange)="searchTerm.set($event)"
+  (sortChange)="sortBy.set($event)"
+  (clearDateFilter)="clearDateFilter()"
+/>
+
 @if (selectMode()) {
   <header class="selection-toolbar">
     <div class="left">
@@ -115,158 +134,6 @@
       </button>
     </div>
   </header>
-}
-
-@if (overdueCount() > 0) {
-  <button type="button" class="overdue-banner" (click)="showOverdue()">
-    <span class="banner-icon">⚠️</span>
-    <span class="banner-text">
-      <strong>{{ overdueCount() }}</strong> 
-      {{ overdueCount() === 1 ? 'task' : 'tasks' }} overdue
-    </span>
-    <span class="banner-action">Show →</span>
-  </button>
-}
-
-@if (dueTodayCount() > 0) {
-  <button type="button" class="due-today-banner" (click)="showDueToday()">
-    <span class="banner-icon">⏰</span>
-    <span class="banner-text">
-      <strong>{{ dueTodayCount() }}</strong> 
-      {{ dueTodayCount() === 1 ? 'task' : 'tasks' }} due today
-    </span>
-    <span class="banner-action">Show →</span>
-  </button>
-}
-
-<div class="filters">
-  <button
-    type="button"
-    class="chip"
-    [class.active]="statusFilter() === 'all'"
-    [disabled]="loading()"
-    (click)="setFilter('all')"
-    [attr.data-count]="totalCount()"
-  >
-    All
-  </button>
-  <button
-    type="button"
-    class="chip"
-    [class.active]="statusFilter() === 'todo'"
-    [disabled]="loading()"
-    (click)="setFilter('todo')"
-    [attr.data-count]="todoCount()"
-  >
-    Todo
-  </button>
-  <button
-    type="button"
-    class="chip"
-    [class.active]="statusFilter() === 'doing'"
-    [disabled]="loading()"
-    (click)="setFilter('doing')"
-    [attr.data-count]="doingCount()"
-  >
-    Doing
-  </button>
-  <button
-    type="button"
-    class="chip"
-    [class.active]="statusFilter() === 'done'"
-    [disabled]="loading()"
-    (click)="setFilter('done')"
-    [attr.data-count]="doneCount()"
-  >
-    Done
-  </button>
-</div>
-
-<div class="search-row">
-  <div class="search-field">
-    <label>Search</label>
-    <div class="input-wrapper">
-      <svg
-        class="search-icon"
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-      >
-        <circle cx="11" cy="11" r="8"></circle>
-        <path d="m21 21-4.35-4.35"></path>
-      </svg>
-      <input
-        type="text"
-        placeholder="Search tasks by title..."
-        [disabled]="loading()"
-        [ngModel]="searchTerm()"
-        (ngModelChange)="searchTerm.set($event)"
-      />
-    </div>
-  </div>
-
-  <div class="sort-field">
-    <label>Sort</label>
-    <div class="select-wrapper">
-      <select [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)">
-        <option value="manual">Manual (drag)</option>
-        <option value="dueDate">Due date (urgency)</option>
-        <option value="priority">Priority</option>
-        <option value="status">Status</option>
-        <option value="newest">Newest first</option>
-        <option value="oldest">Oldest first</option>
-      </select>
-      <svg
-        class="select-arrow"
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-      >
-        <polyline points="6 9 12 15 18 9"></polyline>
-      </svg>
-    </div>
-  </div>
-</div>
-
-<div class="view-switch">
-  <button
-    class="btn ghost"
-    type="button"
-    (click)="viewMode.set('list')"
-    [class.active]="viewMode() === 'list'"
-  >
-    List
-  </button>
-
-  <button
-    class="btn ghost"
-    type="button"
-    (click)="viewMode.set('board')"
-    [class.active]="viewMode() === 'board'"
-  >
-    Board
-  </button>
-</div>
-@if (!isManualOrder()) {
-  <p class="hint">
-    Drag and drop is available only in <strong>Manual</strong> mode.
-  </p>
-}
-@if (dateFilter() !== 'all') {
-  <div class="active-filter-pill">
-    <span class="pill-text">
-      {{ dateFilter() === 'overdue' ? '⚠️ Overdue' : '⏰ Due today' }}
-    </span>
-    <button type="button" class="pill-close" (click)="clearDateFilter()" aria-label="Show all tasks">
-      ✕
-    </button>
-  </div>
 }
 
 @if (viewMode() === 'list') {

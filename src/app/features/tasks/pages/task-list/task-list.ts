@@ -29,18 +29,8 @@ import { ToastService } from '@/shared/ui/toast/toast.service';
 
 import { Task, TaskStatus } from '../../task';
 import { TasksService } from '../../tasks.service';
-
-/** Filter option for task status */
-type Filter = 'all' | TaskStatus;
-
-/** Date filter options */
-type DateFilter = 'all' | 'overdue' | 'due-today';
-
-/** Task sorting options */
-type SortOption = 'manual' | 'dueDate' | 'priority' | 'status' | 'newest' | 'oldest';
-
-/** Display mode for task list */
-type ViewMode = 'list' | 'board';
+import { Filter, DateFilter, SortOption, ViewMode } from './task-list.types';
+import { TaskToolbar } from './components/task-toolbar/task-toolbar';
 
 /**
  * Main task list page with multiple views and bulk actions.
@@ -64,6 +54,7 @@ type ViewMode = 'list' | 'board';
     CommonModule,
     RouterLink,
     TaskCard,
+    TaskToolbar,
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -171,11 +162,6 @@ export class TaskList implements OnInit, OnDestroy {
   async logout() {
     await this.auth.logout();
     await this.router.navigateByUrl('/auth');
-  }
-
-  /** Changes view mode between list and board */
-  setViewMode(mode: ViewMode) {
-    this.viewMode.set(mode);
   }
 
   /** Toggles bulk selection mode and clears selection when exiting */

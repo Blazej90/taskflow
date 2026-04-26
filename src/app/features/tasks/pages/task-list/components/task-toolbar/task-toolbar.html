@@ -1,0 +1,114 @@
+<!-- Date Banners -->
+@if (overdueCount() > 0) {
+  <button type="button" class="overdue-banner" (click)="showOverdue.emit()">
+    <span class="banner-icon">⚠️</span>
+    <span class="banner-text">
+      <strong>{{ overdueCount() }}</strong>
+      {{ overdueCount() === 1 ? 'task' : 'tasks' }} overdue
+    </span>
+    <span class="banner-action">Show →</span>
+  </button>
+}
+
+@if (dueTodayCount() > 0) {
+  <button type="button" class="due-today-banner" (click)="showDueToday.emit()">
+    <span class="banner-icon">⏰</span>
+    <span class="banner-text">
+      <strong>{{ dueTodayCount() }}</strong>
+      {{ dueTodayCount() === 1 ? 'task' : 'tasks' }} due today
+    </span>
+    <span class="banner-action">Show →</span>
+  </button>
+}
+
+<!-- Status Filters -->
+<div class="filters">
+  <button
+    type="button"
+    class="chip"
+    [class.active]="statusFilter() === 'all'"
+    (click)="filterChange.emit('all')"
+    [attr.data-count]="totalCount()"
+  >
+    All
+  </button>
+  <button
+    type="button"
+    class="chip"
+    [class.active]="statusFilter() === 'todo'"
+    (click)="filterChange.emit('todo')"
+    [attr.data-count]="todoCount()"
+  >
+    Todo
+  </button>
+  <button
+    type="button"
+    class="chip"
+    [class.active]="statusFilter() === 'doing'"
+    (click)="filterChange.emit('doing')"
+    [attr.data-count]="doingCount()"
+  >
+    Doing
+  </button>
+  <button
+    type="button"
+    class="chip"
+    [class.active]="statusFilter() === 'done'"
+    (click)="filterChange.emit('done')"
+    [attr.data-count]="doneCount()"
+  >
+    Done
+  </button>
+</div>
+
+<!-- Search & Sort -->
+<div class="search-row">
+  <div class="search-field">
+    <label>Search</label>
+    <div class="input-wrapper">
+      <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+      <input
+        type="text"
+        placeholder="Search tasks by title..."
+        [ngModel]="searchTerm()"
+        (ngModelChange)="searchChange.emit($event)"
+      />
+    </div>
+  </div>
+
+  <div class="sort-field">
+    <label>Sort</label>
+    <div class="select-wrapper">
+      <select [ngModel]="sortBy()" (ngModelChange)="sortChange.emit($event)">
+        @for (opt of sortOptions; track opt.value) {
+          <option [value]="opt.value">{{ opt.label }}</option>
+        }
+      </select>
+      <svg class="select-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- Manual Mode Hint -->
+@if (sortBy() !== 'manual') {
+  <p class="hint">
+    Drag and drop is available only in <strong>Manual</strong> mode.
+  </p>
+}
+
+<!-- Active Date Filter Pill -->
+@if (dateFilter() !== 'all') {
+  <div class="active-filter-pill">
+    <span class="pill-text">
+      {{ dateFilter() === 'overdue' ? '⚠️ Overdue' : '⏰ Due today' }}
+    </span>
+    <button type="button" class="pill-close" (click)="clearDateFilter.emit()" aria-label="Show all tasks">
+      ✕
+    </button>
+  </div>
+}
