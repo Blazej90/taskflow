@@ -62,42 +62,47 @@
   </header>
 
   <!-- Mobile drawer -->
-  @if (mobileMenuOpen()) {
-    <div class="mobile-drawer-overlay" (click)="closeMobileMenu()"></div>
-    <nav class="mobile-drawer">
-      <div class="drawer-header">
-        <span class="brand-name">Menu</span>
-        <button class="close-btn" (click)="closeMobileMenu()" aria-label="Close">✕</button>
-      </div>
-      
-      <div class="drawer-content">
-        <a 
-          class="drawer-link" 
-          routerLink="/tasks/new" 
-          routerLinkActive="active"
-          (click)="closeMobileMenu()">
-          <span>✚ New task</span>
-        </a>
-        
-        <a 
-          class="drawer-link" 
-          routerLink="/shopping" 
-          routerLinkActive="active"
-          (click)="closeMobileMenu()">
-          <span>🛒 Shopping</span>
-        </a>
-        
-        <a 
-          class="drawer-link" 
-          routerLink="/tasks" 
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          (click)="closeMobileMenu()">
-          <span>📋 My tasks</span>
-        </a>
-      </div>
-    </nav>
-  }
+  <div
+    class="mobile-drawer-overlay"
+    [class.open]="mobileMenuOpen()"
+    (click)="closeMobileMenu()"
+  ></div>
+  <nav class="mobile-drawer" [class.open]="mobileMenuOpen()">
+    <div class="drawer-header">
+      <span class="brand-name">Menu</span>
+      <button class="close-btn" (click)="closeMobileMenu()" aria-label="Close">✕</button>
+    </div>
+
+    <div class="drawer-content">
+      <a
+        class="drawer-link"
+        routerLink="/tasks/new"
+        routerLinkActive="active"
+        (click)="closeMobileMenu()"
+      >
+        <span>✚ New task</span>
+      </a>
+
+      <a
+        class="drawer-link"
+        routerLink="/shopping"
+        routerLinkActive="active"
+        (click)="closeMobileMenu()"
+      >
+        <span>🛒 Shopping</span>
+      </a>
+
+      <a
+        class="drawer-link"
+        routerLink="/tasks"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        (click)="closeMobileMenu()"
+      >
+        <span>📋 My tasks</span>
+      </a>
+    </div>
+  </nav>
 
   <main class="app-main">
     <div class="app-main-container">
