@@ -1,0 +1,27 @@
+<section
+  class="list"
+  cdkDropList
+  [cdkDropListDisabled]="!isManualOrder()"
+  (cdkDropListDropped)="drop.emit($event)"
+>
+  @for (t of tasks(); track t.id) {
+    <div
+      class="draggable-row"
+      cdkDrag
+      [cdkDragDisabled]="!isManualOrder()"
+      [cdkDragStartDelay]="{ touch: 180, mouse: 0 }"
+    >
+      <app-task-card
+        [task]="t"
+        [selectable]="selectMode()"
+        [selected]="isSelected(t.id)"
+        [highlight]="isDueToday(t.dueDate)"
+        [overdue]="isOverdue(t.dueDate)"
+        [viewMode]="'list'"
+        (selectedChange)="selectedChange.emit($event)"
+        (remove)="remove.emit($event)"
+        (toggle)="toggle.emit($event)"
+      ></app-task-card>
+    </div>
+  }
+</section>

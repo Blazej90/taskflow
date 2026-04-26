@@ -105,33 +105,16 @@
 }
 
 @if (viewMode() === 'list') {
-  <section
-    class="list"
-    cdkDropList
-    [cdkDropListDisabled]="!isManualOrder()"
-    (cdkDropListDropped)="onDrop($event)"
-  >
-    @for (t of filteredTasks(); track t.id) {
-      <div
-        class="draggable-row"
-        cdkDrag
-        [cdkDragDisabled]="!isManualOrder()"
-        [cdkDragStartDelay]="{ touch: 180, mouse: 0 }"
-      >
-        <app-task-card
-          [task]="t"
-          [selectable]="selectMode()"
-          [selected]="isSelected(t.id)"
-          [highlight]="isDueToday(t.dueDate)"
-          [overdue]="isOverdue(t.dueDate)"
-          [viewMode]="'list'"
-          (selectedChange)="onSelectedChange($event)"
-          (remove)="removeTask($event)"
-          (toggle)="toggleTaskStatus($event)"
-        ></app-task-card>
-      </div>
-    }
-  </section>
+  <app-task-list-view
+    [tasks]="filteredTasks()"
+    [isManualOrder]="isManualOrder()"
+    [selectMode]="selectMode()"
+    [selectedIds]="selectedIds()"
+    (drop)="onDrop($event)"
+    (selectedChange)="onSelectedChange($event)"
+    (remove)="removeTask($event)"
+    (toggle)="toggleTaskStatus($event)"
+  />
 } @else {
   <div class="board-indicators">
     <span [class.active]="activeColumn() === 0"></span>

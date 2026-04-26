@@ -32,6 +32,7 @@ import { TasksService } from '../../tasks.service';
 import { Filter, DateFilter, SortOption, ViewMode } from './task-list.types';
 import { TaskToolbar } from './components/task-toolbar/task-toolbar';
 import { TaskBulkActions } from './components/task-bulk-actions/task-bulk-actions';
+import { TaskListView } from './components/task-list-view/task-list-view';
 
 /**
  * Main task list page with multiple views and bulk actions.
@@ -57,6 +58,7 @@ import { TaskBulkActions } from './components/task-bulk-actions/task-bulk-action
     TaskCard,
     TaskToolbar,
     TaskBulkActions,
+    TaskListView,
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
