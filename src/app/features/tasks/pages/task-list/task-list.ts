@@ -31,6 +31,7 @@ import { Task, TaskStatus } from '../../task';
 import { TasksService } from '../../tasks.service';
 import { Filter, DateFilter, SortOption, ViewMode } from './task-list.types';
 import { TaskToolbar } from './components/task-toolbar/task-toolbar';
+import { TaskBulkActions } from './components/task-bulk-actions/task-bulk-actions';
 
 /**
  * Main task list page with multiple views and bulk actions.
@@ -55,6 +56,7 @@ import { TaskToolbar } from './components/task-toolbar/task-toolbar';
     RouterLink,
     TaskCard,
     TaskToolbar,
+    TaskBulkActions,
     FormsModule,
     MatFormFieldModule,
     MatInputModule,

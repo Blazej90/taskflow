@@ -96,44 +96,12 @@
 />
 
 @if (selectMode()) {
-  <header class="selection-toolbar">
-    <div class="left">
-      <button
-        class="icon-btn"
-        type="button"
-        (click)="toggleSelectMode()"
-        aria-label="Cancel selection"
-      >
-        ✕
-      </button>
-
-      <span class="selection-pill">
-        <strong>{{ selectedCount() }}</strong> selected
-      </span>
-    </div>
-
-    <div class="right">
-      <button
-        class="action-btn"
-        type="button"
-        (click)="bulkMarkDone()"
-        [disabled]="selectedCount() === 0"
-        title="Mark selected as done"
-      >
-        ✓ Done
-      </button>
-
-      <button
-        class="action-btn danger"
-        type="button"
-        (click)="bulkDelete()"
-        [disabled]="selectedCount() === 0"
-        title="Delete selected"
-      >
-        🗑 Delete
-      </button>
-    </div>
-  </header>
+  <app-task-bulk-actions
+    [selectedCount]="selectedCount()"
+    (cancel)="toggleSelectMode()"
+    (markDone)="bulkMarkDone()"
+    (delete)="bulkDelete()"
+  />
 }
 
 @if (viewMode() === 'list') {
