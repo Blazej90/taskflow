@@ -206,6 +206,9 @@
     }
 
     .user-menu {
+      position: relative;
+      z-index: 300;
+
       .avatar-btn {
         width: 36px;
         height: 36px;
@@ -217,7 +220,8 @@
 
       .user-dropdown {
         min-width: 180px;
-        right: 0;
+        right: 8px;
+        z-index: 999;
 
         .user-email {
           font-size: 12px;
@@ -227,6 +231,7 @@
         .dropdown-item {
           padding: 10px 14px;
           font-size: 13px;
+          white-space: nowrap;
         }
       }
     }
