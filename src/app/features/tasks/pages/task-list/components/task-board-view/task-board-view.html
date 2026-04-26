@@ -1,0 +1,74 @@
+<div class="board-indicators">
+  <span [class.active]="activeColumn() === 0"></span>
+  <span [class.active]="activeColumn() === 1"></span>
+  <span [class.active]="activeColumn() === 2"></span>
+</div>
+
+<div class="board" (scroll)="boardScroll.emit($event)">
+  @for (col of columns(); track col.listId) {
+    <div class="col col-{{ col.status }}">
+      <div class="col-header">
+        <div class="col-title">
+          <span class="col-dot {{ col.dotClass }}"></span>
+          <span>{{ col.label }}</span>
+          <span class="col-count">{{ col.tasks.length }}</span>
+        </div>
+      </div>
+
+      <div
+        class="col-list"
+        cdkDropList
+        [cdkDropListData]="col.tasks"
+        [cdkDropListConnectedTo]="col.connectedTo"
+        (cdkDropListDropped)="boardDrop.emit({ targetStatus: col.status, event: $event })"
+        [id]="col.listId"
+        [cdkDropListDisabled]="isMobileView()"
+      >
+        @for (t of col.tasks; track t.id) {
+          <div
+            cdkDrag
+            class="draggable-row"
+            [cdkDragStartDelay]="{ touch: 180, mouse: 0 }"
+            [cdkDragDisabled]="isMobileView()"
+          >
+            <app-task-card
+              [task]="t"
+              [selectable]="selectMode()"
+              [selected]="isSelected(t.id)"
+              [highlight]="isDueToday(t.dueDate)"
+              [overdue]="isOverdue(t.dueDate)"
+              [viewMode]="'board'"
+              (selectedChange)="selectedChange.emit($event)"
+              (remove)="remove.emit($event)"
+              (toggle)="toggle.emit($event)"
+            ></app-task-card>
+          </div>
+        }
+
+        @if (col.tasks.length === 0) {
+          <div class="col-empty">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
+              <circle cx="12" cy="12" r="10" stroke-dasharray="4 2" />
+              @switch (col.emptyIcon) {
+                @case ('plus') {
+                  <path d="M12 8v8M8 12h8" />
+                }
+                @case ('check') {
+                  <path d="M8 12l3 3 5-6" />
+                }
+              }
+            </svg>
+            <span>No tasks</span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>
