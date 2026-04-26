@@ -23,7 +23,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 
 import { AuthService } from '@/features/auth/auth.service';
-import { TaskCard } from '@/features/tasks/components/task-card/task-card';
+
 import { ConfirmService } from '@/shared/ui/confirm-dialog/confirm.service';
 import { ToastService } from '@/shared/ui/toast/toast.service';
 
@@ -56,7 +56,6 @@ import { TaskBoardView } from './components/task-board-view/task-board-view';
   imports: [
     CommonModule,
     RouterLink,
-    TaskCard,
     TaskToolbar,
     TaskBulkActions,
     TaskListView,
